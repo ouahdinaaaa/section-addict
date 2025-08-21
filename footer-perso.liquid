@@ -1,0 +1,417 @@
+{% schema %}
+{
+  "name": "Footer DarkFiles",
+  "settings": [
+    {
+      "type": "text",
+      "id": "footer_title",
+      "label": "Titre du footer",
+      "default": "Les vérités dévoilées"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Couleur du titre",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Taille du titre (desktop)",
+      "default": 22,
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Taille du titre (mobile)",
+      "default": 18,
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "textarea",
+      "id": "footer_subtitle",
+      "label": "Sous-titre",
+      "default": "Explorez nos ebooks pour découvrir ce que personne n'ose dire."
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Couleur du sous-titre",
+      "default": "#cccccc"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "label": "Taille du sous-titre (desktop)",
+      "default": 16,
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "label": "Taille du sous-titre (mobile)",
+      "default": 14,
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Informations de contact"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact",
+      "label": "Afficher les informations de contact",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Email",
+      "default": "contact@darkfiles.com",
+      "info": "Laisser vide pour masquer"
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Téléphone",
+      "default": "+33 1 23 45 67 89",
+      "info": "Laisser vide pour masquer"
+    },
+    {
+      "type": "color",
+      "id": "contact_color",
+      "label": "Couleur des infos de contact",
+      "default": "#cccccc"
+    },
+    {
+      "type": "header",
+      "content": "Liens et couleurs"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Couleur des liens",
+      "default": "#bf0603"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Couleur des titres de colonnes",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "link_size_desktop",
+      "label": "Taille des liens (desktop)",
+      "default": 16,
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "link_size_mobile",
+      "label": "Taille des liens (mobile)",
+      "default": 14,
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "help_link",
+      "name": "Lien Aide & Informations",
+      "settings": [
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Nom du lien",
+          "default": "Conditions Générales"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "URL du lien"
+        }
+      ]
+    },
+    {
+      "type": "useful_link",
+      "name": "Lien Utile",
+      "settings": [
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Nom du lien",
+          "default": "Accueil"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "URL du lien"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer DarkFiles",
+      "category": "Footer",
+      "blocks": [
+        { "type": "help_link", "settings": { "link_label": "Conditions Générales", "link_url": "/pages/conditions-generales" } },
+        { "type": "help_link", "settings": { "link_label": "CGV", "link_url": "/pages/cgv" } },
+        { "type": "help_link", "settings": { "link_label": "Mentions légales", "link_url": "/pages/mentions-legales" } },
+        { "type": "help_link", "settings": { "link_label": "FAQ", "link_url": "/pages/faq" } },
+        { "type": "help_link", "settings": { "link_label": "Politique de remboursement", "link_url": "/pages/remboursement" } },
+        { "type": "useful_link", "settings": { "link_label": "Accueil", "link_url": "/" } },
+        { "type": "useful_link", "settings": { "link_label": "Nos ebooks", "link_url": "/collections/all" } },
+        { "type": "useful_link", "settings": { "link_label": "Contact", "link_url": "/pages/contact" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<div class="custom-footer">
+  <div class="footer-main">
+    <h2 class="footer-title">{{ section.settings.footer_title }}</h2>
+    <p class="footer-subtitle">{{ section.settings.footer_subtitle }}</p>
+
+    {% if section.settings.show_contact %}
+      <div class="footer-contact">
+        {% if section.settings.contact_email != blank %}
+          <p class="contact-info">
+            <span class="contact-icon">✉</span>
+            <a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a>
+          </p>
+        {% endif %}
+        {% if section.settings.contact_phone != blank %}
+          <p class="contact-info">
+            <span class="contact-icon">📞</span>
+            <a href="tel:{{ section.settings.contact_phone }}">{{ section.settings.contact_phone }}</a>
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="footer-columns">
+      {% assign help_links = section.blocks | where: 'type', 'help_link' %}
+      {% assign useful_links = section.blocks | where: 'type', 'useful_link' %}
+      
+      {% if help_links.size > 0 %}
+        <div class="footer-column">
+          <h3 class="footer-heading">Aide & Informations</h3>
+          <ul>
+            {% for block in help_links %}
+              <li>
+                <a href="{{ block.settings.link_url }}">
+                  {{ block.settings.link_label }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      {% if useful_links.size > 0 %}
+        <div class="footer-column">
+          <h3 class="footer-heading">Liens utiles</h3>
+          <ul>
+            {% for block in useful_links %}
+              <li>
+                <a href="{{ block.settings.link_url }}">
+                  {{ block.settings.link_label }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; {{ 'now' | date: '%Y' }} DarkFiles. Tous droits réservés.</p>
+  </div>
+</div>
+
+<style>
+.custom-footer {
+  background: #0b090a;
+  color: #ffffff;
+}
+
+.footer-main {
+  text-align: center;
+  padding: 40px 20px 30px;
+}
+
+.custom-footer .footer-title {
+  color: {{ section.settings.title_color }};
+  font-size: {{ section.settings.title_size_desktop }}px;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.custom-footer .footer-subtitle {
+  color: {{ section.settings.subtitle_color }};
+  font-size: {{ section.settings.subtitle_size_desktop }}px;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.footer-contact {
+  margin-bottom: 30px;
+}
+
+.contact-info {
+  color: {{ section.settings.contact_color }};
+  margin: 8px 0;
+  display: inline-block;
+  margin-right: 30px;
+}
+
+.contact-info:last-child {
+  margin-right: 0;
+}
+
+.contact-icon {
+  margin-right: 8px;
+}
+
+.contact-info a {
+  color: {{ section.settings.contact_color }};
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contact-info a:hover {
+  color: {{ section.settings.link_color }};
+}
+
+.footer-columns {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.footer-column {
+  min-width: 200px;
+  text-align: left;
+}
+
+.footer-column h3 {
+  color: {{ section.settings.heading_color }};
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 2px solid #bf0603;
+  padding-bottom: 8px;
+  display: inline-block;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  margin: 8px 0;
+}
+
+.footer-column ul li a {
+  text-decoration: none;
+  color: {{ section.settings.link_color }};
+  font-size: {{ section.settings.link_size_desktop }}px;
+  transition: all 0.3s ease;
+  padding: 3px 0;
+  display: block;
+}
+
+.footer-column ul li a:hover {
+  color: #ffffff;
+  background-color: rgba(191, 6, 3, 0.2);
+  padding-left: 8px;
+  border-radius: 3px;
+}
+
+.footer-bottom {
+  border-top: 1px solid #333;
+  padding: 20px;
+  text-align: center;
+  background: #050304;
+}
+
+.footer-bottom p {
+  margin: 0;
+  color: #888;
+  font-size: 14px;
+}
+
+/* Mobile Responsive */
+@media(max-width: 767px) {
+  .custom-footer .footer-title {
+    font-size: {{ section.settings.title_size_mobile }}px;
+  }
+  
+  .custom-footer .footer-subtitle {
+    font-size: {{ section.settings.subtitle_size_mobile }}px;
+  }
+  
+  .footer-column ul li a {
+    font-size: {{ section.settings.link_size_mobile }}px;
+  }
+  
+  .footer-columns {
+    gap: 40px;
+  }
+  
+  .footer-column {
+    min-width: 150px;
+  }
+  
+  .contact-info {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+  
+  .footer-main {
+    padding: 30px 15px 20px;
+  }
+}
+
+@media(max-width: 480px) {
+  .footer-columns {
+    flex-direction: column;
+    gap: 25px;
+  }
+  
+  .footer-column {
+    text-align: left;
+  }
+  
+  .footer-column h3 {
+    text-align: center;
+  }
+}
+</style>  

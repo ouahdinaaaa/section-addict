@@ -1,0 +1,561 @@
+<style>
+  .cart-drawer-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    display: none;
+  }
+
+  .cart-drawer {
+    position: fixed;
+    top: 0; right: -100%;
+    width: 100%; max-width: 400px; height: 100%;
+    background-color: #fff;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+    z-index: 1001;
+    transition: right 0.4s ease;
+    padding: 30px;
+    font-family: 'Quicksand', sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cart-drawer.open {
+    right: 0;
+  }
+
+  .cart-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+
+  /* Minuteur */
+  .cart-timer {
+    text-align: center;
+    font-size: 11px;
+    color: black;
+    line-height : normal;
+    font-weight : bold;
+    margin-bottom: 20px;
+    padding: 10px 50px;
+  }
+
+  .timer-countdown {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-align: center;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+
+  .timer-countdown #timeDigits {
+    display: block;
+    margin-bottom: -7px;
+  }
+
+  .timer-labels {
+    display: flex;
+    justify-content: center;
+  }
+
+  .timer-label-minutes,
+  .timer-label-seconds {
+    font-size: 10px;
+    color: #444;
+    line-height: 1.2;
+    font-weight: bold;
+    padding: 0 6px;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .cart-drawer-content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 12px;
+    gap: 12px;
+  }
+
+  .cart-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+  }
+
+  .cart-item-info {
+    flex: 1;
+    font-size: 0.95rem;
+    position: relative;
+  }
+
+  .cart-item-info strong {
+    font-weight: bold;
+    display: block;
+    font-size : 1.5rem;
+    margin-bottom : -5px;
+    color : black;
+  }
+
+  .cart-item-info span {
+    display: block;
+    font-weight: bold;
+    color:black;
+    font-size:1.3rem;
+  }
+
+  .cart-item-price {
+    color: red;
+    font-weight: 700;
+  }
+
+  .cart-item-original-price {
+    text-decoration: line-through;
+    font-size: 0.85rem;
+    color: #999;
+    margin-left: 8px;
+  }
+
+  /* Boutons quantité et suppression */
+  .quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size : 15px;
+  }
+
+  .qty-btn {
+    width: 20px;
+    height: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #2f2e2e;
+    background: white;
+    border-radius: 50%;
+    font-size: 15px;
+    text-align: center;
+    user-select: none;
+    padding: 0;
+  }
+
+  .qty-btn:hover {
+    background: #eee;
+  }
+
+  .remove-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 22px;
+    color: #e53935;
+    background: none;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .cart-total {
+    font-weight: bold;
+    font-size: 1.6rem;
+    text-align: right;
+    margin-top: 20px;
+    color:black;
+  }
+
+  .cart-button {
+    width: 50%;
+    background-color: #00cc00;
+    color: white;
+    border: none;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 2rem;
+    cursor: pointer;
+    margin: 25px auto 0 auto;
+    display: block;
+  }
+
+  .cart-close {
+    cursor: pointer;
+    font-size: 1.3rem;
+    background: none;
+    border: none;
+  }
+
+  .empty-cart {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+    margin-top: 50px;
+  }
+
+  .loading-cart {
+    text-align: center;
+    font-size: 1rem;
+    color: #999;
+    margin-top: 50px;
+  }
+
+  @media (max-width: 767px) {
+    .cart-drawer {
+      width: 100%;
+      max-width: none;
+    }
+  }
+</style>
+
+<div class="cart-drawer-overlay" id="cartOverlay"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-drawer-header">
+    <span>Panier</span>
+    <button class="cart-close" onclick="toggleCart()">&times;</button>
+  </div>
+
+  <div class="cart-timer">
+    Vos articles sont réservés dans votre panier pendant 10 minutes !<br><br>
+    <div class="timer-countdown" id="cartTimer">
+      <span id="timeDigits">10:00</span>
+      <div class="timer-labels">
+        <div class="timer-label-minutes">min</div>
+        <div class="timer-label-seconds">sec</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cart-drawer-content" id="cartContent">
+    <div class="loading-cart">Chargement du panier...</div>
+  </div>
+</div>
+<script>
+  let cachedCart = null; // Cache local du panier
+  let timerInterval = null; // Pour gérer l'arrêt du timer
+
+  // Précharge le panier dès que possible (au chargement)
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('/cart.js')
+      .then(res => res.json())
+      .then(cart => {
+        cachedCart = cart;
+        localStorage.setItem('instant_cart', JSON.stringify(cart));
+
+        if (cart.items && cart.items.length > 0) {
+          const STORAGE_KEY = 'cart_reservation_timer';
+          if (!localStorage.getItem(STORAGE_KEY)) {
+            resetCartTimer();
+          }
+          initCartTimer();
+        } else {
+          stopCartTimer();
+          localStorage.removeItem('cart_reservation_timer');
+          const timerDisplay = document.getElementById('timeDigits');
+          if(timerDisplay) timerDisplay.textContent = '00:00';
+        }
+      })
+      .catch(console.error);
+  });
+
+  function toggleCart() {
+    const drawer = document.getElementById('cartDrawer');
+    const overlay = document.getElementById('cartOverlay');
+    
+    if (drawer.classList.contains('open')) {
+      drawer.classList.remove('open');
+      overlay.style.display = 'none';
+    } else {
+      loadCartContent();
+      drawer.classList.add('open');
+      overlay.style.display = 'block';
+    }
+  }
+
+  function loadCartContent() {
+    const cartContent = document.getElementById('cartContent');
+
+    if (cachedCart) {
+      // Affiche direct le panier depuis cache
+      renderCartContent(cachedCart);
+
+      // Synchronise en tâche de fond
+      fetch('/cart.js')
+        .then(res => res.json())
+        .then(cart => {
+          cachedCart = cart;
+          localStorage.setItem('instant_cart', JSON.stringify(cart));
+          renderCartContent(cart);
+        })
+        .catch(console.error);
+
+    } else {
+      cartContent.innerHTML = '<div class="loading-cart">Chargement du panier...</div>';
+
+      fetch('/cart.js')
+        .then(response => response.json())
+        .then(cart => {
+          cachedCart = cart;
+          localStorage.setItem('instant_cart', JSON.stringify(cart));
+          renderCartContent(cart);
+        })
+        .catch(error => {
+          console.error('Erreur lors du chargement du panier:', error);
+          cartContent.innerHTML = '<div class="loading-cart">Erreur de chargement</div>';
+        });
+    }
+  }
+
+  function renderCartContent(cart) {
+    const cartContent = document.getElementById('cartContent');
+    
+    if (!cart.items || cart.items.length === 0) {
+      cartContent.innerHTML = '<div class="empty-cart">Votre panier est vide 🛒</div>';
+      stopCartTimer();
+      localStorage.removeItem('cart_reservation_timer');
+      const timerDisplay = document.getElementById('timeDigits');
+      if(timerDisplay) timerDisplay.textContent = '00:00';
+      return;
+    }
+
+    // Si panier non vide, on s'assure que le timer est actif
+    if (!localStorage.getItem('cart_reservation_timer')) {
+      resetCartTimer();
+    }
+    initCartTimer();
+
+    let html = '';
+    cart.items.forEach((item, index) => {
+      const lineNumber = index + 1;
+      const imageUrl = item.featured_image ? item.featured_image.url : '';
+      const finalPrice = item.final_line_price || item.line_price;
+      const originalPrice = item.original_line_price;
+      
+      html += `
+        <div class="cart-item" data-key="${item.key}" data-line="${lineNumber}">
+          <img src="${imageUrl}" alt="${item.product_title}" onerror="this.style.display='none'">
+          <div class="cart-item-info">
+            <button class="remove-btn" aria-label="Supprimer l'article" title="Supprimer l'article">&times;</button>
+            <strong>${item.product_title}</strong>
+            <span>Prix unitaire : ${formatPrice(item.price)}</span>
+            ${originalPrice && originalPrice > finalPrice ? 
+              `<span class="cart-item-price">${formatPrice(finalPrice)}</span>
+               <span class="cart-item-original-price">${formatPrice(originalPrice)}</span>` :
+              `<span class="cart-item-price">Quantité :</span>`
+            }
+            <div class="quantity-controls">
+              <button class="qty-btn" data-action="decrease" aria-label="Diminuer quantité">−</button>
+              <span class="qty-number" style="-webkit-text-stroke:0.6px black">${item.quantity}</span>
+              <button class="qty-btn" data-action="increase" aria-label="Augmenter quantité">+</button>
+            </div>
+          </div>
+        </div>`;
+    });
+
+    html += `
+      <div class="cart-total">TOTAL : ${formatPrice(cart.total_price)}</div>
+      <button class="cart-button" onclick="window.location.href='/checkout'">Payer</button>
+    `;
+
+    cartContent.innerHTML = html;
+
+    addCartItemEventListeners();
+  }
+
+  function formatPrice(priceInCents) {
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency',
+      currency: 'EUR'
+    }).format(priceInCents / 100);
+  }
+
+  function addCartItemEventListeners() {
+    const cartContent = document.getElementById('cartContent');
+    
+    cartContent.querySelectorAll('.qty-btn[data-action="increase"]').forEach(button => {
+      button.removeEventListener('click', qtyButtonHandler);
+      button.addEventListener('click', qtyButtonHandler);
+    });
+
+    cartContent.querySelectorAll('.qty-btn[data-action="decrease"]').forEach(button => {
+      button.removeEventListener('click', qtyButtonHandler);
+      button.addEventListener('click', qtyButtonHandler);
+    });
+
+    cartContent.querySelectorAll('.remove-btn').forEach(button => {
+      button.removeEventListener('click', removeButtonHandler);
+      button.addEventListener('click', removeButtonHandler);
+    });
+  }
+
+  function qtyButtonHandler(event) {
+    const button = event.currentTarget;
+    const cartItem = button.closest('.cart-item');
+    if (!cartItem) return;
+
+    const line = cartItem.getAttribute('data-line');
+    const action = button.getAttribute('data-action');
+    if (!line) return;
+
+    fetch('/cart.js')
+      .then(r => r.json())
+      .then(cart => {
+        const item = cart.items[line - 1];
+        if (!item) return;
+
+        let newQty = item.quantity;
+        if (action === 'increase') {
+          newQty++;
+        } else if (action === 'decrease') {
+          newQty--;
+          if (newQty < 1) newQty = 1;
+        }
+
+        updateCartLine(line, newQty);
+      })
+      .catch(console.error);
+  }
+
+  function removeButtonHandler(event) {
+    const button = event.currentTarget;
+    const cartItem = button.closest('.cart-item');
+    if (!cartItem) return;
+
+    const line = cartItem.getAttribute('data-line');
+    if (!line) return;
+
+    updateCartLine(line, 0);
+  }
+
+  function updateCartLine(lineKey, newQuantity) {
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ line: lineKey, quantity: newQuantity })
+    })
+    .then(response => response.json())
+    .then(updatedCart => {
+      cachedCart = updatedCart;
+      localStorage.setItem('instant_cart', JSON.stringify(updatedCart));
+      renderCartContent(updatedCart);
+    })
+    .catch(console.error);
+  }
+
+  document.querySelectorAll('.open-cart').forEach(btn => {
+    btn.addEventListener('click', toggleCart);
+  });
+
+  window.addToCartAndOpenSlide = function(variantId) {
+    const btn = event?.target;
+    if (btn) btn.disabled = true;
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: 1 })
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Erreur ajout panier');
+      return response.json();
+    })
+    .then(() => {
+      toggleCart();
+      resetCartTimer();
+    })
+    .catch(err => {
+      console.error('Erreur lors de l\'ajout au panier:', err);
+      alert('Erreur lors de l\'ajout au panier');
+    })
+    .finally(() => {
+      if (btn) btn.disabled = false;
+    });
+  };
+
+  function initCartTimer() {
+    const timerDisplay = document.getElementById('timeDigits');
+    const STORAGE_KEY = 'cart_reservation_timer';
+
+    function formatTime(seconds) {
+      const m = Math.floor(seconds / 60);
+      const s = seconds % 60;
+      return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }
+
+    function clearCart() {
+      fetch('/cart/clear.js', { method: 'POST' })
+        .then(() => {
+          loadCartContent();
+          localStorage.removeItem(STORAGE_KEY);
+          stopCartTimer();
+        });
+    }
+
+    function updateTimer() {
+      let endTime = localStorage.getItem(STORAGE_KEY);
+      if (!endTime) {
+        timerDisplay.textContent = '00:00';
+        stopCartTimer();
+        return;
+      }
+
+      endTime = parseInt(endTime, 10);
+      const now = Date.now();
+      const diff = Math.floor((endTime - now) / 1000);
+
+      if (diff <= 0) {
+        timerDisplay.textContent = '00:00';
+        clearCart();
+        return;
+      }
+
+      timerDisplay.textContent = formatTime(diff);
+    }
+
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateTimer, 1000);
+    updateTimer();
+  }
+
+  function stopCartTimer() {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  }
+
+  function resetCartTimer() {
+    const DURATION = 10 * 60;
+    const STORAGE_KEY = 'cart_reservation_timer';
+    const endTime = Date.now() + DURATION * 1000;
+    localStorage.setItem(STORAGE_KEY, endTime);
+  }
+</script>
+
+
+{% schema %}
+{
+  "name": "Carte Panier Slide",
+  "tag": "section",
+  "class": "cart-slide-section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Carte Panier Slide Dynamique",
+      "category": "Cartes"
+    }
+  ]
+}
+{% endschema %}

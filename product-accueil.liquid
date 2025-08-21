@@ -1,0 +1,953 @@
+{% comment %}
+  Section: Conspiracy Ebooks
+  Description: Section pour afficher des ebooks sur les conspirations avec Apple Pay
+{% endcomment %}
+
+<style>
+  .conspiracy-ebooks-section {
+    font-family: 'Georgia', serif;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0f0f0f 100%);
+    color: #ffffff;
+    padding: {{ section.settings.section_padding_desktop }}px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .conspiracy-ebooks-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, rgba(139, 0, 0, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .conspiracy-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .conspiracy-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+.conspiracy-title {
+  font-size: {{ section.settings.title_size_desktop }}px;
+  margin-bottom: 15px;
+  text-shadow: 0 0 10px rgba(139, 0, 0, 0.3);
+  letter-spacing: 2px;
+  font-weight: bold;
+
+  /* Dégradé appliqué au texte */
+  background-image: linear-gradient(45deg, #8b0000, #ff0000, #8b0000);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* Pour certains navigateurs */
+  background-clip: text;
+  color: transparent;
+}
+
+
+  .conspiracy-subtitle {
+    font-size: {{ section.settings.subtitle_size_desktop }}px;
+    color:rgb(238, 238, 238);
+    font-style: italic;
+    opacity: 0.9;
+  }
+
+  .conspiracy-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+  }
+
+  .conspiracy-card {
+    background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: {{ section.settings.card_border_radius }}px;
+    padding: {{ section.settings.card_padding_desktop }}px;
+    border: {{ section.settings.card_border_width }}px solid rgba(139, 0, 0, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .conspiracy-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(139, 0, 0, 0.1), transparent);
+    transition: left 0.6s ease;
+  }
+
+  .conspiracy-card:hover::before {
+    left: 100%;
+  }
+
+  .conspiracy-card:hover {
+    transform: translateY(-10px);
+    border-color: #8B0000;
+    box-shadow: 0 20px 40px rgba(139, 0, 0, 0.3);
+  }
+
+  .conspiracy-image {
+    width: fit-content;
+    height: 280px;
+    border-radius: {{ section.settings.image_border_radius }}px;
+    margin-bottom: 25px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid rgba(139, 0, 0, 0.2);
+  }
+
+  .conspiracy-image img {
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.4s ease;
+  }
+
+  .conspiracy-card:hover .conspiracy-image img {
+    transform: scale(1.05);
+  }
+
+  .conspiracy-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2c2c54 0%, #40407a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: rgba(139, 0, 0, 0.7);
+    position: relative;
+  }
+
+  .conspiracy-image-placeholder::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(139, 0, 0, 0.1) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.7; }
+  }
+
+  .conspiracy-product-title {
+    font-size: {{ section.settings.product_title_size_desktop }}px;
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-weight: bold;
+    line-height: 1.3;
+  }
+
+  .conspiracy-product-description {
+    color: #cccccc;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-size: {{ section.settings.description_size_desktop }}px;
+  }
+
+  .conspiracy-price-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+  }
+
+  .conspiracy-product-price {
+    font-size: {{ section.settings.price_size_desktop }}px;
+    color: rgb(248, 248, 248);
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(139, 0, 0, 0.3);
+  }
+
+  .conspiracy-old-price {
+    font-size: {{ section.settings.old_price_size_desktop }}px;
+    color: #999999;
+    text-decoration: line-through;
+    opacity: 0.8;
+  }
+
+  .conspiracy-discount-badge {
+    background: linear-gradient(135deg, #ff0000 0%, #8b0000 100%);
+    color: white;
+    padding: 3px 12px;
+    border-radius: 10px;
+    font-size: {{ section.settings.badge_size_desktop }}px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    animation: blinkDiscount 2s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .conspiracy-discount-badge::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes blinkDiscount {
+    0%, 100% { 
+      opacity: 1;
+      transform: scale(1);
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+    }
+    50% { 
+      opacity: 0.7;
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+    }
+  }
+
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  .conspiracy-buy-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .conspiracy-apple-pay-btn,
+  .conspiracy-buy-btn {
+    background: #000000;
+    color: white;
+    border: {{ section.settings.button_border_width }}px solid {{ section.settings.button_border_color }};
+    padding: 15px 25px;
+    border-radius: {{ section.settings.button_border_radius }}px;
+    font-size: {{ section.settings.button_text_size_desktop }}px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .conspiracy-apple-pay-btn:hover,
+  .conspiracy-buy-btn:hover {
+    background: {{ section.settings.button_hover_color }};
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(139, 0, 0, 0.4);
+    color: white;
+    text-decoration: none;
+  }
+
+  .conspiracy-apple-pay-btn::before {
+    content: '';
+    width: 24px;
+    height: 24px;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>') center/contain no-repeat;
+  }
+
+  .conspiracy-cart-icon::before {
+    content: '🛒';
+    margin-right: 5px;
+  }
+
+
+  @media (max-width: 580px) {
+    .conspiracy-grid {
+      grid-template-columns: repeat(1, 1fr);
+      gap: 30px;
+    }
+  }
+
+
+    @media (min-width: 580px) {
+    .conspiracy-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+    }
+  }
+
+
+
+  /* Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .conspiracy-ebooks-section {
+      padding: {{ section.settings.section_padding_mobile }}px 0;
+    }
+
+    .conspiracy-title {
+      font-size: {{ section.settings.title_size_mobile }}px;
+    }
+
+    .conspiracy-subtitle {
+      font-size: {{ section.settings.subtitle_size_mobile }}px;
+    }
+
+
+    .conspiracy-card {
+      padding: {{ section.settings.card_padding_mobile }}px;
+    }
+
+    .conspiracy-image {
+      height: 220px;
+    }
+
+    .conspiracy-image-placeholder {
+      font-size: 3rem;
+    }
+
+    .conspiracy-product-title {
+      font-size: {{ section.settings.product_title_size_mobile }}px;
+    }
+
+    .conspiracy-product-description {
+      font-size: {{ section.settings.description_size_mobile }}px;
+    }
+
+    .conspiracy-product-price {
+      font-size: {{ section.settings.price_size_mobile }}px;
+    }
+
+    .conspiracy-old-price {
+      font-size: {{ section.settings.old_price_size_mobile }}px;
+    }
+
+    .conspiracy-discount-badge {
+      font-size: {{ section.settings.badge_size_mobile }}px;
+      padding: 4px 8px;
+    }
+
+    .conspiracy-price-container {
+      gap: 10px;
+    }
+
+    .conspiracy-apple-pay-btn,
+    .conspiracy-buy-btn {
+      font-size: {{ section.settings.button_text_size_mobile }}px;
+      padding: 12px 20px;
+    }
+
+    .conspiracy-container {
+      padding: 0 15px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .conspiracy-card {
+      padding: {{ section.settings.card_padding_mobile }}px;
+    }
+  }
+
+  /* Animation pour l'entrée */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .conspiracy-card {
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  .conspiracy-card:nth-child(1) { animation-delay: 0.1s; }
+  .conspiracy-card:nth-child(2) { animation-delay: 0.2s; }
+  .conspiracy-card:nth-child(3) { animation-delay: 0.3s; }
+</style>
+
+<section class="conspiracy-ebooks-section">
+  <div class="conspiracy-container">
+    {% if section.settings.section_title != blank or section.settings.section_subtitle != blank %}
+      <div class="conspiracy-header">
+        {% if section.settings.section_title != blank %}
+          <h2 class="conspiracy-title">{{ section.settings.section_title }}</h2>
+        {% endif %}
+        {% if section.settings.section_subtitle != blank %}
+          <p class="conspiracy-subtitle">{{ section.settings.section_subtitle }}</p>
+        {% endif %}
+      </div>
+    {% endif %}
+    
+    <div class="conspiracy-grid">
+      {% for block in section.blocks %}
+        {% assign product = all_products[block.settings.product] %}
+        {% if product != blank %}
+          <div class="conspiracy-card">
+            <div class="conspiracy-image">
+              {% if product.featured_image != blank %}
+                <img src="{{ product.featured_image | image_url: width: 400 }}" alt="{{ product.title | escape }}" loading="lazy">
+              {% else %}
+                <div class="conspiracy-image-placeholder">
+                  {{ block.settings.fallback_icon | default: '📚' }}
+                </div>
+              {% endif %}
+            </div>
+            
+            <h3 class="conspiracy-product-title">{{ product.title }}</h3>
+            
+            {% if block.settings.custom_description != blank %}
+              <p class="conspiracy-product-description">{{ block.settings.custom_description }}</p>
+            {% elsif product.description != blank %}
+              <p class="conspiracy-product-description">{{ product.description | strip_html | truncate: 150 }}</p>
+            {% endif %}
+            
+            <div class="conspiracy-price-container">
+              <div class="conspiracy-product-price">
+                {{ product.price | money_without_currency }} €
+                {% comment %}
+                <--   {{ product.price | money }}
+{% endcomment %}
+              </div>
+              
+              {% if block.settings.show_old_price and block.settings.old_price != blank %}
+                <div class="conspiracy-old-price">
+                  {{ block.settings.old_price }}€
+                </div>
+              {% endif %}
+              
+              {% if block.settings.show_discount_badge and block.settings.discount_percentage != blank %}
+                <div class="conspiracy-discount-badge">
+                  -{{ block.settings.discount_percentage }}%
+                </div>
+              {% endif %}
+            </div>
+            
+            <div class="conspiracy-buy-buttons">
+              {% if block.settings.show_apple_pay %}
+<button class="conspiracy-apple-pay-btn" 
+        style="display:none"
+        data-product-id="{{ product.selected_or_first_available_variant.id }}"
+        data-product-price="{{ product.price | money_without_currency }}"
+        data-product-title="{{ product.title | escape }}">
+  Apple Pay
+</button>
+
+
+              {% endif %}
+              
+<button 
+  type="button" 
+  class="conspiracy-buy-btn conspiracy-cart-icon"
+  onclick="addToCart({{ product.selected_or_first_available_variant.id }}, 1)">
+  {{ block.settings.buy_button_text | default: 'Ajouter au panier' }}
+</button>
+
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const applePayAvailable = window.ApplePaySession && ApplePaySession.canMakePayments();
+
+    document.querySelectorAll(".conspiracy-buy-buttons").forEach(container => {
+      const appleBtn = container.querySelector(".conspiracy-apple-pay-btn");
+
+      if (applePayAvailable && appleBtn) {
+        appleBtn.style.display = "flex";
+
+        // --- Déclenchement Apple Pay ---
+        appleBtn.addEventListener("click", function() {
+          const productId = this.getAttribute("data-product-id");
+          const price = this.getAttribute("data-product-price");
+          const title = this.getAttribute("data-product-title");
+
+          handleApplePay(productId, price, title);
+        });
+      } else if (appleBtn) {
+        // Masquer si non supporté
+        appleBtn.style.display = "none";
+      }
+    });
+  });
+
+  function handleApplePay(productId, price, title) {
+    if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
+      const request = {
+        countryCode: 'FR',
+        currencyCode: 'EUR',
+        supportedNetworks: ['visa', 'masterCard', 'amex'],
+        merchantCapabilities: ['supports3DS'],
+        total: {
+          label: title,
+          amount: price,
+          type: 'final'
+        }
+      };
+
+      const session = new ApplePaySession(3, request);
+
+      session.onvalidatemerchant = function(event) {
+        console.log('Validation du marchand pour le produit:', productId);
+        // ⚠️ Ici tu dois appeler ton endpoint backend pour valider le marchand
+        // session.completeMerchantValidation(merchantSession);
+      };
+
+      session.onpaymentauthorized = function(event) {
+        console.log('Paiement autorisé pour le produit:', productId);
+        session.completePayment(ApplePaySession.STATUS_SUCCESS);
+
+        // Ajout au panier et ouverture du slide cart
+        addToCart(productId, 1);
+      };
+
+      session.begin();
+    } else {
+      // fallback → ajouter au panier normal
+      addToCart(productId, 1);
+    }
+  }
+</script>
+
+
+
+{% schema %}
+{
+  "name": "Conspiracy Ebooks",
+  "tag": "section",
+  "class": "section-conspiracy-ebooks",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Titre & Sous-titre"
+    },
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Titre de la section",
+      "default": "VÉRITÉS CACHÉES"
+    },
+    {
+      "type": "text",
+      "id": "section_subtitle",
+      "label": "Sous-titre de la section",
+      "default": "Découvrez ce qu'ils ne veulent pas que vous sachiez"
+    },
+    {
+      "type": "header",
+      "content": "Tailles de texte - Desktop"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Taille titre (Desktop)",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "label": "Taille sous-titre (Desktop)",
+      "min": 14,
+      "max": 30,
+      "step": 1,
+      "default": 19,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "product_title_size_desktop",
+      "label": "Taille titre produit (Desktop)",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "description_size_desktop",
+      "label": "Taille description (Desktop)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 15,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "price_size_desktop",
+      "label": "Taille prix (Desktop)",
+      "min": 18,
+      "max": 50,
+      "step": 2,
+      "default": 32,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "old_price_size_desktop",
+      "label": "Taille ancien prix (Desktop)",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "badge_size_desktop",
+      "label": "Taille badge réduction (Desktop)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size_desktop",
+      "label": "Taille texte bouton (Desktop)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Tailles de texte - Mobile"
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Taille titre (Mobile)",
+      "min": 18,
+      "max": 40,
+      "step": 2,
+      "default": 32,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "label": "Taille sous-titre (Mobile)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "product_title_size_mobile",
+      "label": "Taille titre produit (Mobile)",
+      "min": 14,
+      "max": 30,
+      "step": 1,
+      "default": 21,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "description_size_mobile",
+      "label": "Taille description (Mobile)",
+      "min": 12,
+      "max": 18,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "price_size_mobile",
+      "label": "Taille prix (Mobile)",
+      "min": 16,
+      "max": 36,
+      "step": 2,
+      "default": 26,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "old_price_size_mobile",
+      "label": "Taille ancien prix (Mobile)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 15,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "badge_size_mobile",
+      "label": "Taille badge réduction (Mobile)",
+      "min": 8,
+      "max": 14,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_text_size_mobile",
+      "label": "Taille texte bouton (Mobile)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Espacement & Padding"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_desktop",
+      "label": "Padding section (Desktop)",
+      "min": 40,
+      "max": 150,
+      "step": 10,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_mobile",
+      "label": "Padding section (Mobile)",
+      "min": 20,
+      "max": 100,
+      "step": 10,
+      "default": 50,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "card_padding_desktop",
+      "label": "Padding cartes (Desktop)",
+      "min": 15,
+      "max": 60,
+      "step": 5,
+      "default": 30,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "card_padding_mobile",
+      "label": "Padding cartes (Mobile)",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "default": 25,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Bordures & Coins"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "label": "Coins arrondis cartes",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "label": "Épaisseur bordure cartes",
+      "min": 0,
+      "max": 8,
+      "step": 1,
+      "default": 2,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "image_border_radius",
+      "label": "Coins arrondis images",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Coins arrondis boutons",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "label": "Épaisseur bordure boutons",
+      "min": 0,
+      "max": 6,
+      "step": 1,
+      "default": 2,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Couleurs des boutons"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Couleur bordure boutons",
+      "default": "#8B0000"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Couleur fond bouton (hover)",
+      "default": "#8B0000"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Produit Ebook",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Sélectionner le produit"
+        },
+        {
+          "type": "textarea",
+          "id": "custom_description",
+          "label": "Description personnalisée",
+          "info": "Laissez vide pour utiliser la description du produit"
+        },
+        {
+          "type": "text",
+          "id": "fallback_icon",
+          "label": "Icône de remplacement",
+          "default": "👁️",
+          "info": "Affiché si le produit n'a pas d'image (emoji ou caractère spécial)"
+        },
+        {
+          "type": "header",
+          "content": "Prix et Réduction"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_old_price",
+          "label": "Afficher l'ancien prix",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "old_price",
+          "label": "Ancien prix",
+          "default": "64.99",
+          "info": "Entrez seulement le nombre (ex: 64.99)"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_discount_badge",
+          "label": "Afficher le badge de réduction",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "discount_percentage",
+          "label": "Pourcentage de réduction",
+          "default": "60",
+          "info": "Entrez seulement le nombre (ex: 60 pour -60%)"
+        },
+        {
+          "type": "header",
+          "content": "Boutons d'achat"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_apple_pay",
+          "label": "Afficher le bouton Apple Pay",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "apple_pay_text",
+          "label": "Texte du bouton Apple Pay",
+          "default": "Acheter avec Apple Pay"
+        },
+        {
+          "type": "text",
+          "id": "buy_button_text",
+          "label": "Texte du bouton d'achat",
+          "default": "Ajouter au panier"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Conspiracy Ebooks",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "fallback_icon": "👁️",
+            "old_price": "64.99",
+            "discount_percentage": "60"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "fallback_icon": "🛸",
+            "old_price": "59.99",
+            "discount_percentage": "55"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "fallback_icon": "🏛️",
+            "old_price": "69.99",
+            "discount_percentage": "65"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

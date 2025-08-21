@@ -1,0 +1,344 @@
+<style>
+.compare-section {
+  padding: 4rem 2rem;
+  background: linear-gradient(to bottom, #0f001a, #000);
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  text-align: center;
+  position: relative;
+}
+
+.compare-title {
+  font-size: {{ section.settings.title_size_desktop }}px;
+  background: linear-gradient(90deg, #FFD700, #ff00c8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px rgba(255, 0, 200, 0.5);
+}
+
+.compare-subtitle {
+  font-size: {{ section.settings.subtitle_size_desktop }}px;
+  color: #ccc;
+  margin-bottom: 3rem;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.compare-table {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto 2rem auto;
+  border-collapse: collapse;
+  background: linear-gradient(135deg, #1c0036 50%, #2b003d 50%);
+  border-radius: 24px;
+  box-shadow: 0 0 30px rgba(255, 0, 255, 0.2);
+  overflow: hidden;
+}
+
+.compare-table th,
+.compare-table td {
+  padding: 1.2rem;
+  text-align: left;
+  vertical-align: middle;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.compare-table th {
+  background-color: transparent;
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+}
+
+.compare-table td {
+  font-size: {{ section.settings.argument_size_desktop }}px;
+  font-weight: {{ section.settings.argument_bold_desktop }};
+}
+
+.compare-table img.left-icon {
+  width: {{ section.settings.left_icon_size_desktop }}px;
+  height: {{ section.settings.left_icon_size_desktop }}px;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+.compare-table img.right-icon {
+  width: {{ section.settings.right_icon_size_desktop }}px;
+  height: {{ section.settings.right_icon_size_desktop }}px;
+  vertical-align: middle;
+  margin-right: 0.5rem;
+}
+
+.trust-icons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.trust-icons img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.4);
+}
+
+@media (max-width: 768px) {
+  .compare-title {
+    font-size: {{ section.settings.title_size_mobile }}px;
+  }
+
+  .compare-subtitle {
+    font-size: {{ section.settings.subtitle_size_mobile }}px;
+  }
+
+  .compare-table th {
+  font-size: 1.3rem;
+}
+
+  .compare-table td {
+    font-size: {{ section.settings.argument_size_mobile }}px;
+    font-weight: {{ section.settings.argument_bold_mobile }};
+  }
+
+  .compare-table img.left-icon {
+    width: {{ section.settings.left_icon_size_mobile }}px;
+    height: {{ section.settings.left_icon_size_mobile }}px;
+  }
+
+  .compare-table img.right-icon {
+    width: {{ section.settings.right_icon_size_mobile }}px;
+    height: {{ section.settings.right_icon_size_mobile }}px;
+  }
+}
+</style>
+
+<section class="compare-section">
+  <div class="compare-title">{{ section.settings.main_title }}</div>
+  <div class="compare-subtitle">{{ section.settings.subtitle }}</div>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>{{ section.settings.left_title }}</th>
+        <th>{{ section.settings.right_title }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for block in section.blocks %}
+        {% if block.type == 'row' %}
+        <tr>
+          <td style="color: {{ block.settings.left_text_color }}">
+            <img class="left-icon" src="{{ block.settings.left_icon | img_url: '50x' }}" alt="✔" />
+            {{ block.settings.left_text }}
+          </td>
+          <td style="color: {{ block.settings.right_text_color }}">
+            <img class="right-icon" src="{{ block.settings.right_icon | img_url: '50x' }}" alt="✖" />
+            {{ block.settings.right_text }}
+          </td>
+        </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="trust-icons">
+    {% for block in section.blocks %}
+      {% if block.type == 'trust_badge' %}
+        <img src="{{ block.settings.icon | img_url: '50x' }}" alt="Badge confiance" />
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Comparatif R36",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Titre principal",
+      "default": "R36S vs Autres Consoles"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Que nous choisissez ?"
+    },
+    {
+      "type": "text",
+      "id": "left_title",
+      "label": "Titre colonne gauche",
+      "default": "R36S"
+    },
+    {
+      "type": "text",
+      "id": "right_title",
+      "label": "Titre colonne droite",
+      "default": "Autres consoles"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Taille titre desktop",
+      "default": 40,
+      "min": 20,
+      "max": 80
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Taille titre mobile",
+      "default": 28,
+      "min": 14,
+      "max": 60
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "label": "Taille sous-titre desktop",
+      "default": 22,
+      "min": 12,
+      "max": 50
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "label": "Taille sous-titre mobile",
+      "default": 16,
+      "min": 10,
+      "max": 40
+    },
+    {
+      "type": "range",
+      "id": "argument_size_desktop",
+      "label": "Taille texte argument desktop",
+      "default": 16,
+      "min": 10,
+      "max": 30
+    },
+    {
+      "type": "range",
+      "id": "argument_size_mobile",
+      "label": "Taille texte argument mobile",
+      "default": 14,
+      "min": 10,
+      "max": 24
+    },
+    {
+      "type": "select",
+      "id": "argument_bold_desktop",
+      "label": "Texte argument desktop - Gras",
+      "default": "normal",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "bold", "label": "Gras" }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "argument_bold_mobile",
+      "label": "Texte argument mobile - Gras",
+      "default": "normal",
+      "options": [
+        { "value": "normal", "label": "Normal" },
+        { "value": "bold", "label": "Gras" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "left_icon_size_desktop",
+      "label": "Taille icône R36S desktop",
+      "default": 28,
+      "min": 10,
+      "max": 100
+    },
+    {
+      "type": "range",
+      "id": "left_icon_size_mobile",
+      "label": "Taille icône R36S mobile",
+      "default": 24,
+      "min": 10,
+      "max": 80
+    },
+    {
+      "type": "range",
+      "id": "right_icon_size_desktop",
+      "label": "Taille icône Autres consoles desktop",
+      "default": 28,
+      "min": 10,
+      "max": 100
+    },
+    {
+      "type": "range",
+      "id": "right_icon_size_mobile",
+      "label": "Taille icône Autres consoles mobile",
+      "default": 24,
+      "min": 10,
+      "max": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Ligne de comparaison",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "left_icon",
+          "label": "Icône R36S"
+        },
+        {
+          "type": "text",
+          "id": "left_text",
+          "label": "Texte R36S"
+        },
+        {
+          "type": "color",
+          "id": "left_text_color",
+          "label": "Couleur texte R36S",
+          "default": "#ffffff"
+        },
+        {
+          "type": "image_picker",
+          "id": "right_icon",
+          "label": "Icône Autres Consoles"
+        },
+        {
+          "type": "text",
+          "id": "right_text",
+          "label": "Texte Autres Consoles"
+        },
+        {
+          "type": "color",
+          "id": "right_text_color",
+          "label": "Couleur texte Autres Consoles",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "trust_badge",
+      "name": "Badge de confiance",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icône du badge"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Comparatif R36S"
+    }
+  ]
+}
+{% endschema %}

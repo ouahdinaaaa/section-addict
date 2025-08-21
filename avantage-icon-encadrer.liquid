@@ -1,0 +1,100 @@
+<style>
+  .r36s-icons-section {
+    background-color: #000;
+    padding: 40px 20px;
+    font-family: 'Orbitron', sans-serif;
+  }
+
+  .r36s-icons-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #1a001f;
+    border-radius: 16px;
+    border: 1px solid #a472f5;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 30px;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(164, 114, 245, 0.2);
+  }
+
+  .r36s-icon-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .r36s-icon-block:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 15px rgba(164, 114, 245, 0.4);
+  }
+
+  .r36s-icon-block img {
+    height: 50px;
+    width: auto;
+    filter: brightness(1.2) saturate(1.5);
+  }
+
+  .r36s-icon-text {
+    font-size: 14px;
+    color: #fff;
+  }
+
+  @media (max-width: 600px) {
+    .r36s-icons-container {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 20px;
+    }
+
+    .r36s-icon-text {
+      font-size: 13px;
+    }
+  }
+</style>
+
+<div class="r36s-icons-section">
+  <div class="r36s-icons-container">
+    <div class="r36s-icon-block">
+      <img src="{{ section.settings.icon1 | image_url }}" alt="Paiement sécurisé">
+      <div class="r36s-icon-text">Paiement sécurisé</div>
+    </div>
+    <div class="r36s-icon-block">
+      <img src="{{ section.settings.icon2 | image_url }}" alt="10 000 jeux">
+      <div class="r36s-icon-text">+15 000 jeux inclus</div>
+    </div>
+    <div class="r36s-icon-block">
+      <img src="{{ section.settings.icon3 | image_url }}" alt="Batterie">
+      <div class="r36s-icon-text">Batterie longue durée</div>
+    </div>
+    <div class="r36s-icon-block">
+      <img src="{{ section.settings.icon4 | image_url }}" alt="Langue">
+      <div class="r36s-icon-text">Jouez dans votre langue</div>
+    </div>
+    <div class="r36s-icon-block">
+      <img src="{{ section.settings.icon5 | image_url }}" alt="Livraison">
+      <div class="r36s-icon-text">Livraison rapide & suivie</div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Avantages R36S",
+  "settings": [
+    { "type": "image_picker", "id": "icon1", "label": "Icône 1 - Paiement sécurisé" },
+    { "type": "image_picker", "id": "icon2", "label": "Icône 2 - Jeux inclus" },
+    { "type": "image_picker", "id": "icon3", "label": "Icône 3 - Batterie" },
+    { "type": "image_picker", "id": "icon4", "label": "Icône 4 - Langue" },
+    { "type": "image_picker", "id": "icon5", "label": "Icône 5 - Livraison" }
+  ],
+  "presets": [
+    {
+      "name": "Avantages R36S",
+      "category": "Sections personnalisées"
+    }
+  ]
+}
+{% endschema %}

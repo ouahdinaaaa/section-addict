@@ -1,0 +1,588 @@
+{% schema %}
+{
+  "name": "Nouveautés + Best-sellers",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Titre de la section", "default": "Nouveautés" },
+    { "type": "checkbox", "id": "title_bold", "label": "Titre en gras", "default": true },
+    { "type": "color", "id": "section_bg_color", "label": "Couleur de fond de la section", "default": "#ffffff" },
+    { "type": "color", "id": "label_bg_color", "label": "Couleur de fond de l'étiquette", "default": "#000000" },
+    { "type": "color", "id": "label_text_color", "label": "Couleur du texte de l'étiquette", "default": "#ffffff" },
+    { "type": "range", "id": "products_per_row_desktop", "label": "Produits par ligne (desktop)", "min": 1, "max": 4, "step": 1, "default": 2 },
+    { "type": "range", "id": "products_per_row_mobile", "label": "Produits par ligne (mobile)", "min": 1, "max": 3, "step": 1, "default": 1 },
+    { "type": "range", "id": "stars_size", "label": "Taille des étoiles", "min": 10, "max": 40, "step": 1, "default": 18 },
+    { "type": "range", "id": "price_size_mobile", "label": "Taille du prix (mobile)", "min": 10, "max": 30, "step": 1, "default": 14 },
+    { "type": "range", "id": "price_size_desktop", "label": "Taille du prix (desktop)", "min": 10, "max": 30, "step": 1, "default": 16 },
+    { "type": "range", "id": "sale_price_font_size", "label": "Taille du prix remisé (desktop)", "min": 10, "max": 50, "step": 1, "default": 18 },
+    { "type": "range", "id": "original_price_font_size", "label": "Taille du prix d'origine (desktop)", "min": 10, "max": 50, "step": 1, "default": 14 },
+    { "type": "range", "id": "original_price_font_size_mobile", "label": "Taille du prix d'origine (mobile)", "min": 10, "max": 30, "step": 1, "default": 12 },
+    { "type": "color", "id": "original_price_color", "label": "Couleur du prix d'origine", "default": "#000000" },
+    { "type": "range", "id": "original_price_stroke", "label": "Contour du texte du prix d'origine", "min": 0, "max": 5, "step": 0.1, "default": 0 },
+    { "type": "color", "id": "price_color", "label": "Couleur du prix", "default": "#000000" },
+    { "type": "color", "id": "text_color", "label": "Couleur du texte", "default": "#000000" },
+    { "type": "range", "id": "title_size_desktop", "label": "Taille du titre (desktop)", "min": 10, "max": 100, "step": 1, "default": 40 },
+    { "type": "range", "id": "title_size_mobile", "label": "Taille du titre (mobile)", "min": 10, "max": 60, "step": 1, "default": 28 },
+    { "type": "range", "id": "title_margin_bottom_desktop", "label": "Margin bottom du titre (desktop)", "min": -100, "max": 300, "step": 5, "default": 50 },
+    { "type": "range", "id": "title_margin_bottom_mobile", "label": "Margin bottom du titre (mobile)", "min": -100, "max": 300, "step": 5, "default": 30 },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Alignement des infos produit",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Gauche" },
+        { "value": "center", "label": "Centre" },
+        { "value": "right", "label": "Droite" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "info_spacing",
+      "label": "Espacement vertical entre les blocs d'infos (px)",
+      "min": -10,
+      "max": 20,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "number",
+      "id": "label_offset_default",
+      "label": "Décalage vertical de l'étiquette (sans offre exclusive)",
+      "default": 8
+    },
+    {
+      "type": "number",
+      "id": "label_offset_exclusive",
+      "label": "Décalage vertical de l'étiquette (avec offre exclusive)",
+      "default": -10
+    },
+    {
+      "type": "range",
+      "id": "exclusive_padding_top",
+      "label": "Padding Haut - Offre Exclusive",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "exclusive_padding_bottom",
+      "label": "Padding Bas - Offre Exclusive",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "exclusive_padding_left",
+      "label": "Padding Gauche - Offre Exclusive",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "exclusive_padding_right",
+      "label": "Padding Droite - Offre Exclusive",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "row_gap",
+      "label": "Espacement vertical entre les rangées de produits",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 32
+    },
+    { "type": "range", "id": "label_font_size", "label": "Taille de la police des étiquettes", "min": 10, "max": 40, "step": 1, "default": 12 },
+    {
+      "type": "select",
+      "id": "hover_animation",
+      "label": "Type d'animation au survol",
+      "default": "scale",
+      "options": [
+        { "value": "scale", "label": "Agrandissement" },
+        { "value": "lift", "label": "Élévation" },
+        { "value": "tilt", "label": "Inclinaison" },
+        { "value": "glow", "label": "Effet lumineux" }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Produit",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Produit" },
+        { "type": "text", "id": "etiquette", "label": "Texte de l'étiquette", "default": "Best-seller" },
+        { "type": "checkbox", "id": "exclusive", "label": "Afficher 'Offre Exclusive'", "default": false },
+        { "type": "checkbox", "id": "show_old_price", "label": "Afficher le prix d'origine + réduction", "default": false }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Nouveautés + Best-sellers" }]
+}
+{% endschema %}
+
+<section class="nouveautes-section" style="background-color: {{ section.settings.section_bg_color }};">
+  <div class="section-container">
+    <h2 class="section-title{% if section.settings.title_bold %} bold{% endif %}"
+        style="color: {{ section.settings.text_color }};">
+      {{ section.settings.title }}
+    </h2>
+
+    <div class="nouveautes-grid hover-{{ section.settings.hover_animation }}" 
+         style="--products-per-row-desktop: {{ section.settings.products_per_row_desktop }}; 
+                --products-per-row-mobile: {{ section.settings.products_per_row_mobile }}; 
+                --row-gap: {{ section.settings.row_gap }}px;">
+      {% for block in section.blocks %}
+        {% assign product = all_products[block.settings.product] %}
+        {% if product %}
+          <div class="product-card-container">
+            <div class="etiquette-wrapper" style="top: {% if block.settings.exclusive %}{{ section.settings.label_offset_exclusive }}{% else %}{{ section.settings.label_offset_default }}{% endif %}px;">
+              <div class="etiquette">{{ block.settings.etiquette }}</div>
+              {% if block.settings.exclusive %}
+                <div class="etiquette-exclusive" 
+                     style="padding: {{ section.settings.exclusive_padding_top }}px {{ section.settings.exclusive_padding_right }}px {{ section.settings.exclusive_padding_bottom }}px {{ section.settings.exclusive_padding_left }}px;">
+                  Offre Exclusive
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="product-card" style="color: {{ section.settings.text_color }};">
+              <div class="product-image-wrapper">
+                <a href="{{ product.url }}" class="product-link">
+                  <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}" class="product-image">
+                  <div class="overlay">
+                    <span class="view-details">Voir les détails</span>
+                  </div>
+                </a>
+              </div>
+
+              <div class="product-info">
+                <p class="product-title">{{ product.title }}</p>
+
+                <div class="price-container">
+                  <p class="product-price sale-price" style="font-size: {{ section.settings.sale_price_font_size }}px; color: {% if block.settings.exclusive %}#ffffff{% else %}{{ section.settings.price_color }}{% endif %};">
+                    {{ product.price | money_without_currency }} €
+                  </p>
+
+                  {% if block.settings.show_old_price %}
+                    <div class="original-price-container">
+                      <span class="original-price" style="color: {{ section.settings.original_price_color }}; font-size: {{ section.settings.original_price_font_size }}px; -webkit-text-stroke: {{ section.settings.original_price_stroke }}px;">
+                        Prix d'origine : 64,99 €
+                      </span>
+                      <span class="discount-badge bright-flash">-60%</span>
+                    </div>
+                  {% endif %}
+                </div>
+
+                {% assign age_groups = product.metafields.shopify.recommended_age_group.value %}
+                {% if age_groups.size > 0 %}
+                  <p class="product-age">
+                    {% for group in age_groups %}
+                      {{ group.label }}{% unless forloop.last %}, {% endunless %}
+                    {% endfor %}
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+.nouveautes-section {
+  padding: 3rem 0;
+  transition: background-color 0.3s ease;
+}
+
+.section-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 1rem;
+}
+
+.product-info > * {
+  margin-bottom: {{ section.settings.info_spacing }}px;
+  text-align: {{ section.settings.text_alignment }};
+}
+
+/* Titre amélioré sans gradients */
+.section-title {
+  font-size: {{ section.settings.title_size_desktop }}px;
+  margin-bottom: {{ section.settings.title_margin_bottom_desktop }}px;
+  text-align: center;
+  position: relative;
+  opacity: 0;
+  animation: fadeInDown 1s ease forwards;
+  /* Effet de relief subtil */
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 10px rgba(191, 6, 3, 0.2);
+  /* Effet de contour élégant */
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
+}
+
+.section-title.bold { 
+  font-weight: bold;
+}
+
+.section-title:not(.bold) { 
+  font-weight: normal; 
+}
+
+/* Ligne décorative améliorée */
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background-color: #BF0603;
+  border-radius: 4px;
+  box-shadow: 
+    0 2px 8px rgba(191, 6, 3, 0.4),
+    0 0 20px rgba(191, 6, 3, 0.2);
+  animation: lineGlow 2s ease-in-out infinite alternate;
+}
+
+/* Animation subtile pour la ligne */
+@keyframes lineGlow {
+  0% { 
+    box-shadow: 0 2px 8px rgba(191, 6, 3, 0.4);
+    transform: translateX(-50%) scale(1);
+  }
+  100% { 
+    box-shadow: 0 2px 12px rgba(191, 6, 3, 0.6);
+    transform: translateX(-50%) scale(1.05);
+  }
+}
+
+.nouveautes-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--products-per-row-desktop), 1fr);
+  column-gap: 2rem;
+  row-gap: var(--row-gap);
+}
+
+/* Container principal pour gérer les étiquettes au-dessus */
+.product-card-container {
+  position: relative;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.product-card-container:nth-child(1) { animation-delay: 0.1s; }
+.product-card-container:nth-child(2) { animation-delay: 0.2s; }
+.product-card-container:nth-child(3) { animation-delay: 0.3s; }
+.product-card-container:nth-child(4) { animation-delay: 0.4s; }
+
+.product-card {
+  text-align: center;
+  padding: 10px;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Étiquettes repositionnées au-dessus de la carte */
+.etiquette-wrapper {
+  position: absolute;
+  left: 8px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  pointer-events: none; /* Permet le survol de passer à travers */
+}
+
+.etiquette, .etiquette-exclusive {
+  display: inline-block;
+  font-weight: bold;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: {{ section.settings.label_font_size }}px;
+  transition: all 0.3s ease;
+  animation: bounceIn 1s ease;
+  pointer-events: auto; /* Réactive les événements pour les étiquettes */
+}
+
+.etiquette {
+  background: linear-gradient(135deg, {{ section.settings.label_bg_color }}, #333);
+  color: {{ section.settings.label_text_color }};
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.etiquette-exclusive {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  margin-top: 4px;
+  box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+  /* Padding contrôlable via les settings */
+}
+
+/* Animations de survol incluant les étiquettes */
+.product-card-container:hover .etiquette,
+.product-card-container:hover .etiquette-exclusive {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Animations de survol */
+.hover-scale .product-card-container:hover .product-card {
+  transform: scale(1.05);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.hover-lift .product-card-container:hover .product-card {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+.hover-tilt .product-card-container:hover .product-card {
+  transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+}
+
+.hover-glow .product-card-container:hover .product-card {
+  box-shadow: 0 0 30px rgba(216, 2, 2, 0.6);
+  border-color: rgba(152, 7, 7, 0.85);
+}
+
+.product-image-wrapper {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-link {
+  display: block;
+  position: relative;
+  text-decoration: none;
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  transition: all 0.4s ease;
+  border-radius: 8px;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.1);
+  filter: brightness(1.1);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.product-card:hover .overlay {
+  opacity: 1;
+}
+
+.view-details {
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+}
+
+.product-card:hover .view-details {
+  transform: translateY(0);
+}
+
+.product-title {
+  font-weight: bold;
+  margin-top: 1rem;
+  transition: color 0.3s ease;
+}
+
+.product-card:hover .product-title {
+  color: #BF0603;
+}
+
+.price-container {
+  text-align: left;
+  margin-top: -20px;
+}
+
+.sale-price {
+  font-weight: bold;
+  margin-bottom: 4px;
+  transition: all 0.3s ease;
+}
+
+.original-price-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: -10px;
+}
+
+.original-price {
+  text-decoration: line-through;
+  transition: all 0.3s ease;
+}
+
+/* Badge de réduction amélioré avec clignotement rouge vif */
+.discount-badge {
+  background: #FF0000; /* Rouge plus vif */
+  color: white;
+  padding: 4px 8px;
+  font-size: 0.8em;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(255, 0, 0, 0.4);
+}
+
+.bright-flash {
+  animation: brightFlash 1.5s ease-in-out infinite;
+}
+
+@keyframes brightFlash {
+  0%, 100% {
+    background-color: #FF0000;
+    box-shadow: 0 2px 6px rgba(255, 0, 0, 0.4);
+    transform: scale(1);
+  }
+  50% {
+    background-color: #FF3333; /* Rouge encore plus vif au clignotement */
+    box-shadow: 
+      0 2px 6px rgba(255, 0, 0, 0.6),
+      0 0 15px rgba(255, 0, 0, 0.4);
+    transform: scale(1.1);
+  }
+}
+
+/* Animations keyframes */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive */
+@media (max-width: 570px) {
+  .nouveautes-grid {
+    grid-template-columns: repeat(var(--products-per-row-mobile), 1fr);
+    column-gap: 1rem;
+  }
+  
+  .section-title {
+    font-size: {{ section.settings.title_size_mobile }}px;
+    margin-bottom: {{ section.settings.title_margin_bottom_mobile }}px;
+  }
+  
+  .sale-price {
+    font-size: {{ section.settings.price_size_mobile }}px !important;
+  }
+  
+  .original-price {
+    font-size: {{ section.settings.original_price_font_size_mobile }}px !important;
+  }
+
+  .product-image-wrapper {
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+}
+
+/* Amélioration de l'accessibilité */
+.product-card:focus-within {
+  outline: 2px solid rgb(112, 3, 14);
+  outline-offset: 4px;
+}
+
+.product-link:focus {
+  outline: none;
+}
+
+/* Effet de chargement */
+.nouveautes-section {
+  position: relative;
+}
+
+.nouveautes-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, rgb(189, 4, 4), rgb(1, 48, 156), rgb(23, 7, 129));
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+</style>

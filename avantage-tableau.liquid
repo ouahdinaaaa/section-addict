@@ -1,0 +1,299 @@
+{% schema %}
+{
+  "name": "Avantages R36S",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "intro_text",
+      "label": "Texte d'introduction",
+      "default": "Revivez les meilleurs moments du retro gaming avec la console R36S. Compacte et stylée, remplie de jeux cultes, elle est parfaite pour jouer partout."
+    },
+    {
+      "type": "textarea",
+      "id": "left_block",
+      "label": "Bloc de gauche (Caractéristiques)",
+      "default": "64Go ou 128Go\nÉmulateurs : GBA, NES, SNES, PS1, Arcade\nÉcran IPS 3.5″\nJusqu'à 6 heures de jeu continu\nDouble port manette intégré\nRecharge rapide via USB-C"
+    },
+    {
+      "type": "textarea",
+      "id": "right_block",
+      "label": "Bloc de droite (Pourquoi choisir)",
+      "default": "Console prête à jouer\nDes milliers de jeux classiques\nExpériences fluides et responsives\nLook rétro ultra stylé\nCompatible avec les enfants et les nostalgiques"
+    },
+    {
+      "type": "range",
+      "id": "intro_text_size_desktop",
+      "label": "Taille du texte d'intro (desktop)",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "intro_text_size_mobile",
+      "label": "Taille du texte d'intro (mobile)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "titre_text_size_desktop",
+      "label": "Taille des titres (desktop)",
+      "min": 18,
+      "max": 32,
+      "step": 1,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "titre_text_size_mobile",
+      "label": "Taille des titres (mobile)",
+      "min": 16,
+      "max": 28,
+      "step": 1,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "bloc_text_size_desktop",
+      "label": "Taille du texte dans les blocs (desktop)",
+      "min": 14,
+      "max": 24,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "bloc_text_size_mobile",
+      "label": "Taille du texte dans les blocs (mobile)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 15,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "table_title_size_desktop",
+      "label": "Taille des titres de tableau (desktop)",
+      "min": 14,
+      "max": 28,
+      "step": 1,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "table_title_size_mobile",
+      "label": "Taille des titres de tableau (mobile)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "badge_text_size_desktop",
+      "label": "Taille du texte des badges (desktop)",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "badge_text_size_mobile",
+      "label": "Taille du texte des badges (mobile)",
+      "min": 8,
+      "max": 18,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Avantages R36S"
+    }
+  ]
+}
+{% endschema %}
+
+
+<style>
+.r36s-section3 {
+  background: linear-gradient(to top, #000000, #10001f);
+  padding: 60px 20px;
+  font-family: 'Orbitron', sans-serif;
+  color: #fff;
+  text-align: center;
+}
+
+.r36s-section h2 {
+  font-size: 28px;
+  margin-bottom: 40px;
+  font-weight: 800;
+    color: #ff6ec4;
+  text-shadow: 0 0 10px rgba(255, 110, 196, 0.5);
+}
+
+.r36s-section h2 .highlight {
+  background: linear-gradient(90deg, #ff6c00, #ffcc00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.r36s-table {
+  max-width: 800px;
+  margin: 0 auto;
+  border: 2px solid #ff6ec4;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(255, 110, 196, 0.25);
+}
+
+.r36s-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 18px;
+}
+
+.r36s-table th,
+.r36s-table td {
+  padding: 18px;
+  text-align: center;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 110, 196, 0.15);
+}
+
+/* Tailles dynamiques des titres de colonnes */
+@media screen and (min-width: 769px) {
+  .r36s-table th {
+    font-size: {{ settings.table_title_size_desktop }}px;
+  }
+  .r36s-badge {
+    font-size: {{ settings.badge_text_size_desktop }}px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .r36s-table th {
+    font-size: 13px;
+  }
+  .r36s-badge {
+    font-size: 10px;
+    padding : 10px 10px;
+    border-radius:10px;
+  }
+
+  
+.r36s-table td:first-child {
+    font-weight: bold;
+    text-align: left;
+    font-size: 13px;
+}
+
+  .r36s-table th, .r36s-table td {
+    padding: 11px 3px;
+    text-align: center;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 110, 196, 0.15);
+}
+
+  
+.r36s-table td:first-child {
+  font-weight: bold;
+  text-align: left;
+}
+
+.r36s-badge {
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  width: max-content;
+  -webkit-text-stroke: 0.3px white;
+  color: #fff;
+  display: inline-block;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+}
+
+.badge-orange {
+  background: linear-gradient(to right, #ff6c00, #ffcc00);
+}
+
+.badge-blue {
+  background: linear-gradient(to right, #007cf0, #00dfd8);
+}
+
+.badge-red {
+  background: linear-gradient(to right, #ff4e50, #f00000);
+}
+
+.badge-green {
+  background: linear-gradient(to right, #00c851, #007e33);
+}
+
+.icon-check {
+  font-size: 20px;
+  color: #ffe600;
+  text-shadow: 0 0 8px rgba(255, 230, 0, 0.5);
+}
+
+.icon-cross {
+  font-size: 20px;
+  color: #ff4444;
+  text-shadow: 0 0 8px rgba(255, 0, 0, 0.5);
+}
+
+.h2 {
+  color: #ff6ec4;
+}
+  
+</style>
+
+<section class="r36s-section3">
+  <h2 style="color: #ff6ec4;font-size: 28px; font-weight: bold; margin-bottom: 50px; color: #ff91d2; animation: glowText 4s ease-in-out infinite alternate;">Pourquoi préférer la <span class="highlight">Gameboy R36S</span> ?</h2>
+  <div class="r36s-table">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Gameboy R36S</th>
+          <th>Autres retro consoles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Plus de jeux</td>
+          <td><span class="r36s-badge badge-orange">Plus de jeux</span></td>
+          <td><span class="icon-check">✔</span></td>
+        </tr>
+        <tr>
+          <td>Écran HD</td>
+          <td><span class="r36s-badge badge-blue">Écran HD</span></td>
+          <td><span class="icon-check">✔</span></td>
+        </tr>
+        <tr>
+          <td>Ultra portable</td>
+          <td><span class="r36s-badge badge-red">Ultra portable</span></td>
+          <td><span class="icon-cross">✖</span></td>
+        </tr>
+        <tr>
+          <td>Style vintage</td>
+          <td><span class="r36s-badge badge-green">Style vintage</span></td>
+          <td><span class="icon-check">✔</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>

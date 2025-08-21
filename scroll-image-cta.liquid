@@ -1,0 +1,293 @@
+<section class="cult-games-section">
+  <div class="text-block">
+    <h2 class="title" style="font-size: 30px;
+    background: linear-gradient(90deg, #FFD700, #ff00c8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(255, 0, 200, 0.5);">
+      {{ section.settings.title }}
+    </h2>
+    <p class="subtitle {% if section.settings.neon_effect %}neon{% endif %}"
+       style="color: {{ section.settings.subtitle_color }};
+              font-size: {{ section.settings.subtitle_size_desktop }}px;
+              {% if section.settings.bold_text %}font-weight: bold;{% endif %}">
+      {{ section.settings.subtitle }}
+    </p>
+  </div>
+
+  <div class="scroll-wrapper">
+    <div class="scroll-track" style="--scroll-speed: {{ section.settings.scroll_speed_desktop }}s; --scroll-speed-mobile: {{ section.settings.scroll_speed_mobile }}s;">
+      {% for block in section.blocks %}
+        {% if block.settings.image != blank %}
+          <div class="game-image"><img src="{{ block.settings.image | image_url: width: 400 }}" alt="Jeu" /></div>
+        {% endif %}
+      {% endfor %}
+      {% for block in section.blocks %}
+        {% if block.settings.image != blank %}
+          <div class="game-image"><img src="{{ block.settings.image | image_url: width: 400 }}" alt="Jeu" /></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="button-wrapper">
+    <a href="{{ section.settings.link }}" class="discover-btn"
+       style="background: {{ section.settings.button_color }};
+              font-size: {{ section.settings.button_size_desktop }}px;">
+      {{ section.settings.button_label }}
+    </a>
+  </div>
+</section>
+
+<style>
+
+.title h2 {
+    font-size: 42px;
+    background: linear-gradient(90deg, #FFD700, #ff00c8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px rgba(255, 0, 200, 0.5);
+}
+
+
+  
+  .cult-games-section {
+    text-align: center;
+    background : linear-gradient(to bottom, #000000, #120024);
+    color: white;
+    overflow: hidden;
+  }
+
+  .cult-games-section .neon {
+    text-shadow: 0 0 5px #fff, 0 0 10px #c832fa, 0 0 20px #c832fa;
+  }
+
+  .scroll-wrapper {
+    width: 100%;
+    overflow: hidden;
+    margin: 30px 0;
+  }
+
+  .scroll-track {
+    display: flex;
+    width: max-content;
+    gap: 20px;
+    animation: scroll-left linear infinite;
+    animation-duration: var(--scroll-speed);
+  }
+
+  .game-image img {
+    width: 220px;
+    height: auto;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+
+  .discover-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .discover-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #fff, 0 0 20px #c832fa;
+  }
+
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .cult-games-section .title {
+      font-size: {{ section.settings.title_size_mobile }}px;
+    }
+
+    .cult-games-section .subtitle {
+      font-size: {{ section.settings.subtitle_size_mobile }}px;
+    }
+
+    .discover-btn {
+      font-size: {{ section.settings.button_size_mobile }}px;
+    }
+
+    .scroll-track {
+      animation-duration: var(--scroll-speed-mobile) !important;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const track = document.querySelector('.scroll-track');
+    const clone = track.cloneNode(true);
+    // Pas besoin d'ajouter le clone, car on double déjà via Liquid.
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Section Jeux Cultes",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre principal",
+      "default": "Explore les jeux cultes inclus dans la console"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Retrouve les classiques de ton enfance et fais défiler les pépites rétro qui t’attendent ✨"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texte du bouton",
+      "default": "Découvrir tous les jeux"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Couleur du titre",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Couleur du sous-titre",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Taille du titre (desktop)",
+      "min": 12,
+      "max": 72,
+      "default": 36,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "label": "Taille du sous-titre (desktop)",
+      "min": 10,
+      "max": 48,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Taille du titre (mobile)",
+      "min": 12,
+      "max": 48,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "label": "Taille du sous-titre (mobile)",
+      "min": 10,
+      "max": 32,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "color_background",
+      "id": "button_color",
+      "label": "Couleur du bouton",
+      "default": "#712b96"
+    },
+    {
+      "type": "range",
+      "id": "button_size_desktop",
+      "label": "Taille du texte du bouton (desktop)",
+      "min": 10,
+      "max": 36,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_size_mobile",
+      "label": "Taille du texte du bouton (mobile)",
+      "min": 10,
+      "max": 28,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed_desktop",
+      "label": "Vitesse de scroll (desktop, en secondes)",
+      "min": 5,
+      "max": 60,
+      "default": 20,
+      "unit": "s"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed_mobile",
+      "label": "Vitesse de scroll (mobile, en secondes)",
+      "min": 5,
+      "max": 60,
+      "default": 30,
+      "unit": "s"
+    },
+    {
+      "type": "checkbox",
+      "id": "bold_text",
+      "label": "Mettre le texte en gras",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "neon_effect",
+      "label": "Activer l'effet néon sur les textes",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image de jeu",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Jeux cultes rétro",
+      "category": "Bannière"
+    }
+  ]
+}
+{% endschema %}

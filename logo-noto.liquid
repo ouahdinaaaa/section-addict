@@ -1,0 +1,183 @@
+{% schema %}
+{
+  "name": "Section 'As Seen In'",
+  "settings": [
+    {
+      "type": "text",
+      "id": "section_title",
+      "label": "Titre de la section",
+      "default": "As Seen In"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_1",
+      "label": "Couleur de fond 1 (dégradé)",
+      "default": "#0d1b2a"
+    },
+    {
+      "type": "color",
+      "id": "bg_color_2",
+      "label": "Couleur de fond 2 (dégradé)",
+      "default": "#2b2d42"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Taille du texte - Desktop",
+      "min": 16,
+      "max": 48,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Taille du texte - Mobile",
+      "min": 12,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "icon_size_desktop",
+      "label": "Taille des logos - Desktop",
+      "min": 20,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "label": "Taille des logos - Mobile",
+      "min": 16,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_1",
+      "label": "Logo 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_2",
+      "label": "Logo 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_3",
+      "label": "Logo 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_4",
+      "label": "Logo 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_5",
+      "label": "Logo 5"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Section As Seen In"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .as-seen-in-section {
+    padding: 40px 20px;
+    background: linear-gradient(to right, {{ section.settings.bg_color_1 }}, {{ section.settings.bg_color_2 }});
+    text-align: center;
+    color: white;
+  }
+
+  .as-seen-in-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+
+  .as-seen-in-title::before,
+  .as-seen-in-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: white;
+    max-width: 200px;
+  }
+
+  .as-seen-in-title-text {
+    font-weight: bold;
+  }
+
+  .as-seen-in-logos {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .as-seen-in-logos img {
+    height: {{ section.settings.icon_size_desktop }}px;
+    object-fit: contain;
+    max-width: 100%;
+    transition: transform 0.3s ease;
+  }
+
+  .as-seen-in-logos img:hover {
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    .as-seen-in-title-text {
+      font-size: {{ section.settings.title_size_mobile }}px !important;
+    }
+
+    .as-seen-in-logos img {
+      height: {{ section.settings.icon_size_mobile }}px;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .as-seen-in-title-text {
+      font-size: {{ section.settings.title_size_desktop }}px;
+    }
+  }
+</style>
+
+<div class="as-seen-in-section">
+  <div class="as-seen-in-title">
+    <span class="as-seen-in-title-text">{{ section.settings.section_title }}</span>
+  </div>
+  <div class="as-seen-in-logos">
+    {% if section.settings.logo_1 != blank %}
+      <img src="{{ section.settings.logo_1 | image_url }}" alt="Logo 1">
+    {% endif %}
+    {% if section.settings.logo_2 != blank %}
+      <img src="{{ section.settings.logo_2 | image_url }}" alt="Logo 2">
+    {% endif %}
+    {% if section.settings.logo_3 != blank %}
+      <img src="{{ section.settings.logo_3 | image_url }}" alt="Logo 3">
+    {% endif %}
+    {% if section.settings.logo_4 != blank %}
+      <img src="{{ section.settings.logo_4 | image_url }}" alt="Logo 4">
+    {% endif %}
+    {% if section.settings.logo_5 != blank %}
+      <img src="{{ section.settings.logo_5 | image_url }}" alt="Logo 5">
+    {% endif %}
+  </div>
+</div>

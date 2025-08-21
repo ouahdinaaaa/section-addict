@@ -1,0 +1,217 @@
+{% schema %}
+{
+  "name": "How to use Spacegoods",
+  "tag": "section",
+  "class": "how-to-use-spacegoods",
+  "settings": [
+    {
+      "type": "text",
+      "id": "main_title",
+      "label": "Titre principal",
+      "default": "How to use Spacegoods"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Taille du titre (Desktop)",
+      "default": 32,
+      "min": 16,
+      "max": 64,
+      "step": 1,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Taille du titre (Mobile)",
+      "default": 24,
+      "min": 14,
+      "max": 40,
+      "step": 1,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "step",
+      "name": "Étape",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "step_image",
+          "label": "Image de l’étape"
+        },
+        {
+          "type": "text",
+          "id": "step_title",
+          "label": "Titre de l’étape",
+          "default": "STEP 1"
+        },
+        {
+          "type": "textarea",
+          "id": "step_subtitle",
+          "label": "Sous-titre",
+          "default": "Texte explicatif"
+        },
+        {
+          "type": "range",
+          "id": "step_title_size_desktop",
+          "label": "Taille du titre étape (Desktop)",
+          "default": 18,
+          "min": 12,
+          "max": 32,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "step_title_size_mobile",
+          "label": "Taille du titre étape (Mobile)",
+          "default": 16,
+          "min": 10,
+          "max": 28,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "checkbox",
+          "id": "step_title_bold",
+          "label": "Titre en gras",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "step_subtitle_size_desktop",
+          "label": "Taille du sous-titre (Desktop)",
+          "default": 14,
+          "min": 10,
+          "max": 28,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "range",
+          "id": "step_subtitle_size_mobile",
+          "label": "Taille du sous-titre (Mobile)",
+          "default": 12,
+          "min": 10,
+          "max": 24,
+          "step": 1,
+          "unit": "px"
+        },
+        {
+          "type": "checkbox",
+          "id": "step_subtitle_bold",
+          "label": "Sous-titre en gras",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "max_blocks": 4,
+  "presets": [
+    {
+      "name": "How to use Spacegoods",
+      "category": "Contenu",
+      "blocks": [
+        { "type": "step" },
+        { "type": "step" },
+        { "type": "step" },
+        { "type": "step" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<div class="how-to-container">
+  <h2 class="main-title">{{ section.settings.main_title }}</h2>
+  <div class="steps-wrapper">
+    {% for block in section.blocks %}
+      <div class="step-card">
+        {% if block.settings.step_image %}
+          <img src="{{ block.settings.step_image | image_url: width: 600 }}" alt="Step image" loading="lazy" />
+        {% endif %}
+        <h3 class="step-title" style="
+          font-size: {{ block.settings.step_title_size_desktop }}px;
+          font-weight: {{ block.settings.step_title_bold | default: false | if: 'bold', 'normal' }};
+        ">{{ block.settings.step_title }}</h3>
+        <p class="step-subtitle" style="
+          font-size: {{ block.settings.step_subtitle_size_desktop }}px;
+          font-weight: {{ block.settings.step_subtitle_bold | default: false | if: 'bold', 'normal' }};
+        ">{{ block.settings.step_subtitle }}</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .how-to-container {
+    padding: 40px 20px;
+    text-align: center;
+    background : #e7f0fe;
+  }
+
+  .main-title {
+    margin-bottom: 40px;
+    font-weight:bold;
+  }
+
+  .steps-wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .step-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  }
+
+  .step-card img {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .step-title {
+    margin-top: 16px;
+    margin-bottom: 8px;
+    font-weight:bold;
+    text-align : left;
+  }
+
+  .step-subtitle {
+    margin: 0;
+    color: #535353;
+    font-weight:bold;
+    text-align : left;
+    
+  }
+
+  @media (max-width: 768px) {
+    .main-title {
+      font-size: {{ section.settings.title_size_mobile }}px !important;
+    }
+
+    .steps-wrapper {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .step-title {
+      font-size: {{ block.settings.step_title_size_mobile }}px !important;
+    }
+
+    .step-subtitle {
+      font-size: {{ block.settings.step_subtitle_size_mobile }}px !important;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .main-title {
+      font-size: {{ section.settings.title_size_desktop }}px !important;
+    }
+  }
+</style>

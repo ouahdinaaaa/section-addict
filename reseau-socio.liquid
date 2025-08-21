@@ -1,0 +1,246 @@
+<style>
+  .social-section {
+    background-color: #fff;
+    font-family: 'Quicksand', sans-serif;
+    color: #000;
+    text-align: {{ section.settings.title_align }};
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  .container-social {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: {{ section.settings.padding_left_desktop }}px;
+    padding-right: {{ section.settings.padding_right_desktop }}px;
+  }
+
+  .container-social h2 {
+    font-size: {{ section.settings.title_size }}px;
+    font-weight: {% if section.settings.title_bold %}bold{% else %}normal{% endif %};
+    color: {{ section.settings.title_color }};
+    margin-bottom: 20px;
+  }
+
+  .social-icons {
+    display: flex;
+    gap: {{ section.settings.icon_gap_desktop }}px;
+    margin-top: 10px;
+  }
+
+  .social-icons a img {
+    width: {{ section.settings.icon_size_desktop }}px;
+    height: {{ section.settings.icon_size_desktop }}px;
+    transition: transform 0.3s ease;
+  }
+
+  .social-icons a img:hover {
+    transform: scale(1.1);
+  }
+
+  @media (max-width: 767px) {
+    .container-social {
+      padding-left: {{ section.settings.padding_left_mobile }}px;
+      padding-right: {{ section.settings.padding_right_mobile }}px;
+    }
+    .social-icons {
+      gap: {{ section.settings.icon_gap_mobile }}px;
+    }
+    .social-icons a img {
+      width: {{ section.settings.icon_size_mobile }}px;
+      height: {{ section.settings.icon_size_mobile }}px;
+    }
+  }
+</style>
+
+<div class="social-section">
+  <div class="container-social">
+    <h2>{{ section.settings.title }}</h2>
+    <div class="social-icons">
+      {% if section.settings.facebook_icon != blank %}
+        <a href="{{ section.settings.facebook_link }}" target="_blank">
+          <img src="{{ section.settings.facebook_icon | image_url }}" alt="Facebook">
+        </a>
+      {% endif %}
+      {% if section.settings.instagram_icon != blank %}
+        <a href="{{ section.settings.instagram_link }}" target="_blank">
+          <img src="{{ section.settings.instagram_icon | image_url }}" alt="Instagram">
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Réseaux sociaux",
+  "tag": "section",
+  "class": "section-social-follow",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre de la section",
+      "default": "Nous suivre"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Taille du titre",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "title_bold",
+      "label": "Texte en gras",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "title_align",
+      "label": "Alignement du titre",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Gauche" },
+        { "value": "center", "label": "Centré" }
+      ]
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Couleur du titre",
+      "default": "#000000"
+    },
+    {
+      "type": "image_picker",
+      "id": "facebook_icon",
+      "label": "Icône Facebook"
+    },
+    {
+      "type": "url",
+      "id": "facebook_link",
+      "label": "Lien Facebook"
+    },
+    {
+      "type": "image_picker",
+      "id": "instagram_icon",
+      "label": "Icône Instagram"
+    },
+    {
+      "type": "url",
+      "id": "instagram_link",
+      "label": "Lien Instagram"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding haut",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding bas",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_left_desktop",
+      "label": "Padding gauche (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_right_desktop",
+      "label": "Padding droite (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_left_mobile",
+      "label": "Padding gauche (mobile)",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_right_mobile",
+      "label": "Padding droite (mobile)",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "icon_gap_desktop",
+      "label": "Espace entre les icônes (desktop)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 30,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "icon_gap_mobile",
+      "label": "Espace entre les icônes (mobile)",
+      "min": 0,
+      "max": 50,
+      "step": 5,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "icon_size_desktop",
+      "label": "Taille des icônes (desktop)",
+      "min": 20,
+      "max": 100,
+      "step": 2,
+      "default": 40,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "icon_size_mobile",
+      "label": "Taille des icônes (mobile)",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "default": 30,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Réseaux sociaux responsive",
+      "category": "Contact"
+    }
+  ]
+}
+{% endschema %}

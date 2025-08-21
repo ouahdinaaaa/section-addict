@@ -1,0 +1,925 @@
+<style>
+  .astro-product-section {
+    display: flex;
+    flex-wrap: wrap;
+    background: #e7f0ff;
+    padding: 2rem;
+  }
+
+  .astro-left, .astro-right {
+    flex: 1 1 50%;
+    box-sizing: border-box;
+  }
+
+.astro-selected-qty {
+  color : black;
+  font-weight : bold;
+}
+  
+  .astro-left {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+  }
+
+
+.astro-selected-color {
+  color :black;
+  font-weight : bold;
+}
+  
+  .astro-main-image {
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .astro-thumbnails {
+    display: flex;
+    justify-content: left;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .astro-thumbnails img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .astro-right {
+    padding-left: 2rem;
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+
+  .astro-title {
+    color: #093b81;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .astro-price-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 2rem;
+  }
+
+  .astro-price-initial {
+    text-decoration: line-through;
+    color: #999;
+  }
+
+  .astro-price-discounted {
+    color: #000;
+    font-weight: bold;
+    font-size : 2rem;
+  }
+
+  .astro-price-tag {
+    background: #093b81;
+    color: #fff;
+    font-size: 0.9rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+  }
+
+  .astro-info {
+    margin-top: 1rem;
+    line-height: 1.6;
+  }
+
+  .astro-quantity-options {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .astro-quantity-box {
+    flex: 1;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+    color:black;
+    -webkit-text-stroke: 0.6px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .astro-quantity-box .badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    width:max-content;
+  }
+
+  .astro-quantity-box img {
+    height: 50px;
+    margin-bottom: 0.5rem;
+  }
+
+  .astro-gift-title {
+    font-weight: bold;
+    font-size: 1.3rem;
+    margin: 1rem 0 0.5rem;
+    color : black;
+  }
+
+  .astro-gift-grid {
+    display: flex;
+    gap: 1rem;
+    width: 140px;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .astro-gift {
+    flex: 1 1 30%;
+    border: 2px dashed rgb(37 77 138);
+    border-radius: 10px;
+    /* padding: 1rem; */
+    position: relative;
+    text-align: center;
+    background: #fff;
+  }
+
+  .astro-gift .strike {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #000;
+    color: #fff;
+    font-size: 1.3rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 5px;
+    text-decoration: line-through;
+  }
+
+  .astro-gift img {
+    height: 60px;
+    margin-top: 20px;
+    margin-bottom: -10px;
+  }
+
+  .astro-gift .free {
+    color: green;
+    font-weight: bold;
+  }
+
+  .astro-scroll-icons {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .astro-scroll-icons div {
+    flex: 1;
+    text-align: center;
+    color: #003366;
+    background: #003366;
+    color: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+
+  .astro-scroll-icons p {
+    margin-top: 0.5rem;
+    text-align: center;
+    color: #003366;
+    font-size: 0.85rem;
+  }
+
+  .astro-add-btn {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    text-align: center;
+    background: #000;
+    color: #fff;
+    font-size: 1.7rem;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-weight : bold;
+  }
+
+  .astro-add-btn:hover {
+    background: #333;
+  }
+
+  .astro-add-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .astro-guarantee {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+  }
+
+  details {
+    background: #fff;
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+    padding: 1rem;
+    cursor: pointer;
+  }
+
+  summary {
+    font-weight: bold;
+  }
+
+@media screen and (max-width: 768px) {
+  .astro-quantity-options {
+    padding-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .astro-quantity-box {
+    /* min-width: 115px; */
+  }
+
+  .astro-product-section {
+    display:grid;
+ }
+  .astro-left {
+    position: static;
+    top: auto;
+    align-self: auto;
+  }
+
+  .astro-right {
+    padding-left: 0;
+    max-height: none;
+  }
+}
+
+  .astro-quantity-box.selected {
+  border-color: #093b81;
+  box-shadow: 0 0 0 2px #093b81;
+  transition: all 0.3s ease;
+}
+
+.astro-feature-list {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-top: 1.5rem;
+}
+
+.astro-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.astro-feature-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0, 91, 211, 1), black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.astro-feature-text {
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #000;
+  -webkit-text-stroke: 0.5px black;
+}
+
+.qty-inline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  flex-wrap: nowrap;
+  font-size:10px;
+}
+
+.qty-inline img {
+  height: 40px;
+  width: auto;
+}
+
+.astro-color-options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width:min-content;
+}
+
+.astro-color-box {
+  flex: 1;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  color: black;
+  -webkit-text-stroke: 0.6px;
+}
+
+.astro-color-box.selected {
+  border-color: #093b81;
+  box-shadow: 0 0 0 2px #093b81;
+  transition: all 0.3s ease;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  display: none;
+}
+
+/* Nouveaux styles pour le prix ancien et le badge SAVE */
+.astro-old-price {
+  text-decoration: line-through;
+  color: black;
+  font-size: 2rem;
+}
+
+.astro-save-badge {
+  background: #3d5afe;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.info-products {
+    color: black;
+    font-size: 1.5rem;
+    margin-bottom: -10px;
+    margin-left: 5px;
+}
+
+
+.stock-alert {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #ffe5e5;
+  color: #c0392b;
+  font-weight: bold;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  animation: pulseBorder 1.5s infinite ease-in-out;
+}
+
+.stock-dot {
+  width: 10px;
+  height: 10px;
+  background-color: #e74c3c;
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+  
+</style>
+
+<section class="astro-product-section">
+  <div class="astro-left">
+    <img class="astro-main-image" src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product.title }}">
+    <div class="astro-thumbnails">
+      {% for image in product.images %}
+        <img src="{{ image | img_url: '100x100' }}" onclick="document.querySelector('.astro-main-image').src=this.src">
+      {% endfor %}
+    </div>
+  </div>
+
+  
+  <div class="astro-right">
+    <div class="astro-title">{{ product.title }}</div>
+
+    <div class="astro-price-row">
+      <!-- Prix total selon la quantité -->
+      <div class="astro-price-discounted" id="totalPrice">
+        {{ product.price | money }}
+      </div>
+      
+      <!-- Prix ancien barré -->
+      <div class="astro-old-price" id="oldPrice">
+        {{ section.settings.old_price_1 }}
+      </div>
+      
+      <!-- Badge SAVE -->
+      <div class="astro-save-badge" id="saveBadge">
+        {{ section.settings.save_text }} {{ section.settings.save_amount_1 }}
+      </div>
+    </div>
+
+ <p class="info-products"> Information du produit </p>
+<div class="astro-info astro-feature-list">
+  {% for block in section.blocks %}
+    {% if block.type == 'feature' %}
+      <div class="astro-feature-item">
+        <div class="astro-feature-icon">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+            <path d="M9 16.2l-3.5-3.6L4 14l5 5 12-12-1.5-1.4z"/>
+          </svg>
+        </div>
+        <div class="astro-feature-text">{{ block.settings.feature_text }}</div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+              
+<p class="astro-selected-color">Couleur : <span id="selectedColor">Or</span></p>
+<div class="astro-color-options">
+  <div class="astro-color-box selected" data-color="gold" onclick="selectColor(this)">
+    <div class="qty-inline">
+      <img src="{{ section.settings.color_image_gold | img_url: '100x100' }}" alt="Or" />
+    </div>
+  </div>
+  <div class="astro-color-box" data-color="gray" onclick="selectColor(this)">
+    <div class="qty-inline">
+      <img src="{{ section.settings.color_image_gray | img_url: '100x100' }}" alt="Gris" />
+    </div>
+  </div>
+</div>
+
+<p class="astro-selected-qty">Quantité : <span id="selectedQty">1</span></p>
+<div class="astro-quantity-options">
+  {% assign qty_settings = "1,2,3" | split: "," %}
+  {% for i in qty_settings %}
+    {% capture badge_key %}badge_{{ i }}{% endcapture %}
+    {% capture icon_gold_key %}qty_icon_{{ i }}_gold{% endcapture %}
+    {% capture icon_gray_key %}qty_icon_{{ i }}_gray{% endcapture %}
+    {% capture label_key %}qty_label_{{ i }}{% endcapture %}
+
+    <div class="astro-quantity-box" data-qty="{{ i }}" onclick="selectQuantity(this)">
+      <div class="badge" style="
+        font-size: {{ section.settings.badge_font_size }}px;
+        padding: {{ section.settings.badge_padding_y }}px {{ section.settings.badge_padding_x }}px;">
+        {{ section.settings[badge_key] }}
+      </div>
+      <div class="qty-inline">
+        <img class="qty-icon" 
+             data-gold-src="{{ section.settings[icon_gold_key] | img_url: '100x100' }}"
+             data-gray-src="{{ section.settings[icon_gray_key] | img_url: '100x100' }}"
+             src="{{ section.settings[icon_gold_key] | img_url: '100x100' }}">
+        <div>{{ section.settings[label_key] }}</div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+    <div class="astro-gift-title">{{ section.settings.gift_title }}</div>
+    <div class="astro-gift-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'gift' %}
+          <div class="astro-gift">
+            <div class="strike">{{ block.settings.old_price }}</div>
+            <img src="{{ block.settings.image | img_url: '200x' }}">
+            <div class="free">FREE <span style="color:black;"> {{ block.settings.label }} </span></div> 
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="astro-scroll-icons">
+      <p>{{ section.settings.icon_label_1 }}</p>
+      <p>{{ section.settings.icon_label_2 }}</p>
+      <p>{{ section.settings.icon_label_3 }}</p>
+      <p>{{ section.settings.icon_label_4 }}</p>
+    </div>
+
+    <div class="astro-info">{{ section.settings.below_scroll_text }}</div>
+
+    <form method="post" action="/cart/add" id="addToCartForm">
+      <input type="hidden" name="id" id="variantId" value="">
+      <input type="hidden" name="quantity" id="quantityInput" value="1">
+      <input type="hidden" name="properties[Couleur]" id="colorProperty" value="Or">
+
+
+        <div class="stock-alert">
+          <span class="stock-dot"></span>
+          Stock limité : 4 restant
+        </div>
+
+      <button type="submit" class="astro-add-btn" id="addToCartBtn">
+        {{ section.settings.button_text }} - <span id="dynamicPrice">{{ product.price | money }}</span>
+      </button>
+      
+      <div class="error-message" id="errorMessage">
+        Veuillez sélectionner une variante disponible.
+      </div>
+    </form>
+
+    <div class="astro-guarantee">{{ section.settings.guarantee }}</div>
+
+    <details>
+      <summary>Détails du produit</summary>
+      <div>{{ product.description }}</div>
+    </details>
+
+    <details>
+      <summary>Contenu du Colis</summary>
+      <div>{{ section.settings.contenus_colis }}</div>
+    </details>
+
+    <details>
+      <summary>Livraison & Retour</summary>
+      <div>{{ section.settings.livraison }}</div>
+    </details>
+</div>
+</section>
+
+<script>
+  // Variables globales pour les données produit
+  const productData = {
+    variants: [
+      {% for variant in product.variants %}
+        {
+          id: {{ variant.id }},
+          price: {{ variant.price }},
+          available: {{ variant.available | json }},
+          option1: "{{ variant.option1 | escape }}",
+          option2: "{{ variant.option2 | escape }}",
+          option3: "{{ variant.option3 | escape }}"
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ],
+    currency: "{{ cart.currency.symbol }}",
+    basePrice: {{ product.price }}
+  };
+
+  let selectedColor = 'gold';
+  let selectedQuantity = 1;
+  let currentVariant = null;
+
+  function formatMoney(cents) {
+    const price = (cents / 100).toFixed(2).replace('.', ',');
+    return `${price} €`;
+  }
+
+  function findVariant(color, quantity) {
+    // Mapper les couleurs
+    const colorMap = {
+      'gold': 'Or',
+      'gray': 'Gris'
+    };
+    
+    const mappedColor = colorMap[color] || color;
+    
+    console.log('Recherche variante pour:', mappedColor, quantity);
+    console.log('Variantes disponibles:', productData.variants);
+    
+    // Tester différentes structures possibles
+    let variant = productData.variants.find(v => {
+      console.log('Test variant:', v.option1, v.option2, v.option3);
+      
+      // Cas 1: Couleur = option1, pas de quantité comme variante
+      if (v.option1 === mappedColor && !v.option2) {
+        return true;
+      }
+      
+      // Cas 2: Couleur = option1, Quantité = option2
+      if (v.option1 === mappedColor && parseInt(v.option2) === quantity) {
+        return true;
+      }
+      
+      // Cas 3: Quantité = option1, Couleur = option2
+      if (parseInt(v.option1) === quantity && v.option2 === mappedColor) {
+        return true;
+      }
+      
+      // Cas 4: Seulement la couleur compte
+      if (v.option1 === mappedColor) {
+        return true;
+      }
+      
+      return false;
+    });
+    
+    console.log('Variante trouvée:', variant);
+    return variant;
+  }
+
+  function updateVariant() {
+    const variant = findVariant(selectedColor, selectedQuantity);
+    const variantIdInput = document.getElementById('variantId');
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const errorMessage = document.getElementById('errorMessage');
+    const dynamicPrice = document.getElementById('dynamicPrice');
+    const totalPriceEl = document.getElementById('totalPrice');
+
+    if (variant && variant.available) {
+      currentVariant = variant;
+      variantIdInput.value = variant.id;
+      addToCartBtn.disabled = false;
+      errorMessage.style.display = 'none';
+      
+      // Calculer le prix total selon la quantité
+      const totalPrice = variant.price * selectedQuantity;
+
+      // Mettre à jour les prix affichés
+      dynamicPrice.textContent = formatMoney(totalPrice);
+      totalPriceEl.textContent = formatMoney(totalPrice);
+      
+    } else {
+      currentVariant = null;
+      variantIdInput.value = '';
+      addToCartBtn.disabled = true;
+      errorMessage.style.display = 'block';
+      
+      // Prix par défaut
+      const defaultPrice = productData.basePrice * selectedQuantity;
+      dynamicPrice.textContent = formatMoney(defaultPrice);
+      totalPriceEl.textContent = formatMoney(defaultPrice);
+    }
+
+    // Mise à jour du prix barré et du montant économisé selon la quantité
+    const oldPriceEl = document.getElementById('oldPrice');
+    const saveBadgeEl = document.getElementById('saveBadge');
+
+    // Récupère les prix et saves depuis les attributs `data`
+    const oldPrices = {
+      1: "{{ section.settings.old_price_1 }}",
+      2: "{{ section.settings.old_price_2 }}",
+      3: "{{ section.settings.old_price_3 }}"
+    };
+
+    const saveAmounts = {
+      1: "{{ section.settings.save_amount_1 }}",
+      2: "{{ section.settings.save_amount_2 }}",
+      3: "{{ section.settings.save_amount_3 }}"
+    };
+
+    oldPriceEl.textContent = oldPrices[selectedQuantity] || "";
+    saveBadgeEl.textContent = "{{ section.settings.save_text }} " + (saveAmounts[selectedQuantity] || "");
+  }
+
+  function selectQuantity(box) {
+    const qty = parseInt(box.getAttribute('data-qty'));
+    const qtyText = document.getElementById('selectedQty');
+    const quantityInput = document.getElementById('quantityInput');
+    const allBoxes = document.querySelectorAll('.astro-quantity-box');
+
+    // Mise à jour visuelle
+    allBoxes.forEach(b => b.classList.remove('selected'));
+    box.classList.add('selected');
+
+    // Mise à jour des variables
+    selectedQuantity = qty;
+    qtyText.textContent = qty;
+    quantityInput.value = qty;
+
+    // Mettre à jour la variante
+    updateVariant();
+  }
+
+  function selectColor(box) {
+    const color = box.getAttribute('data-color');
+    const allColorBoxes = document.querySelectorAll('.astro-color-box');
+    const colorText = document.getElementById('selectedColor');
+    const colorProperty = document.getElementById('colorProperty');
+
+    // Mise à jour visuelle
+    allColorBoxes.forEach(b => b.classList.remove('selected'));
+    box.classList.add('selected');
+
+    // Mise à jour des variables
+    selectedColor = color;
+    colorText.textContent = color === 'gold' ? 'Or' : 'Gris';
+    colorProperty.value = color === 'gold' ? 'Or' : 'Gris';
+
+    // Changer les images des icônes de quantité
+    updateQuantityIcons(color);
+
+    // Mettre à jour la variante
+    updateVariant();
+  }
+
+  function updateQuantityIcons(color) {
+    const qtyIcons = document.querySelectorAll('.qty-icon');
+    qtyIcons.forEach(icon => {
+      if (color === 'gold') {
+        icon.src = icon.getAttribute('data-gold-src');
+      } else {
+        icon.src = icon.getAttribute('data-gray-src');
+      }
+    });
+  }
+
+  // Gestion de l'ajout au panier
+  document.getElementById('addToCartForm').addEventListener('submit', function(e) {
+    if (!currentVariant || !currentVariant.available) {
+      e.preventDefault();
+      document.getElementById('errorMessage').style.display = 'block';
+      return false;
+    }
+  });
+
+  // Initialisation au chargement
+  document.addEventListener("DOMContentLoaded", function() {
+    const firstBox = document.querySelector('.astro-quantity-box');
+    if (firstBox) {
+      selectQuantity(firstBox);
+    }
+    
+    // Initialisation au chargement
+    const firstColorBox = document.querySelector('.astro-color-box.selected');
+    if (firstColorBox) {
+      updateQuantityIcons('gold'); // Initialiser avec la couleur or par défaut
+    }
+
+    // Mise à jour initiale
+    updateVariant();
+  });
+
+  // Debug - vous pouvez supprimer cette ligne en production
+  console.log('Variantes disponibles:', productData.variants);
+</script>
+{% schema %}
+{
+  "name": "Fiche Produit Auto",
+  "tag": "section",
+  "templates": ["product"],
+  "blocks": [
+    {
+      "type": "gift",
+      "name": "Cadeau",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image du cadeau" },
+        { "type": "text", "id": "old_price", "label": "Prix barré" },
+        { "type": "text", "id": "label", "label": "Nom du cadeau" }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Avantage produit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature_text",
+          "label": "Texte de l'avantage"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "text", "id": "badge_1", "label": "Badge Quantité 1" },
+    { "type": "image_picker", "id": "qty_icon_1_gold", "label": "Icône Quantité 1 - Or" },
+    { "type": "image_picker", "id": "qty_icon_1_gray", "label": "Icône Quantité 1 - Gris" },
+    { "type": "text", "id": "qty_label_1", "label": "Texte Quantité 1" },
+
+    { "type": "text", "id": "badge_2", "label": "Badge Quantité 2" },
+    { "type": "image_picker", "id": "qty_icon_2_gold", "label": "Icône Quantité 2 - Or" },
+    { "type": "image_picker", "id": "qty_icon_2_gray", "label": "Icône Quantité 2 - Gris" },
+    { "type": "text", "id": "qty_label_2", "label": "Texte Quantité 2" },
+
+    { "type": "text", "id": "badge_3", "label": "Badge Quantité 3" },
+    { "type": "image_picker", "id": "qty_icon_3_gold", "label": "Icône Quantité 3 - Or" },
+    { "type": "image_picker", "id": "qty_icon_3_gray", "label": "Icône Quantité 3 - Gris" },
+    { "type": "text", "id": "qty_label_3", "label": "Texte Quantité 3" },
+
+    { "type": "image_picker", "id": "color_image_gold", "label": "Image couleur Or" },
+    { "type": "image_picker", "id": "color_image_gray", "label": "Image couleur Gris" },
+
+    { "type": "text", "id": "gift_title", "label": "Titre cadeaux", "default": "FREE Gifts With Your Order" },
+
+    { "type": "text", "id": "icon_label_1", "label": "Texte icône 1" },
+    { "type": "text", "id": "icon_label_2", "label": "Texte icône 2" },
+    { "type": "text", "id": "icon_label_3", "label": "Texte icône 3" },
+    { "type": "text", "id": "icon_label_4", "label": "Texte icône 4" },
+    { "type": "text", "id": "contenus_colis", "label": "contenus colis" },
+    { "type": "text", "id": "livraison", "label": "Livraison & retours texte" },
+
+    { "type": "text", "id": "below_scroll_text", "label": "Texte au-dessus du bouton panier" },
+    { "type": "text", "id": "button_text", "label": "Texte du bouton panier", "default": "Ajouter au panier" },
+    { "type": "text", "id": "guarantee", "label": "Garantie", "default": "60 jours satisfait ou remboursé" },
+
+    {
+      "type": "text",
+      "id": "old_price",
+      "label": "Prix ancien (barré)",
+      "info": "Exemple: 199€ - Ce prix apparaîtra barré avant le prix actuel"
+    },
+    {
+      "type": "text", 
+      "id": "save_text",
+      "label": "Texte du badge SAVE",
+      "default": "SAVE",
+      "info": "Le texte qui apparaîtra dans le badge rouge"
+    },
+    {
+      "type": "text",
+      "id": "save_amount", 
+      "label": "Montant économisé",
+      "info": "Exemple: 50€ ou 25% - Le montant/pourcentage économisé"
+    },
+    
+    {
+      "type": "range",
+      "id": "badge_font_size",
+      "label": "Taille du texte du badge (px)",
+      "min": 8,
+      "max": 24,
+      "step": 1,
+      "default": 12
+    },
+    
+    {
+      "type": "range",
+      "id": "badge_padding_x",
+      "label": "Padding horizontal badge",
+      "min": 2,
+      "max": 20,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "badge_padding_y",
+      "label": "Padding vertical badge",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "radio",
+      "id": "selected_color",
+      "label": "Couleur de la batterie",
+      "options": [
+        { "value": "gold", "label": "Or" },
+        { "value": "gray", "label": "Gris" }
+      ],
+      "default": "gold"
+    },
+    {
+  "type": "text",
+  "id": "old_price_1",
+  "label": "Prix barré quantité 1"
+},
+{
+  "type": "text",
+  "id": "old_price_2",
+  "label": "Prix barré quantité 2"
+},
+{
+  "type": "text",
+  "id": "old_price_3",
+  "label": "Prix barré quantité 3"
+},
+{
+  "type": "text",
+  "id": "save_amount_1",
+  "label": "Montant économisé quantité 1"
+},
+{
+  "type": "text",
+  "id": "save_amount_2",
+  "label": "Montant économisé quantité 2"
+},
+{
+  "type": "text",
+  "id": "save_amount_3",
+  "label": "Montant économisé quantité 3"
+}
+
+  ],
+  "presets": [
+    {
+      "name": "Fiche Produit Auto",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

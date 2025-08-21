@@ -1,0 +1,879 @@
+{% schema %}
+{
+  "name": "Dark Files Section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "🖼️ Image de fond"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Image de fond"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Opacité de l'overlay sombre",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 75
+    },
+
+    {
+      "type": "header",
+      "content": "📱 Espacement & Marges"
+    },
+    {
+      "type": "range",
+      "id": "padding_top_desktop",
+      "label": "Padding haut (desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_desktop",
+      "label": "Padding bas (desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_left_desktop",
+      "label": "Padding gauche (desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_right_desktop",
+      "label": "Padding droite (desktop)",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "padding_top_mobile",
+      "label": "Padding haut (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom_mobile",
+      "label": "Padding bas (mobile)",
+      "min": 0,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_left_mobile",
+      "label": "Padding gauche (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "padding_right_mobile",
+      "label": "Padding droite (mobile)",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "label": "Marge haute section",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "label": "Marge basse section",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "default": 0
+    },
+
+    {
+      "type": "header",
+      "content": "📝 Titre principal"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Les secrets qu'on ne veut pas que vous lisiez…"
+    },
+    {
+      "type": "color",
+      "id": "title_color_desktop",
+      "label": "Couleur du titre (desktop)",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "title_color_mobile",
+      "label": "Couleur du titre (mobile)",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Taille du titre (desktop)",
+      "min": 20,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Taille du titre (mobile)",
+      "min": 16,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "checkbox",
+      "id": "title_bold",
+      "label": "Titre en gras",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "👁️ Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo (œil)"
+    },
+    {
+      "type": "range",
+      "id": "logo_size_deskop",
+      "label": "Taille du logo (deskop)",
+      "min": 10,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "logo_size_mobile",
+      "label": "Taille du logo (mobile)",
+      "min": 10,
+      "max": 150,
+      "step": 2,
+      "unit": "px",
+      "default": 80
+    },
+
+    {
+      "type": "header",
+      "content": "🏪 Nom de la boutique"
+    },
+    {
+      "type": "text",
+      "id": "store_name",
+      "label": "Nom de la boutique",
+      "default": "DARK FILES"
+    },
+    {
+      "type": "color",
+      "id": "store_name_color_desktop",
+      "label": "Couleur nom boutique (desktop)",
+      "default": "#dc2626"
+    },
+    {
+      "type": "color",
+      "id": "store_name_color_mobile",
+      "label": "Couleur nom boutique (mobile)",
+      "default": "#dc2626"
+    },
+    {
+      "type": "range",
+      "id": "store_name_size_desktop",
+      "label": "Taille nom boutique (desktop)",
+      "min": 20,
+      "max": 120,
+      "step": 1,
+      "unit": "px",
+      "default": 56
+    },
+    {
+      "type": "range",
+      "id": "store_name_size_mobile",
+      "label": "Taille nom boutique (mobile)",
+      "min": 16,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "checkbox",
+      "id": "store_name_bold",
+      "label": "Nom boutique en gras",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "📄 Sous-titre"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "Découvrez nos eBooks exclusifs et plongez dans les dossiers interdits. La vérité est entre vos mains."
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color_desktop",
+      "label": "Couleur du sous-titre (desktop)",
+      "default": "#d1d5db"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color_mobile",
+      "label": "Couleur du sous-titre (mobile)",
+      "default": "#d1d5db"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "label": "Taille du sous-titre (desktop)",
+      "min": 12,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "label": "Taille du sous-titre (mobile)",
+      "min": 12,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "checkbox",
+      "id": "subtitle_bold",
+      "label": "Sous-titre en gras",
+      "default": false
+    },
+
+    {
+      "type": "header",
+      "content": "🔘 Bouton"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texte du bouton",
+      "default": "Accéder aux Ebooks"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color_desktop",
+      "label": "Couleur fond bouton (desktop)",
+      "default": "#7c2d12"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color_mobile",
+      "label": "Couleur fond bouton (mobile)",
+      "default": "#7c2d12"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color_desktop",
+      "label": "Couleur texte bouton (desktop)",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color_mobile",
+      "label": "Couleur texte bouton (mobile)",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color_desktop",
+      "label": "Couleur bordure bouton (desktop)",
+      "default": "#dc2626"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color_mobile",
+      "label": "Couleur bordure bouton (mobile)",
+      "default": "#dc2626"
+    },
+    {
+      "type": "range",
+      "id": "button_size_desktop",
+      "label": "Taille texte bouton (desktop)",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "button_size_mobile",
+      "label": "Taille texte bouton (mobile)",
+      "min": 12,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "button_padding_x",
+      "label": "Padding horizontal bouton",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "button_padding_y",
+      "label": "Padding vertical bouton",
+      "min": 5,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Arrondi des coins bouton",
+      "min": 0,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "Style du bouton",
+      "default": "gradient",
+      "options": [
+        { "value": "solid", "label": "Couleur unie" },
+        { "value": "gradient", "label": "Dégradé" },
+        { "value": "outline", "label": "Contour seulement" },
+        { "value": "glass", "label": "Effet verre" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dark Files Section"
+    }
+  ]
+}
+{% endschema %}
+
+<section 
+  class="dark-files-section" 
+  style="
+    background-image: url({{ section.settings.background_image | image_url }}); 
+    margin-top: {{ section.settings.margin_top }}px; 
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  "
+>
+  <div class="dark-files-overlay" style="background: rgba(0,0,0,{{ section.settings.overlay_opacity | divided_by: 100.0 }});">
+    <div class="dark-files-content">
+
+      <h2 class="dark-files-title animate-fade-in">
+        {{ section.settings.title }}
+      </h2>
+
+      {% if section.settings.logo_image %}
+        <div class="logo-container animate-bounce-in">
+          <img 
+            src="{{ section.settings.logo_image | image_url }}" 
+            alt="Logo" 
+            class="dark-files-logo"
+          >
+        </div>
+      {% endif %}
+
+      <h1 class="dark-files-store animate-slide-up">
+        {{ section.settings.store_name }}
+      </h1>
+
+      <p class="dark-files-subtitle animate-fade-in-delayed">
+        {{ section.settings.subtitle }}
+      </p>
+
+      {% if section.settings.button_label != blank %}
+        <div class="button-container animate-pop-in">
+          <a href="{{ section.settings.button_link }}" 
+             class="dark-files-btn btn-{{ section.settings.button_style }}"
+          >
+            <span class="btn-text">{{ section.settings.button_label }}</span>
+            <span class="btn-icon">→</span>
+          </a>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+<style>
+.dark-files-section {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.dark-files-overlay {
+  width: 100%;
+  padding: {{ section.settings.padding_top_desktop }}px {{ section.settings.padding_right_desktop }}px {{ section.settings.padding_bottom_desktop }}px {{ section.settings.padding_left_desktop }}px;
+  border-radius: 0;
+  backdrop-filter: blur(3px);
+  position: relative;
+}
+
+.dark-files-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    rgba(15, 23, 42, 0.2) 0%,
+    rgba(124, 45, 18, 0.15) 25%,
+    rgba(30, 41, 59, 0.2) 50%,
+    rgba(220, 38, 38, 0.1) 75%,
+    rgba(7, 12, 23, 0.25) 100%
+  );
+  pointer-events: none;
+}
+
+.dark-files-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.3) 100%);
+  pointer-events: none;
+}
+
+.dark-files-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.dark-files-title {
+  color: {{ section.settings.title_color_desktop }};
+  font-size: {{ section.settings.title_size_desktop }}px;
+  font-weight: {% if section.settings.title_bold %}bold{% else %}normal{% endif %};
+  margin-bottom: 2rem;
+  text-shadow: 3px 3px 8px rgba(0,0,0,0.8), 0 0 20px rgba(220, 38, 38, 0.3);
+  line-height: 1.2;
+  position: relative;
+}
+
+.dark-files-title::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: linear-gradient(45deg, transparent, rgba(220, 38, 38, 0.1), transparent);
+  z-index: -1;
+  border-radius: 8px;
+}
+
+.logo-container {
+  margin: 2rem 0;
+  position: relative;
+}
+
+.logo-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: -1;
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+  50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.8; }
+}
+
+.dark-files-logo {
+  max-width: {{ section.settings.logo_size_desktop }}px;
+  height: auto;
+  filter: drop-shadow(0 0 25px rgba(220, 38, 38, 0.5)) drop-shadow(0 0 50px rgba(124, 45, 18, 0.3));
+  transition: all 0.4s ease;
+}
+
+.dark-files-logo:hover {
+  transform: scale(1.1) rotate(10deg);
+  filter: drop-shadow(0 0 35px rgba(220, 38, 38, 0.8)) drop-shadow(0 0 70px rgba(30, 41, 59, 0.5));
+}
+
+.dark-files-store {
+  color: {{ section.settings.store_name_color_desktop }};
+  font-size: {{ section.settings.store_name_size_desktop }}px;
+  font-weight: {% if section.settings.store_name_bold %}bold{% else %}normal{% endif %};
+  margin: 1.5rem 0;
+  text-shadow: 4px 4px 10px rgba(0,0,0,0.9), 0 0 30px rgba(220, 38, 38, 0.6);
+  letter-spacing: 4px;
+  background: linear-gradient(135deg, {{ section.settings.store_name_color_desktop }}, #7c2d12, #1e293b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+.dark-files-store::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.8), rgba(124, 45, 18, 0.6));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  z-index: -1;
+  filter: blur(2px);
+}
+
+.dark-files-subtitle {
+  color: {{ section.settings.subtitle_color_desktop }};
+  font-size: {{ section.settings.subtitle_size_desktop }}px;
+  font-weight: {% if section.settings.subtitle_bold %}bold{% else %}normal{% endif %};
+  margin: 2rem auto;
+  max-width: 600px;
+  line-height: 1.7;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+  position: relative;
+  padding: 1rem;
+  border-left: 3px solid rgba(220, 38, 38, 0.6);
+  background: rgba(30, 41, 59, 0.2);
+  border-radius: 0 8px 8px 0;
+  backdrop-filter: blur(5px);
+}
+
+.button-container {
+  margin-top: 3rem;
+  position: relative;
+}
+
+.button-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 80px;
+  background: radial-gradient(ellipse, rgba(124, 45, 18, 0.3) 0%, transparent 70%);
+  z-index: -1;
+  border-radius: 50%;
+}
+
+.dark-files-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: {{ section.settings.button_padding_y }}px {{ section.settings.button_padding_x }}px;
+  font-size: {{ section.settings.button_size_desktop }}px;
+  border-radius: {{ section.settings.button_border_radius }}px;
+  text-decoration: none;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid {{ section.settings.button_border_color_desktop }};
+}
+
+/* Styles de boutons */
+.btn-solid {
+  background: {{ section.settings.button_bg_color_desktop }};
+  color: {{ section.settings.button_text_color_desktop }};
+  box-shadow: 0 8px 25px rgba(124, 45, 18, 0.4);
+}
+
+.btn-gradient {
+  background: linear-gradient(135deg, {{ section.settings.button_bg_color_desktop }}, #dc2626, #1e293b);
+  color: {{ section.settings.button_text_color_desktop }};
+  box-shadow: 0 8px 25px rgba(124, 45, 18, 0.4);
+}
+
+.btn-outline {
+  background: rgba(30, 41, 59, 0.3);
+  color: {{ section.settings.button_text_color_desktop }};
+  border: 2px solid {{ section.settings.button_border_color_desktop }};
+  backdrop-filter: blur(10px);
+}
+
+.btn-glass {
+  background: rgba(124, 45, 18, 0.2);
+  color: {{ section.settings.button_text_color_desktop }};
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.dark-files-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(220, 38, 38, 0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.dark-files-btn:hover::before {
+  left: 100%;
+}
+
+.dark-files-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 35px rgba(124, 45, 18, 0.6);
+}
+
+.btn-outline:hover {
+  background: {{ section.settings.button_bg_color_desktop }};
+  color: {{ section.settings.button_text_color_desktop }};
+  box-shadow: 0 12px 35px rgba(124, 45, 18, 0.6);
+}
+
+.btn-icon {
+  transition: transform 0.3s ease;
+  font-size: 1.2em;
+}
+
+.dark-files-btn:hover .btn-icon {
+  transform: translateX(5px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceIn {
+  0% { opacity: 0; transform: scale(0.3) rotate(-180deg); }
+  50% { opacity: 1; transform: scale(1.1) rotate(0deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.8); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease forwards;
+  opacity: 0;
+}
+
+.animate-bounce-in {
+  animation: bounceIn 1.2s ease forwards 0.3s;
+  opacity: 0;
+}
+
+.animate-slide-up {
+  animation: slideUp 1s ease forwards 0.6s;
+  opacity: 0;
+}
+
+.animate-fade-in-delayed {
+  animation: fadeIn 1s ease forwards 0.9s;
+  opacity: 0;
+}
+
+.animate-pop-in {
+  animation: popIn 0.8s ease forwards 1.2s;
+  opacity: 0;
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .dark-files-section {
+    background-attachment: scroll;
+    background-position: center center;
+    background-size: cover;
+    min-height: 100vh;
+  }
+  
+  .dark-files-overlay {
+    padding: {{ section.settings.padding_top_mobile }}px {{ section.settings.padding_right_mobile }}px {{ section.settings.padding_bottom_mobile }}px {{ section.settings.padding_left_mobile }}px;
+  }
+  
+  .dark-files-title {
+    color: {{ section.settings.title_color_mobile }} !important;
+    font-size: {{ section.settings.title_size_mobile }}px !important;
+    margin-bottom: 1.5rem;
+    text-shadow: 3px 3px 8px rgba(0,0,0,0.9), 0 0 20px rgba(220, 38, 38, 0.4);
+  }
+  
+  .dark-files-logo {
+    max-width: {{ section.settings.logo_size_mobile }}px !important;
+  }
+  
+  .dark-files-store {
+    color: {{ section.settings.store_name_color_mobile }} !important;
+    font-size: {{ section.settings.store_name_size_mobile }}px !important;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, {{ section.settings.store_name_color_mobile }}, #7c2d12, #1e293b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .dark-files-subtitle {
+    color: {{ section.settings.subtitle_color_mobile }} !important;
+    font-size: {{ section.settings.subtitle_size_mobile }}px !important;
+    margin: 1.5rem auto;
+    padding: 0.8rem;
+  }
+  
+  .dark-files-btn {
+    font-size: {{ section.settings.button_size_mobile }}px !important;
+    padding: {{ section.settings.button_padding_y }}px {{ section.settings.button_padding_x | divided_by: 1.2 }}px;
+  }
+  
+  .btn-solid {
+    background: {{ section.settings.button_bg_color_mobile }};
+    color: {{ section.settings.button_text_color_mobile }};
+  }
+  
+  .btn-gradient {
+    background: linear-gradient(135deg, {{ section.settings.button_bg_color_mobile }}, #dc2626, #1e293b);
+    color: {{ section.settings.button_text_color_mobile }};
+  }
+  
+  .btn-outline {
+    color: {{ section.settings.button_text_color_mobile }};
+    border-color: {{ section.settings.button_border_color_mobile }};
+  }
+  
+  .btn-outline:hover {
+    background: {{ section.settings.button_bg_color_mobile }};
+    color: {{ section.settings.button_text_color_mobile }};
+  }
+  
+  .btn-glass {
+    color: {{ section.settings.button_text_color_mobile }};
+  }
+  
+  .button-container {
+    margin-top: 2rem;
+  }
+}
+
+/* Effet parallax subtil */
+@media (min-width: 769px) {
+  .dark-files-section {
+    background-attachment: fixed;
+  }
+}
+
+/* Amélioration de l'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-bounce-in,
+  .animate-slide-up,
+  .animate-fade-in-delayed,
+  .animate-pop-in {
+    animation: none;
+    opacity: 1;
+  }
+  
+  .dark-files-logo:hover {
+    transform: none;
+  }
+  
+  .dark-files-btn:hover {
+    transform: none;
+  }
+}
+</style>

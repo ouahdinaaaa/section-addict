@@ -1,0 +1,1558 @@
+<style>
+/* GameBoy Banner Styles */
+.gameboy-banner {
+  position: relative;
+  width: 100%;
+  min-height: {{ section.settings.banner_height_desktop | default: 100 }}vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom, #110023, #01000c);
+  /* background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%); */
+}
+
+/* Background Images */
+.gameboy-banner__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.gameboy-banner__bg-desktop,
+.gameboy-banner__bg-mobile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.gameboy-banner__bg-desktop img,
+.gameboy-banner__bg-mobile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gameboy-banner__bg-mobile {
+  display: none;
+}
+
+/* Container */
+.gameboy-banner__container {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  /* max-width: 1200px; */
+  /* padding: 0 20px;  */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding : 20px 15px 15px 20px;
+  min-height: {{ section.settings.banner_height_desktop | default: 100 }}vh;
+}
+
+/* Content */
+.gameboy-banner__content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  width: 94%;
+  margin-bottom: 40px;
+}
+
+/* Title */
+.gameboy-banner__title-wrapper {
+  flex: 1;
+  text-align: left;
+}
+
+.gameboy-banner__title {
+  font-family: 'Arial', sans-serif;
+  font-weight: 900;
+  font-size: {{ section.settings.title_size_desktop | default: 80 }}px;
+  color: #FFFFFF;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+  margin: 0;
+  text-align: left;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  background: linear-gradient(45deg, #FF6B35, #F7931E, #FFD700, #FF6B35);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+  transition: all 0.5s ease;
+}
+
+/* Dégradés de couleurs pour le titre */
+.gameboy-banner__title.color-red {
+  background: linear-gradient(45deg, #FFFFFF, #E74C3C, #C0392B, #FFFFFF);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.gameboy-banner__title.color-purple {
+  background: linear-gradient(45deg, #9B59B6, #FFFFFF, #8E44AD, #9B59B6);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.gameboy-banner__title.color-orange {
+  background: linear-gradient(45deg, #FF6B35, #F7931E, #FFD700, #FF6B35);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.gameboy-banner__title.color-gray {
+  background: linear-gradient(45deg, #4A4A4A, #FFFFFF, #707070, #4A4A4A);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.gameboy-banner__title.color-white {
+  background: linear-gradient(45deg, #FFFFFF, #F8F9FA, #E9ECEF, #FFFFFF);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* GameBoy Container */
+
+.gameboy-banner__gameboy-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+.gameboy-banner__gameboy {
+  position: relative;
+  width: 300px;
+  height: 400px;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+}
+
+.gameboy-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 1s ease;
+  transform-style: preserve-3d;
+}
+
+/* Faces */
+.gameboy-flipper .front,
+.gameboy-flipper .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  top: 0;
+  left: 0;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+}
+
+/* Rotation arrière */
+.gameboy-flipper .back {
+  transform: rotateY(180deg);
+}
+
+/* Rotation flipper */
+.gameboy-flipper.flip {
+  transform: rotateY(180deg);
+}
+  
+.gameboy-banner__gameboy-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+  .gameboy-banner__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 400px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 1;
+  opacity: 0.6;
+  filter: blur(60px);
+  transition: all 0.5s ease;
+  pointer-events: none;
+  box-shadow: 0 0 60px rgba(255, 255, 255, 0.6);
+  mix-blend-mode: screen;
+  animation: neonPulse 3s infinite ease-in-out;
+}
+
+.glow-orange {
+  background: radial-gradient(circle, rgba(255,107,53,0.9) 0%, rgba(255,107,53,0.2) 60%, transparent 80%);
+  box-shadow: 0 0 60px rgba(255,107,53,0.6), 0 0 120px rgba(255,107,53,0.4);
+}
+
+.glow-red {
+  background: radial-gradient(circle, rgba(231,76,60,0.9) 0%, rgba(231,76,60,0.2) 60%, transparent 80%);
+  box-shadow: 0 0 60px rgba(231,76,60,0.6), 0 0 120px rgba(231,76,60,0.4);
+}
+
+.glow-purple {
+  background: radial-gradient(circle, rgba(155,89,182,0.9) 0%, rgba(155,89,182,0.2) 60%, transparent 80%);
+  box-shadow: 0 0 60px rgba(155,89,182,0.6), 0 0 120px rgba(155,89,182,0.4);
+}
+
+.glow-gray {
+  background: radial-gradient(circle, rgba(120,120,120,0.9) 0%, rgba(120,120,120,0.2) 60%, transparent 80%);
+  box-shadow: 0 0 60px rgba(120,120,120,0.6), 0 0 120px rgba(120,120,120,0.4);
+}
+
+.glow-white {
+  background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.2) 60%, transparent 80%);
+  box-shadow: 0 0 60px rgba(255,255,255,0.6), 0 0 120px rgba(255,255,255,0.4);
+}
+
+
+
+.gameboy-banner__gameboy-image.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.gameboy-banner__gameboy-image.exiting {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.gameboy-banner__gameboy-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* margin-top: 24%; */
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.5));
+}
+
+/* Color Selector */
+.gameboy-banner__color-selector {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 50px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.5s ease;
+}
+
+.gameboy-banner__color-selector.color-red {
+  background: linear-gradient(45deg, rgba(231, 76, 60, 0.2), rgba(255, 255, 255, 0.1));
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+.gameboy-banner__color-selector.color-purple {
+  background: linear-gradient(45deg, rgba(155, 89, 182, 0.2), rgba(255, 255, 255, 0.1));
+  border: 1px solid rgba(155, 89, 182, 0.3);
+}
+
+.gameboy-banner__color-selector.color-orange {
+  background: linear-gradient(45deg, rgba(255, 107, 53, 0.2), rgba(255, 255, 255, 0.1));
+  border: 1px solid rgba(255, 107, 53, 0.3);
+}
+
+.gameboy-banner__color-selector.color-gray {
+  background: linear-gradient(45deg, rgba(74, 74, 74, 0.2), rgba(255, 255, 255, 0.1));
+  border: 1px solid rgba(74, 74, 74, 0.3);
+}
+
+.gameboy-banner__color-selector.color-white {
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.gameboy-banner__color-btn {
+  width: 40px;
+  height: 40px;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.gameboy-banner__color-btn::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 50%;
+  background: var(--btn-gradient, linear-gradient(45deg, #FF6B35, #F7931E, #FFD700, #FF6B35));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+
+.gameboy-banner__color-btn.active::before,
+.gameboy-banner__color-btn:hover::before {
+  opacity: 1;
+}
+
+.gameboy-banner__color-btn:hover {
+  transform: scale(1.1);
+}
+
+.gameboy-banner__color-btn.active {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* Subtitle */
+.gameboy-banner__subtitle-wrapper {
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.gameboy-banner__subtitle {
+  font-family: 'Arial', sans-serif;
+  font-size: {{ section.settings.subtitle_size_desktop | default: 18 }}px;
+  color: #FFFFFF;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: left;
+  margin: 0;
+  opacity: 0.9;
+  font-weight : bold;
+  -webkit-text-stroke: 0.5px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* CTA Button */
+.gameboy-banner__cta-wrapper {
+  width: 100%;
+  text-align: left;
+  margin-top: 30px;
+}
+
+.gameboy-banner__cta-button {
+  display: inline-block;
+  padding: 18px 40px;
+  font-family: 'Arial', sans-serif;
+  font-weight: 900;
+  font-size: {{ section.settings.cta_size_desktop | default: 16 }}px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  color: #FFFFFF;
+  background: linear-gradient(45deg, #8a008b, #cd0b0b, #a70422, #870050);
+  background-size: 400% 400%;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+  animation: gradientShift 3s ease-in-out infinite;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.gameboy-banner__cta-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.gameboy-banner__cta-button:hover::before {
+  left: 100%;
+}
+
+.gameboy-banner__cta-button:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(255, 107, 53, 0.6);
+}
+
+.gameboy-banner__cta-button:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* CTA Button Color Variations */
+.gameboy-banner__cta-button.color-red {
+  /* background: linear-gradient(45deg, #E74C3C, #C0392B, #FFFFFF, #E74C3C);*/
+  background: linear-gradient(45deg, #8a008b, #cd0b0b, #a70422, #870050);
+  background-size: 400% 400%;
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.gameboy-banner__cta-button.color-red:hover {
+  box-shadow: 0 12px 35px rgba(231, 76, 60, 0.6);
+}
+
+.gameboy-banner__cta-button.color-purple {
+    background: linear-gradient(45deg, #8a008b, #cd0b0b, #a70422, #870050);
+  background-size: 400% 400%;
+  box-shadow: 0 8px 25px rgba(155, 89, 182, 0.4);
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.gameboy-banner__cta-button.color-purple:hover {
+  box-shadow: 0 12px 35px rgba(155, 89, 182, 0.6);
+}
+
+.gameboy-banner__cta-button.color-orange {
+    background: linear-gradient(45deg, #8a008b, #cd0b0b, #a70422, #870050);
+  background-size: 400% 400%;
+  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.gameboy-banner__cta-button.color-orange:hover {
+  box-shadow: 0 12px 35px rgba(255, 107, 53, 0.6);
+}
+
+.gameboy-banner__cta-button.color-gray {
+    background: linear-gradient(45deg, #8a008b, #cd0b0b, #a70422, #870050);
+  background-size: 400% 400%;
+  box-shadow: 0 8px 25px rgba(74, 74, 74, 0.4);
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+.gameboy-banner__cta-button.color-gray:hover {
+  box-shadow: 0 12px 35px rgba(74, 74, 74, 0.6);
+}
+
+.gameboy-banner__cta-button.color-white {
+    background: linear-gradient(45deg, #8a008b, #cd0b0b, #a70422, #870050);
+  background-size: 400% 400%;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.4);
+  animation: gradientShift 3s ease-in-out infinite;
+  color: #333333;
+  text-shadow: none;
+}
+
+.gameboy-banner__cta-button.color-white:hover {
+  box-shadow: 0 12px 35px rgba(255, 255, 255, 0.6);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .gameboy-banner {
+    min-height: {{ section.settings.banner_height_mobile | default: 100 }}vh;
+    padding: 20px 0;
+  }
+
+  .gameboy-banner__bg-desktop {
+    display: none;
+  }
+
+  .gameboy-banner__bg-mobile {
+    display: block;
+  }
+
+  .gameboy-banner__container {
+    /* padding: 0 15px; */
+    min-height: {{ section.settings.banner_height_mobile | default: 100 }}vh;
+  }
+
+  .gameboy-banner__content {
+    gap: 30px;
+    text-align: center;
+  }
+
+  .gameboy-banner__title-wrapper {
+    /* text-align: center; */
+    margin-top: -15%;
+  }
+
+  .gameboy-banner__title {
+    font-size: {{ section.settings.title_size_mobile | default: 30 }}px;
+    letter-spacing: 1px;
+  }
+
+  .gameboy-banner__gameboy {
+    width: 200px;
+    height: 280px;
+  }
+
+  .gameboy-banner__color-selector {
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .gameboy-banner__color-btn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .gameboy-banner__subtitle {
+    font-size: {{ section.settings.subtitle_size_mobile | default: 14 }}px;
+    line-height: 1.4;
+    width: 110%;
+  }
+
+  .gameboy-banner__cta-button {
+    padding: 16px 32px;
+    font-size: {{ section.settings.cta_size_mobile | default: 14 }}px;
+  }
+}
+
+
+@media (max-width: 370px) {
+  
+ .gameboy-banner__container {
+  position: relative;
+  z-index: 2;
+  width: 90%;
+  /* max-width: 1200px; */
+  /* padding: 0 20px;  */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding : 20px 15px 15px 20px;
+  min-height: {{ section.settings.banner_height_desktop | default: 100 }}vh;
+}
+
+/* Content */
+.gameboy-banner__content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+  width: 90%;
+  margin-bottom: 40px;
+}
+
+.storage-option4 {
+  padding: 5px 14px;
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: #fff;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.5rem;
+  cursor: pointer;
+  gap : 20px;
+  transition: all 0.3s ease;
+}
+  
+}
+  
+@media (max-width: 480px) {
+  .gameboy-banner__title {
+    font-size: calc({{ section.settings.title_size_mobile | default: 25 }}px - 6px);
+  }
+
+  .gameboy-banner__gameboy {
+    width: 180px;
+    height: 250px;
+  }
+
+  .gameboy-banner__color-btn {
+    width: 25px;
+    height: 25px;
+  }
+
+  .gameboy-banner__subtitle {
+    font-size: calc({{ section.settings.subtitle_size_mobile | default: 14 }}px - 2px);
+  }
+
+  .gameboy-banner__cta-button {
+    padding: 5px 14px;
+    font-size: calc({{ section.settings.cta_size_mobile | default: 12 }}px - 2px);
+  }
+}
+
+  .gameboy-banner__gameboy {
+  perspective: 1000px;
+}
+
+.gameboy-banner__gameboy-image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  transition: transform 0.8s ease, opacity 0.4s ease;
+  opacity: 0;
+}
+
+.gameboy-banner__gameboy-image.active {
+  transform: rotateY(0deg);
+  opacity: 1;
+  z-index: 2;
+}
+
+.gameboy-banner__gameboy-image.exiting {
+  transform: rotateY(-180deg);
+  opacity: 0;
+  z-index: 1;
+}
+
+  @keyframes neonPulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.6;
+    box-shadow: 0 0 60px rgba(255, 255, 255, 0.4),
+                0 0 120px rgba(255, 255, 255, 0.2),
+                0 0 180px rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 1;
+    box-shadow: 0 0 100px rgba(255, 255, 255, 0.7),
+                0 0 140px rgba(255, 255, 255, 0.4),
+                0 0 200px rgba(255, 255, 255, 0.2);
+  }
+}
+
+
+  .gameboy-banner__gameboy.gameboy-glow-orange img {
+  filter: drop-shadow(0 0 20px rgba(255,107,53,0.6));
+}
+
+.gameboy-banner__gameboy.gameboy-glow-red img {
+  filter: drop-shadow(0 0 20px rgba(231,76,60,0.6));
+}
+
+.gameboy-banner__gameboy.gameboy-glow-purple img {
+  filter: drop-shadow(0 0 20px rgba(155,89,182,0.6));
+}
+
+.gameboy-banner__gameboy.gameboy-glow-gray img {
+  filter: drop-shadow(0 0 20px rgba(74,74,74,0.6));
+}
+
+.gameboy-banner__gameboy.gameboy-glow-white img {
+  filter: drop-shadow(0 0 20px rgba(255,255,255,0.7));
+}
+
+
+.storage-options {
+  display: flex;
+  /* gap: 10px; */
+  margin-top: 15px;
+  margin-bottom: 10px;
+  gap: 1rem;
+  width: fit-content;
+}
+
+.storage-option4 {
+  padding: 5px 14px;
+  background: rgba(255,255,255,0.08);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: #fff;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  gap : 20px;
+  transition: all 0.3s ease;
+}
+
+.storage-option4.selected {
+  background: rgba(255,255,255, 3);
+  color: black;
+  border-color: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.storage-option4:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255, 3);
+  color : black;  
+}
+
+
+/* Scroll Horizontal Wrapper */
+.gameboy-banner__color-selector-wrapper {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.gameboy-banner__color-selector {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 15px;
+  padding: 10px 20px;
+  min-width: max-content;
+  scroll-snap-align: center;
+}
+
+/* Scrollbar custom hide */
+.gameboy-banner__color-selector-wrapper::-webkit-scrollbar {
+  display: none;
+}
+.gameboy-banner__color-selector-wrapper {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+  .subtitle-highlight {
+  color: #FF6B35; /* orange/rouge */
+  font-weight: bold;
+}
+
+
+.gameboy-price {
+  margin-bottom: 14px;
+  padding: 10px 18px;
+  border: 2px solid #FF6B35;
+  border-radius: 12px;
+  background: rgba(255, 107, 53, 0.1);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #FF6B35;
+  text-align: center;
+  width: fit-content;
+  box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+  transition: all 0.3s ease;
+}
+
+.gameboy-price.flash {
+  animation: flashPrice 0.4s ease;
+}
+
+@keyframes flashPrice {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+
+
+  
+</style>
+
+
+<section class="gameboy-banner" data-section-id="{{ section.id }}">
+  <div class="gameboy-banner__background">
+    <!-- Background Desktop -->
+    <div class="gameboy-banner__bg-desktop">
+      {% if section.settings.background_image_desktop %}
+        <img src="{{ section.settings.background_image_desktop | img_url: '1920x1080' }}" alt="Background Desktop" loading="lazy">
+      {% endif %}
+    </div>
+    
+    <!-- Background Mobile -->
+    <div class="gameboy-banner__bg-mobile">
+      {% if section.settings.background_image_mobile %}
+        <img src="{{ section.settings.background_image_mobile | img_url: '768x1024' }}" alt="Background Mobile" loading="lazy">
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="gameboy-banner__container">
+    <div class="gameboy-banner__content">
+      <!-- Titre Principal -->
+      <div class="gameboy-banner__title-wrapper">
+        {% if section.settings.title != blank %}
+         <h1 class="gameboy-banner__title color-purple" id="title-{{ section.id }}">{{ section.settings.title }}</h1>
+        {% endif %}
+        
+        <!-- Sous-titre -->
+        {% if section.settings.subtitle != blank %}
+<div class="gameboy-banner__subtitle-wrapper">
+<p class="gameboy-banner__subtitle subtitle-64gb" style="display: block;">
+  {{ section.settings.subtitle_64gb | replace: '15 000 JEUX', '<span style="color: #FF6B35; font-weight: bold;">15 000 JEUX</span>' | replace: '15 000 jeux', '<span style="color: #FF6B35; font-weight: bold;">15 000 jeux</span>' | replace: '15000 JEUX', '<span style="color: #FF6B35; font-weight: bold;">15000 JEUX</span>' | replace: '15000 jeux', '<span style="color: #FF6B35; font-weight: bold;">15000 jeux</span>' | raw }}
+</p>
+<p class="gameboy-banner__subtitle subtitle-128gb" style="display: none;">
+  {{ section.settings.subtitle_128gb | replace: '21 000 JEUX', '<span style="color: #FF6B35; font-weight: bold;">21 000 JEUX</span>' | replace: '21 000 jeux', '<span style="color: #FF6B35; font-weight: bold;">21 000 jeux</span>' | replace: '21000 JEUX', '<span style="color: #FF6B35; font-weight: bold;">21000 JEUX</span>' | replace: '21000 jeux', '<span style="color: #FF6B35; font-weight: bold;">21000 jeux</span>' | raw }}
+</p>
+
+</div>
+
+        {% endif %}
+
+        <!-- Bouton CTA -->
+<!-- Stockage + Bouton d'ajout -->
+<div class="gameboy-banner__cta-wrapper">
+  <div class="storage-options" id="storage-options-{{ section.id }}">
+    <div class="storage-option4 selected" data-storage="64GB">64GB</div>
+    <div class="storage-option4" data-storage="128G">128G</div>
+  </div>
+
+  <div class="gameboy-price" id="gameboy-price-{{ section.id }}">
+   Prix : 69,99 €
+</div>
+
+  
+  <button class="gameboy-banner__cta-button color-orange" id="add-to-cart-btn-{{ section.id }}">
+    Ajouter au panier
+  </button>
+
+  <div class="variant-error" style="color:#ff6b6b; display:none; font-size:0.9rem; margin-top: 0.5rem;">
+    Veuillez choisir une combinaison disponible.
+  </div>
+
+</div>
+
+      </div>
+
+      <!-- GameBoy Container -->
+      <div class="gameboy-banner__gameboy-container">
+        <div class="gameboy-banner__gameboy" id="gameboy-{{ section.id }}">
+          <div class="gameboy-flipper">
+           <!-- Face avant -->
+          <img class="gameboy-face front" src="{% if section.settings.gameboy_image_4 %}{{ section.settings.gameboy_image_4 | img_url: '400x400' }}{% endif %}" alt="GameBoy Face Avant" data-color="color4" loading="lazy">
+
+            <!-- Face arrière -->
+            <img class="gameboy-face back" src="{% if section.settings.gameboy_image_2 %}{{ section.settings.gameboy_image_2 | img_url: '400x400' }}{% endif %}" alt="GameBoy Face Arrière" data-color="color2" loading="lazy">
+          </div>
+
+          
+          <!-- Glow autour de la GameBoy -->
+          <div class="gameboy-banner__glow glow-orange" id="gameboy-glow-{{ section.id }}"></div>
+                    
+          <!-- Images supplémentaires cachées -->
+          {% if section.settings.gameboy_image_3 %}
+            <img src="{{ section.settings.gameboy_image_3 | img_url: '400x400' }}" alt="GameBoy 3" data-color="color3" style="display: none;">
+          {% endif %}
+          {% if section.settings.gameboy_image_5 %}
+            <img src="{{ section.settings.gameboy_image_5 | img_url: '400x400' }}" alt="GameBoy 5" data-color="color5" style="display: none;">
+          {% endif %}
+        </div>
+
+        <!-- Color Selector -->
+      <div class="gameboy-banner__color-selector-wrapper">
+  <div class="gameboy-banner__color-selector color-orange" id="color-selector-{{ section.id }}">
+
+          {% if section.settings.gameboy_image_4 %}
+            <button class="gameboy-banner__color-btn active" data-color="color4" data-theme="purple" style="background-color: {{ section.settings.color_4 | default: '#9B59B6' }};" aria-label="GameBoy Couleur 4"></button>
+          {% endif %}
+          {% if section.settings.gameboy_image_2 %}
+            <button class="gameboy-banner__color-btn" data-color="color2" data-theme="gray" style="background-color: {{ section.settings.color_2 | default: '#4A4A4A' }};" aria-label="GameBoy Couleur 2"></button>
+          {% endif %}
+          {% if section.settings.gameboy_image_3 %}
+            <button class="gameboy-banner__color-btn" data-color="color3" data-theme="red" style="background-color: {{ section.settings.color_3 | default: '#E74C3C' }};" aria-label="GameBoy Couleur 3"></button>
+          {% endif %}
+          {% if section.settings.gameboy_image_1 %}
+            <button class="gameboy-banner__color-btn" data-color="color1" data-theme="orange" style="background-color: {{ section.settings.color_1 | default: '#FF6B35' }};" aria-label="GameBoy Couleur 1"></button>
+          {% endif %}
+          {% if section.settings.gameboy_image_5 %}
+            <button class="gameboy-banner__color-btn" data-color="color5" data-theme="white" style="background-color: {{ section.settings.color_5 | default: '#FFFFFF' }};" aria-label="GameBoy Couleur 5"></button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', async function () {
+  const sectionId = '{{ section.id }}';
+  const gameboy = document.getElementById('gameboy-' + sectionId);
+  const colorSelector = document.getElementById('color-selector-' + sectionId);
+  const title = document.getElementById('title-' + sectionId);
+  const subtitle64 = document.querySelector('.subtitle-64gb');
+  const subtitle128 = document.querySelector('.subtitle-128gb');
+  const glow = document.getElementById('gameboy-glow-' + sectionId);
+  const colorButtons = gameboy.parentElement.parentElement.querySelectorAll('.gameboy-banner__color-btn');
+  const flipper = gameboy.querySelector('.gameboy-flipper');
+  const frontFace = flipper.querySelector('.front');
+  const backFace = flipper.querySelector('.back');
+  const storageOptions = document.querySelectorAll('#storage-options-' + sectionId + ' .storage-option4');
+  const addToCartBtn = document.getElementById('add-to-cart-btn-' + sectionId);
+  const errorDiv = addToCartBtn?.nextElementSibling;
+  const priceDiv = document.getElementById('gameboy-price-' + sectionId);
+  const productHandle = '{{ section.settings.gameboy_product.handle }}';
+  const scrollContainer = document.querySelector('.gameboy-banner__color-selector-wrapper');
+
+
+
+async function updateDisplayedPrice() {
+  let colorLabel = currentColor;
+  if (colorLabel.toLowerCase() === 'gray') {
+    colorLabel = 'Black';
+  }
+
+  const variantName = `${colorLabel} ${selectedStorage}`.trim();
+
+  try {
+    const res = await fetch(`/products/${productHandle}.js`);
+    const product = await res.json();
+    const variant = product.variants.find(v =>
+      v.option1.toLowerCase().trim() === variantName.toLowerCase()
+    );
+
+    if (variant && priceDiv) {
+      const priceInEuros = (variant.price / 100).toFixed(2);
+      priceDiv.textContent = `Prix : ${priceInEuros} €`;
+
+      // 👇 Animation de flash à chaque changement
+      priceDiv.classList.add('flash');
+      setTimeout(() => priceDiv.classList.remove('flash'), 400);
+    } else {
+      priceDiv.textContent = "Prix non disponible";
+    }
+  } catch (err) {
+    console.error('Erreur récupération du prix :', err);
+    if (priceDiv) priceDiv.textContent = "Erreur de prix";
+  }
+}
+
+    
+    
+  let flipped = false;
+  let currentColor = 'Purple';
+  let selectedStorage = '64GB';
+  let currentColorIndex = 0;
+  let isScrolling = false;
+
+  const imageMap = {
+    'color1': '{% if section.settings.gameboy_image_1 %}{{ section.settings.gameboy_image_1 | img_url: "400x400" }}{% endif %}',
+    'color2': '{% if section.settings.gameboy_image_2 %}{{ section.settings.gameboy_image_2 | img_url: "400x400" }}{% endif %}',
+    'color3': '{% if section.settings.gameboy_image_3 %}{{ section.settings.gameboy_image_3 | img_url: "400x400" }}{% endif %}',
+    'color4': '{% if section.settings.gameboy_image_4 %}{{ section.settings.gameboy_image_4 | img_url: "400x400" }}{% endif %}',
+    'color5': '{% if section.settings.gameboy_image_5 %}{{ section.settings.gameboy_image_5 | img_url: "400x400" }}{% endif %}'
+  };
+
+  const gradientMap = {
+    red: 'linear-gradient(45deg, #FFFFFF, #E74C3C, #C0392B, #FFFFFF)',
+    purple: 'linear-gradient(45deg, #9B59B6, #FFFFFF, #8E44AD, #9B59B6)',
+    orange: 'linear-gradient(45deg, #FF6B35, #F7931E, #FFD700, #FF6B35)',
+    gray: 'linear-gradient(45deg, #4A4A4A, #FFFFFF, #707070, #4A4A4A)',
+    white: 'linear-gradient(45deg, #FFFFFF, #F8F9FA, #E9ECEF, #FFFFFF)'
+  };
+
+  // Récupérer les couleurs disponibles dans l'ordre
+  const availableColors = Array.from(colorButtons).map((btn, index) => ({
+    element: btn,
+    color: btn.dataset.color,
+    theme: btn.dataset.theme,
+    index: index
+  }));
+
+  // Fonction pour changer de couleur
+  function changeColor(colorIndex) {
+    if (colorIndex < 0 || colorIndex >= availableColors.length) return;
+    
+    const colorData = availableColors[colorIndex];
+    const button = colorData.element;
+    const selectedColor = colorData.color;
+    const selectedTheme = colorData.theme;
+    const newImageSrc = imageMap[selectedColor];
+
+    if (!newImageSrc) return;
+
+    currentColorIndex = colorIndex;
+    
+    const activeFace = flipped ? backFace : frontFace;
+    const hiddenFace = flipped ? frontFace : backFace;
+
+    // Changer l'image sur la face cachée
+    hiddenFace.style.transition = 'none';
+    hiddenFace.src = newImageSrc;
+    hiddenFace.dataset.color = selectedColor;
+    void hiddenFace.offsetWidth;
+    setTimeout(() => hiddenFace.style.transition = '', 20);
+
+    // Flip pour montrer la nouvelle couleur
+    flipped = !flipped;
+    flipper.style.transform = flipped ? 'rotateY(180deg)' : 'rotateY(0deg)';
+    currentColor = selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1);
+
+    // Mise à jour des styles visuels
+    updateVisualStyles(selectedTheme, button);
+    
+    // Scroll vers le bouton actif
+    scrollToActiveButton(button);
+  }
+
+  // Fonction pour mettre à jour les styles visuels
+  function updateVisualStyles(selectedTheme, activeButton) {
+    // Mise à jour des boutons
+    colorButtons.forEach(btn => {
+      btn.classList.remove('active');
+      btn.style.setProperty('--btn-gradient', 'none');
+    });
+    activeButton.classList.add('active');
+    const gradient = gradientMap[selectedTheme];
+    activeButton.style.setProperty('--btn-gradient', gradient);
+
+    // Mise à jour du titre
+    if (title) {
+      title.className = title.className.replace(/color-\w+/g, '');
+      title.classList.add('color-' + selectedTheme, 'bounce-anim');
+      setTimeout(() => title.classList.remove('bounce-anim'), 1000);
+    }
+
+    // Mise à jour du sélecteur de couleur
+    if (colorSelector) {
+      colorSelector.className = colorSelector.className.replace(/color-\w+/g, '').trim();
+      colorSelector.classList.add('color-' + selectedTheme);
+    }
+
+    // Mise à jour de l'effet glow
+    gameboy.className = gameboy.className.replace(/gameboy-glow-\w+/g, '').trim();
+    gameboy.classList.add('gameboy-glow-' + selectedTheme, 'bounce-anim');
+    setTimeout(() => gameboy.classList.remove('bounce-anim'), 1000);
+  }
+
+  // Fonction pour scroll vers le bouton actif
+  function scrollToActiveButton(button) {
+    if (scrollContainer && button) {
+      const buttonRect = button.getBoundingClientRect();
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const scrollPosition = button.offsetLeft - (containerRect.width / 2) + (buttonRect.width / 2);
+      
+      scrollContainer.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  // Fonction pour passer à la couleur suivante
+  function nextColor() {
+    const nextIndex = (currentColorIndex + 1) % availableColors.length;
+    changeColor(nextIndex);
+  }
+
+  // Fonction pour passer à la couleur précédente
+  function previousColor() {
+    const prevIndex = (currentColorIndex - 1 + availableColors.length) % availableColors.length;
+    changeColor(prevIndex);
+  }
+
+  // Initialisation de la première couleur
+  if (colorButtons.length > 0) {
+    const firstBtn = colorButtons[0];
+    firstBtn.classList.add('active');
+    const firstTheme = firstBtn.dataset.theme;
+    const firstGradient = gradientMap[firstTheme];
+    firstBtn.style.setProperty('--btn-gradient', firstGradient);
+    currentColor = firstTheme.charAt(0).toUpperCase() + firstTheme.slice(1);
+    currentColorIndex = 0;
+  }
+
+  // Gestion des clics sur les boutons de couleur
+  colorButtons.forEach((button, index) => {
+    button.addEventListener('click', function () {
+      if (isScrolling) return;
+      changeColor(index);
+      updateDisplayedPrice();
+    });
+  });
+
+  // Gestion du scroll horizontal sur le container des couleurs
+  if (scrollContainer) {
+    let scrollTimeout;
+    
+    // Scroll avec la molette
+    scrollContainer.addEventListener('wheel', (evt) => {
+      evt.preventDefault();
+      
+      if (isScrolling) return;
+      isScrolling = true;
+      
+      if (evt.deltaY > 0) {
+        // Scroll vers le bas = couleur suivante
+        nextColor();
+      } else {
+        // Scroll vers le haut = couleur précédente
+        previousColor();
+      }
+      
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        isScrolling = false;
+      }, 300);
+    });
+
+    // Variables pour le drag scroll
+    let isDragging = false;
+    let startX;
+    let scrollLeft;
+    let dragThreshold = 50; // Seuil pour déclencher le changement de couleur
+
+    // Gestion du drag avec la souris
+    scrollContainer.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.pageX - scrollContainer.offsetLeft;
+      scrollLeft = scrollContainer.scrollLeft;
+      scrollContainer.style.cursor = 'grabbing';
+    });
+
+    scrollContainer.addEventListener('mouseleave', () => {
+      isDragging = false;
+      scrollContainer.style.cursor = 'default';
+    });
+
+    scrollContainer.addEventListener('mouseup', (e) => {
+      if (isDragging) {
+        const endX = e.pageX - scrollContainer.offsetLeft;
+        const diff = startX - endX;
+        
+        if (Math.abs(diff) > dragThreshold) {
+          if (diff > 0) {
+            nextColor();
+          } else {
+            previousColor();
+          }
+        }
+      }
+      isDragging = false;
+      scrollContainer.style.cursor = 'default';
+    });
+
+    scrollContainer.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+    });
+
+    // Gestion du touch pour mobile
+    let touchStartX = 0;
+    let touchStartScrollLeft = 0;
+    
+    scrollContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartScrollLeft = scrollContainer.scrollLeft;
+    });
+
+    scrollContainer.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+    });
+
+    scrollContainer.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX - touchEndX;
+      
+      if (Math.abs(diff) > dragThreshold) {
+        if (diff > 0) {
+          nextColor();
+        } else {
+          previousColor();
+        }
+      }
+    });
+  }
+
+  // Gestion du scroll horizontal sur la GameBoy elle-même
+  if (gameboy) {
+    let gameboyScrollTimeout;
+    
+    gameboy.addEventListener('wheel', (evt) => {
+      evt.preventDefault();
+      
+      if (isScrolling) return;
+      isScrolling = true;
+      
+      if (evt.deltaY > 0 || evt.deltaX > 0) {
+        nextColor();
+      } else {
+        previousColor();
+      }
+      
+      clearTimeout(gameboyScrollTimeout);
+      gameboyScrollTimeout = setTimeout(() => {
+        isScrolling = false;
+      }, 300);
+    });
+
+    // Touch swipe sur la GameBoy
+    let touchStartXGameboy = 0;
+    
+    gameboy.addEventListener('touchstart', (e) => {
+      touchStartXGameboy = e.touches[0].clientX;
+    });
+
+    gameboy.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartXGameboy - touchEndX;
+      
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) {
+          nextColor();
+        } else {
+          previousColor();
+        }
+      }
+    });
+  }
+
+  // Gestion des touches du clavier
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      previousColor();
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      nextColor();
+    }
+  });
+
+  // Sélection du stockage + changement de sous-titre
+  storageOptions.forEach(option4 => {
+    option4.addEventListener('click', () => {
+      storageOptions.forEach(opt => opt.classList.remove('selected'));
+      option4.classList.add('selected');
+      selectedStorage = option4.dataset.storage;
+
+      if (subtitle64 && subtitle128) {
+        if (selectedStorage === '64GB') {
+          subtitle64.style.display = 'block';
+          subtitle128.style.display = 'none';
+        } else {
+          subtitle64.style.display = 'none';
+          subtitle128.style.display = 'block';
+        }
+      }
+      updateDisplayedPrice();
+    });
+  });
+
+  // Ajouter au panier
+  addToCartBtn?.addEventListener('click', async () => {
+    let colorLabel = currentColor;
+    if (colorLabel.toLowerCase() === 'gray') {
+      colorLabel = 'Black';
+    }
+    const variantName = `${colorLabel} ${selectedStorage}`.trim();
+
+    if (!productHandle) return;
+
+    try {
+      const res = await fetch(`/products/${productHandle}.js`);
+      const product = await res.json();
+      const variant = product.variants.find(v =>
+        v.option1.toLowerCase().trim() === variantName.toLowerCase()
+      );
+
+      if (!variant) {
+        errorDiv.textContent = "Cette combinaison n'existe pas.";
+        errorDiv.style.display = 'block';
+        return;
+      }
+
+      await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: variant.id, quantity: 1 })
+      });
+
+      // Ouvrir slide cart
+      if (typeof toggleCart === 'function') {
+        toggleCart();
+      } else {
+        const slide = document.getElementById('cartSlide');
+        const overlay = document.getElementById('cartSlideOverlay');
+        if (slide && overlay) {
+          slide.classList.add('open');
+          overlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      errorDiv.style.display = 'none';
+      addToCartBtn.textContent = 'Ajouté !';
+      addToCartBtn.disabled = true;
+      setTimeout(() => {
+        addToCartBtn.textContent = 'Ajouter au panier';
+        addToCartBtn.disabled = false;
+      }, 2000);
+    } catch (err) {
+      console.error(err);
+      errorDiv.textContent = "Erreur lors de l'ajout au panier.";
+      errorDiv.style.display = 'block';
+    }
+  });
+});
+</script>
+
+  {% schema %}
+{
+  "name": "Bannière GameBoy",
+  "tag": "section",
+  "class": "gameboy-banner-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Dimensions de la bannière"
+    },
+    {
+      "type": "range",
+      "id": "banner_height_desktop",
+      "label": "Hauteur Desktop",
+      "min": 50,
+      "max": 150,
+      "step": 10,
+      "default": 100,
+      "unit": "vh",
+      "info": "Hauteur de la bannière en pourcentage de la hauteur d'écran"
+    },
+    {
+      "type": "range",
+      "id": "banner_height_mobile",
+      "label": "Hauteur Mobile",
+      "min": 60,
+      "max": 120,
+      "step": 10,
+      "default": 100,
+      "unit": "vh",
+      "info": "Hauteur de la bannière en pourcentage de la hauteur d'écran"
+    },
+    {
+      "type": "header",
+      "content": "Images de fond"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_desktop",
+      "label": "Image de fond Desktop"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Image de fond Mobile"
+    },
+    {
+      "type": "header",
+      "content": "Couleurs et Images GameBoy"
+    },
+    {
+      "type": "color",
+      "id": "color_1",
+      "label": "Couleur 1",
+      "default": "#FF6B35"
+    },
+    {
+      "type": "image_picker",
+      "id": "gameboy_image_1",
+      "label": "Image GameBoy 1"
+    },
+    {
+      "type": "color",
+      "id": "color_2",
+      "label": "Couleur 2",
+      "default": "#4A4A4A"
+    },
+    {
+      "type": "image_picker",
+      "id": "gameboy_image_2",
+      "label": "Image GameBoy 2"
+    },
+    {
+      "type": "color",
+      "id": "color_3",
+      "label": "Couleur 3",
+      "default": "#E74C3C"
+    },
+    {
+      "type": "image_picker",
+      "id": "gameboy_image_3",
+      "label": "Image GameBoy 3"
+    },
+    {
+      "type": "color",
+      "id": "color_4",
+      "label": "Couleur 4",
+      "default": "#9B59B6"
+    },
+    {
+      "type": "image_picker",
+      "id": "gameboy_image_4",
+      "label": "Image GameBoy 4"
+    },
+    {
+      "type": "color",
+      "id": "color_5",
+      "label": "Couleur 5",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "image_picker",
+      "id": "gameboy_image_5",
+      "label": "Image GameBoy 5"
+    },
+    {
+      "type": "header",
+      "content": "Titre principal"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "GAMEBOY SHOP"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Taille titre Desktop",
+      "min": 24,
+      "max": 120,
+      "step": 4,
+      "default": 80,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Taille titre Mobile",
+      "min": 20,
+      "max": 60,
+      "step": 2,
+      "default": 36,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Sous-titre"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Sous-titre",
+      "default": "PLUS DE 15 000 JEUX RÉTRO DANS VOTRE POCHE."
+    },
+    {
+  "type": "text",
+  "id": "subtitle_64gb",
+  "label": "Sous-titre 64GB",
+  "default": "PLUS DE 15 000 JEUX RÉTRO DANS VOTRE POCHE - 64GB"
+},
+{
+  "type": "text",
+  "id": "subtitle_128gb",
+  "label": "Sous-titre 128GB",
+  "default": "PLUS DE JEUX, PLUS DE PLAISIR - 128GB"
+},
+    {
+      "type": "range",
+      "id": "subtitle_size_desktop",
+      "label": "Taille sous-titre Desktop",
+      "min": 12,
+      "max": 36,
+      "step": 2,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "subtitle_size_mobile",
+      "label": "Taille sous-titre Mobile",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+    "type": "product",
+    "id": "link_product",
+    "label": "Produit du bouton CTA"
+  },
+  {
+    "type": "text",
+    "id": "cta_text",
+    "label": "Texte du bouton CTA",
+    "default": "Acheter maintenant"
+  },
+  {
+    "type": "range",
+    "id": "cta_size_desktop",
+    "label": "Taille du texte du bouton Desktop",
+    "min": 12,
+    "max": 36,
+    "step": 2,
+    "default": 16,
+    "unit": "px"
+  },
+  {
+    "type": "range",
+    "id": "cta_size_mobile",
+    "label": "Taille du texte du bouton Mobile",
+    "min": 10,
+    "max": 30,
+    "step": 1,
+    "default": 14,
+    "unit": "px"
+  },
+    {
+  "type": "product",
+  "id": "gameboy_product",
+  "label": "Produit GameBoy (avec variantes couleur + stockage)"
+}
+
+
+  ],
+  "presets": [
+    {
+      "name": "Bannière GameBoy",
+      "settings": {
+        "title": "GAMEBOY SHOP",
+        "subtitle": "PLUS DE 15 000 JEUX RÉTRO DANS VOTRE POCHE.",
+        "title_size_desktop": 80,
+        "title_size_mobile": 36,
+        "subtitle_size_desktop": 18,
+        "subtitle_size_mobile": 14,
+        "banner_height_desktop": 100,
+        "banner_height_mobile": 100,
+        "color_1": "#FF6B35",
+        "color_2": "#4A4A4A",
+        "color_3": "#E74C3C",
+        "color_4": "#9B59B6",
+        "color_5": "#FFFFFF"
+      }
+    }
+  ]
+}
+{% endschema %}

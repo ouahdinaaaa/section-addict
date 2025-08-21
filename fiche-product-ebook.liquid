@@ -1,0 +1,798 @@
+<style>
+  .mysterious-product-section {
+    display: flex;
+    flex-wrap: wrap;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mysterious-product-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(25, 25, 112, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .mysterious-left, .mysterious-right {
+    flex: 1 1 50%;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+  }
+
+
+  
+  .mysterious-left {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+  }
+
+  .mysterious-selected-color {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  }
+  
+  .mysterious-main-image {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 
+      0 20px 40px rgba(139, 0, 0, 0.3),
+      0 10px 20px rgba(25, 25, 112, 0.2),
+      inset 0 1px 0 rgba(255,255,255,0.1);
+    border: 2px solid rgba(139, 0, 0, 0.3);
+    transition: all 0.4s ease;
+  }
+
+  .mysterious-main-image:hover {
+    transform: scale(1.02);
+    box-shadow: 
+      0 30px 60px rgba(139, 0, 0, 0.4),
+      0 15px 30px rgba(25, 25, 112, 0.3),
+      0 0 20px rgba(139, 0, 0, 0.2);
+  }
+
+  .mysterious-thumbnails {
+    display: flex;
+    justify-content: left;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+
+  .mysterious-thumbnails img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 2px solid rgba(139, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+
+  .mysterious-thumbnails img:hover {
+    transform: translateY(-5px);
+    border-color: #8B0000;
+    box-shadow: 
+      0 10px 25px rgba(139, 0, 0, 0.4),
+      0 0 15px rgba(139, 0, 0, 0.2);
+  }
+
+  .mysterious-right {
+    padding-left: 2rem;
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+
+  .mysterious-title {
+    color: #ffffff;
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+    margin-bottom: 1.5rem;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #ffffff, #b8b8b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .mysterious-price-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .mysterious-price-initial {
+    text-decoration: line-through;
+    color: #666;
+  }
+
+  .mysterious-price-discounted {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 2.2rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  }
+
+  .mysterious-price-tag {
+    background: linear-gradient(135deg, #8B0000, #b91515);
+    color: #fff;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .mysterious-info {
+    margin-top: 1rem;
+    line-height: 1.6;
+    color: #b8b8b8;
+  }
+
+
+
+
+
+  .mysterious-scroll-icons {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .mysterious-scroll-icons div {
+    flex: 1;
+    text-align: center;
+    background: linear-gradient(135deg, #8B0000, #191970);
+    color: white;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    box-shadow: 0 8px 20px rgba(139, 0, 0, 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .mysterious-scroll-icons div:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 
+      0 15px 30px rgba(139, 0, 0, 0.4),
+      0 0 20px rgba(139, 0, 0, 0.2);
+  }
+
+  .mysterious-scroll-icons p {
+    margin-top: 0.8rem;
+    text-align: center;
+    color: #b8b8b8;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .mysterious-add-btn {
+    display: block;
+    width: 100%;
+    padding: 1.2rem;
+    text-align: center;
+    background: linear-gradient(135deg, #8B0000, #b91515);
+    color: #fff;
+    font-size: 1.8rem;
+    border: none;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 
+      0 10px 25px rgba(139, 0, 0, 0.3),
+      0 0 20px rgba(139, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .mysterious-add-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .mysterious-add-btn:hover::before {
+    left: 100%;
+  }
+
+  .mysterious-add-btn:hover {
+    background: linear-gradient(135deg, #b91515, #d61a1a);
+    transform: translateY(-3px);
+    box-shadow: 
+      0 15px 35px rgba(139, 0, 0, 0.4),
+      0 0 30px rgba(139, 0, 0, 0.2);
+  }
+
+  .mysterious-add-btn:disabled {
+    background: #333;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .mysterious-guarantee {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #b8b8b8;
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background: rgba(26, 26, 46, 0.5);
+    border-radius: 8px;
+    border: 1px solid rgba(139, 0, 0, 0.2);
+  }
+
+  details {
+    background: rgba(26, 26, 46, 0.8);
+    border-radius: 10px;
+    margin-bottom: 0.8rem;
+    padding: 1.2rem;
+    cursor: pointer;
+    border: 1px solid rgba(139, 0, 0, 0.2);
+    color: #ffffff;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  details:hover {
+    border-color: #8B0000;
+    box-shadow: 0 5px 15px rgba(139, 0, 0, 0.2);
+  }
+
+  summary {
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  }
+
+  .mysterious-color-options {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    width: min-content;
+  }
+
+  .mysterious-color-box {
+    border: 2px solid rgba(139, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    color: #ffffff;
+    background: rgba(26, 26, 46, 0.7);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+
+  .mysterious-color-box:hover {
+    transform: translateY(-5px);
+    border-color: #8B0000;
+    box-shadow: 
+      0 15px 30px rgba(139, 0, 0, 0.2),
+      0 0 20px rgba(139, 0, 0, 0.1);
+  }
+
+  .mysterious-color-box.selected {
+    border-color: #8B0000;
+    box-shadow: 
+      0 0 0 2px #8B0000,
+      0 15px 30px rgba(139, 0, 0, 0.3),
+      0 0 25px rgba(139, 0, 0, 0.2);
+    background: rgba(139, 0, 0, 0.1);
+  }
+
+  .error-message {
+    color: #ff4757;
+    font-size: 0.95rem;
+    margin-top: 0.8rem;
+    display: none;
+    padding: 0.8rem;
+    background: rgba(255, 71, 87, 0.1);
+    border: 1px solid rgba(255, 71, 87, 0.3);
+    border-radius: 8px;
+  }
+
+  .mysterious-old-price {
+    text-decoration: line-through;
+    color: #666;
+    font-size: 1.8rem;
+  }
+
+  .mysterious-save-badge {
+    background: linear-gradient(135deg, #191970, #2a3d8f);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 5px 15px rgba(25, 25, 112, 0.3);
+    letter-spacing: 0.5px;
+  }
+
+  .info-products {
+    color: #ffffff;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+    margin-left: 5px;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  }
+
+  .stock-alert {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, rgba(139, 0, 0, 0.2), rgba(139, 0, 0, 0.1));
+    color: #ff6b6b;
+    font-weight: bold;
+    padding: 12px 18px;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    border: 1px solid rgba(139, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    animation: pulseBorder 1.5s infinite ease-in-out;
+  }
+
+  .stock-dot {
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, #ff4757, #ff3838);
+    border-radius: 50%;
+    animation: blink 1s infinite;
+    box-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.8); }
+  }
+
+  @keyframes pulseBorder {
+    0%, 100% { border-color: rgba(139, 0, 0, 0.3); }
+    50% { border-color: rgba(139, 0, 0, 0.6); }
+  }
+
+  .mysterious-feature-list {
+    background: rgba(26, 26, 46, 0.8);
+    padding: 1.8rem;
+    border-radius: 15px;
+    margin-top: 1.5rem;
+    border: 1px solid rgba(139, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  }
+
+  .mysterious-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .mysterious-feature-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8B0000, #191970);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(139, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+  }
+
+  .mysterious-feature-icon:hover {
+    transform: scale(1.1);
+  }
+
+  .mysterious-feature-text {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #ffffff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  }
+
+
+
+  @media screen and (max-width: 768px) {
+    .mysterious-product-section {
+      display: grid;
+      padding: 2rem 1rem;
+    }
+    
+    .mysterious-left {
+      position: static;
+      top: auto;
+      align-self: auto;
+    }
+
+    .mysterious-right {
+      padding-left: 0;
+      max-height: none;
+      margin-top: 2rem;
+    }
+
+    .mysterious-title {
+      font-size: 2rem;
+    }
+
+    .mysterious-price-row {
+      font-size: 1.5rem;
+    }
+
+    .mysterious-add-btn {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+
+<section class="mysterious-product-section">
+  <div class="mysterious-left">
+    <img class="mysterious-main-image" src="{{ product.featured_image | img_url: 'master' }}" alt="{{ product.title }}">
+    <div class="mysterious-thumbnails">
+      {% for image in product.images %}
+        <img src="{{ image | img_url: '100x100' }}" onclick="document.querySelector('.mysterious-main-image').src=this.src">
+      {% endfor %}
+    </div>
+  </div>
+
+  
+  <div class="mysterious-right">
+    <div class="mysterious-title">{{ product.title }}</div>
+
+    <div class="mysterious-price-row">
+      <!-- Prix total selon la quantité -->
+      <div class="mysterious-price-discounted" id="totalPrice">
+        {{ product.price | money }}
+      </div>
+      
+      <!-- Prix ancien barré -->
+      <div class="mysterious-old-price" id="oldPrice">
+        {{ section.settings.old_price }}
+      </div>
+      
+      <!-- Badge SAVE -->
+    <div class="mysterious-old-price" id="oldPrice">
+        {{ section.settings.old_price_1 }}
+      </div>
+      
+      <!-- Badge SAVE -->
+      <div class="mysterious-save-badge" id="saveBadge">
+        {{ section.settings.save_text }} {{ section.settings.save_amount_1 }}
+      </div>
+    </div>
+
+ <p class="info-products"> 📚 Informations du eBook </p>
+<div class="mysterious-info mysterious-feature-list">
+  {% for block in section.blocks %}
+    {% if block.type == 'feature' %}
+      <div class="mysterious-feature-item">
+        <div class="mysterious-feature-icon">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+            <path d="M9 16.2l-3.5-3.6L4 14l5 5 12-12-1.5-1.4z"/>
+          </svg>
+        </div>
+        <div class="mysterious-feature-text">{{ block.settings.feature_text }}</div>
+      </div>
+    {% endif %}
+  {% endfor %}
+</div>
+
+              
+<p class="mysterious-selected-color">Format : <span id="selectedColor">PDF</span></p>
+<div class="mysterious-color-options">
+  <div class="mysterious-color-box selected" data-color="pdf" onclick="selectColor(this)">
+    <div style="display: flex; align-items: center; justify-content: center; gap: 0.3rem;">
+      <img src="{{ section.settings.color_image_gold | img_url: '100x100' }}" alt="PDF" style="height: 45px; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.3));" />
+      PDF
+    </div>
+  </div>
+</div>
+
+
+    <div style="display: flex; gap: 1rem; margin-top: -1rem;">
+      <p style="flex: 1; text-align: center; color: #b8b8b8; font-size: 0.85rem;">{{ section.settings.icon_label_1 }}</p>
+      <p style="flex: 1; text-align: center; color: #b8b8b8; font-size: 0.85rem;">{{ section.settings.icon_label_2 }}</p>
+      <p style="flex: 1; text-align: center; color: #b8b8b8; font-size: 0.85rem;">{{ section.settings.icon_label_3 }}</p>
+      <p style="flex: 1; text-align: center; color: #b8b8b8; font-size: 0.85rem;">{{ section.settings.icon_label_4 }}</p>
+    </div>
+
+    <div class="mysterious-info">{{ section.settings.below_scroll_text }}</div>
+
+    <form method="post" action="/cart/add" id="addToCartForm">
+      <input type="hidden" name="id" id="variantId" value="">
+      <input type="hidden" name="quantity" id="quantityInput" value="1">
+      <input type="hidden" name="properties[Format]" id="colorProperty" value="PDF">
+
+        <div class="stock-alert">
+          <span class="stock-dot"></span>
+          🔥 Stock limité : 4 exemplaires restants
+        </div>
+
+      <button type="submit" class="mysterious-add-btn" id="addToCartBtn">
+        {{ section.settings.button_text }} - <span id="dynamicPrice">{{ product.price | money }}</span>
+      </button>
+      
+      <div class="error-message" id="errorMessage">
+        ⚠️ Veuillez sélectionner une variante disponible.
+      </div>
+    </form>
+
+    <details>
+      <summary>📖 Détails du eBook</summary>
+      <div>{{ product.description }}</div>
+    </details>
+    
+    <details>
+      <summary>📋 Sommaire</summary>
+      <div>{{ section.settings.sommaire }}</div>
+    </details>
+
+    <details>
+      <summary>📦 Contenu du Pack</summary>
+      <div>{{ section.settings.contenus_colis }}</div>
+    </details>
+
+    <details>
+      <summary>📧 Livraison & Accès</summary>
+      <div>{{ section.settings.livraison }}</div>
+    </details>
+</div>
+</section>
+
+<script>
+  // Variables globales pour les données produit
+  const productData = {
+    variants: [
+      {% for variant in product.variants %}
+        {
+          id: {{ variant.id }},
+          price: {{ variant.price }},
+          available: {{ variant.available | json }},
+          option1: "{{ variant.option1 | escape }}",
+          option2: "{{ variant.option2 | escape }}",
+          option3: "{{ variant.option3 | escape }}"
+        }{% unless forloop.last %},{% endunless %}
+      {% endfor %}
+    ],
+    currency: "{{ cart.currency.symbol }}",
+    basePrice: {{ product.price }}
+  };
+
+  let selectedColor = 'pdf';
+  let selectedQuantity = 1;
+  let currentVariant = null;
+
+  function formatMoney(cents) {
+    const price = (cents / 100).toFixed(2).replace('.', ',');
+    return `${price} €`;
+  }
+
+  function findVariant(color) {
+    // Mapper les formats
+    const colorMap = {
+      'pdf': 'PDF'
+    };
+    
+    const mappedColor = colorMap[color] || color;
+    
+    console.log('Recherche variante pour:', mappedColor);
+    console.log('Variantes disponibles:', productData.variants);
+    
+    // Tester différentes structures possibles
+    let variant = productData.variants.find(v => {
+      console.log('Test variant:', v.option1, v.option2, v.option3);
+      
+      // Cas 1: Format = option1
+      if (v.option1 === mappedColor) {
+        return true;
+      }
+      
+      // Cas 2: Pas de variantes, prendre la première
+      if (!v.option1 || v.option1 === 'Default Title') {
+        return true;
+      }
+      
+      return false;
+    });
+    
+    // Si aucune variante trouvée, prendre la première disponible
+    if (!variant) {
+      variant = productData.variants.find(v => v.available);
+    }
+    
+    console.log('Variante trouvée:', variant);
+    return variant;
+  }
+
+  function updateVariant() {
+    const variant = findVariant(selectedColor);
+    const variantIdInput = document.getElementById('variantId');
+    const addToCartBtn = document.getElementById('addToCartBtn');
+    const errorMessage = document.getElementById('errorMessage');
+    const dynamicPrice = document.getElementById('dynamicPrice');
+    const totalPriceEl = document.getElementById('totalPrice');
+
+    if (variant && variant.available) {
+      currentVariant = variant;
+      variantIdInput.value = variant.id;
+      addToCartBtn.disabled = false;
+      errorMessage.style.display = 'none';
+      
+      // Mettre à jour les prix affichés
+      dynamicPrice.textContent = formatMoney(variant.price);
+      totalPriceEl.textContent = formatMoney(variant.price);
+      
+    } else {
+      currentVariant = null;
+      variantIdInput.value = '';
+      addToCartBtn.disabled = true;
+      errorMessage.style.display = 'block';
+      
+      // Prix par défaut
+      dynamicPrice.textContent = formatMoney(productData.basePrice);
+      totalPriceEl.textContent = formatMoney(productData.basePrice);
+    }
+  }
+
+  function selectColor(box) {
+    const color = box.getAttribute('data-color');
+    const allColorBoxes = document.querySelectorAll('.mysterious-color-box');
+    const colorText = document.getElementById('selectedColor');
+    const colorProperty = document.getElementById('colorProperty');
+
+    // Mise à jour visuelle
+    allColorBoxes.forEach(b => b.classList.remove('selected'));
+    box.classList.add('selected');
+
+    // Mise à jour des variables
+    selectedColor = color;
+    colorText.textContent = 'PDF';
+    colorProperty.value = 'PDF';
+
+    // Mettre à jour la variante
+    updateVariant();
+  }
+
+// Gestion de l'ajout au panier (Ajax + ouverture slide cart)
+document.getElementById('addToCartForm').addEventListener('submit', function(e) {
+  e.preventDefault(); // éviter la redirection vers /cart
+
+  if (!currentVariant || !currentVariant.available) {
+    document.getElementById('errorMessage').style.display = 'block';
+    return;
+  }
+
+  // Récupération ID variant + quantité
+  const productId = currentVariant.id;
+  const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+
+  // 👉 Utilisation de ta fonction globale
+if (window.addToCart) {
+  addToCart(productId, quantity).then(() => {
+    // 👉 Forcer l'ouverture de la slide cart
+    const slideCart = document.querySelector('.cart-slide');
+    if (slideCart) {
+      slideCart.classList.add('active'); // ou la classe qui ouvre ta slide
+      document.body.classList.add('cart-open'); // si tu bloques le body au scroll
+    }
+  });
+}
+
+
+
+});
+
+
+
+  // Initialisation au chargement
+  document.addEventListener("DOMContentLoaded", function() {
+    // Initialisation avec PDF par défaut
+    const firstColorBox = document.querySelector('.mysterious-color-box.selected');
+    if (firstColorBox) {
+      selectedColor = 'pdf';
+    }
+
+    // Mise à jour initiale
+    updateVariant();
+  });
+
+  // Debug - vous pouvez supprimer cette ligne en production
+  console.log('Variantes disponibles:', productData.variants);
+</script>
+
+{% schema %}
+{
+  "name": "Fiche Mystérieux",
+  "tag": "section",
+  "templates": ["product"],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Avantage eBook",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature_text",
+          "label": "Texte de l'avantage",
+          "default": "Accès immédiat après achat"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "image_picker", "id": "color_image_gold", "label": "Image format PDF" },
+
+    { "type": "text", "id": "contenus_colis", "label": "Contenu du pack", "default": "eBook au format PDF + Bonus exclusifs" },
+    { "type": "text", "id": "livraison", "label": "Livraison & accès", "default": "Accès immédiat par email après paiement" },
+    { "type": "text", "id": "sommaire", "label": "Sommaire", "default": "table des matières" },
+
+    { "type": "text", "id": "below_scroll_text", "label": "Texte au-dessus du bouton", "default": "🕐 Offre limitée - Les secrets ne restent pas cachés longtemps..." },
+    { "type": "text", "id": "button_text", "label": "Texte du bouton", "default": "🔓 AJOUTER AU PANIER" },
+
+    {
+      "type": "text",
+      "id": "old_price",
+      "label": "Prix barré",
+      "default": "49€"
+    },
+    {
+      "type": "text", 
+      "id": "save_text",
+      "label": "Texte du badge SAVE",
+      "default": "ÉCONOMISEZ",
+      "info": "Le texte qui apparaîtra dans le badge bleu"
+    },
+    {
+      "type": "text",
+      "id": "save_amount", 
+      "label": "Montant économisé",
+      "default": "20€"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fiche Produit Mystérieux",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

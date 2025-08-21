@@ -1,0 +1,691 @@
+<style>
+  .cart-drawer-wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    max-width: 480px;
+    z-index: 9999;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    display: none;
+  }
+  .cart-drawer-wrapper.open {
+    display: block;
+    transform: translateX(0);
+  }
+  .cart-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9998;
+    display: none;
+  }
+  .cart-overlay.show {
+    display: block;
+  }
+  .cart-drawer {
+    background: {{ section.settings.drawer_bg }};
+    color: {{ section.settings.drawer_text }};
+    padding: 15px;
+    height: 100%;
+    overflow-y: auto;
+    border-left: 3px solid {{section.settings.color_border}};
+    box-shadow: -8px 0 20px rgb(18 36 187 / 20%);
+  }
+  .panier-badges {
+    display: flex;
+    justify-content: space-around;
+    background: {{ section.settings.badge_bg }};
+    border:1px solid {{ section.settings.badge_border }};
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  .panier-badge {
+    text-align: center;
+    color: {{section.settings.badge_text}};
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .panier-badge img {
+    height: 28px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    opacity: 0.9;
+  }
+  .cart-table-header {
+    display: flex;
+    justify-content: space-between;
+    background: {{ section.settings.header_bg }};
+    border: 1px solid {{ section.settings.header_border }};
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 16px;
+    color: {{ section.settings.header_text }};
+    font-weight: 600;
+    font-size: 10px;
+  }
+  .cart-table-header div {
+    flex: 1;
+    text-align: center;
+    color: {{ section.settings.header_text }};
+  }
+  .cart-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: {{ section.settings.item_bg }};
+    border: 1px solid {{ section.settings.item_border }};
+    border-radius: 8px;
+    padding: 4px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+  }
+  .cart-item:hover {
+    background: {{ section.settings.item_bg_hover }};
+    border-color: {{ section.settings.item_border_hover }};
+  }
+  .cart-item img {
+    width: 35px;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid {{ section.settings.item_border }};
+  }
+  .cart-item-info {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+  .cart-item-info > div {
+    flex: 1;
+    text-align: center;
+    font-weight: 500;
+    color: {{ section.settings.item_text }};
+  }
+  .cart-item-info strong {
+    color: {{ section.settings.item_strong }};
+    font-size: 10px;
+    display: block;
+    font-weight: 600;
+    text-align:left;
+  }
+  .qty-btn {
+    background: {{ section.settings.qty_btn_bg }};
+    color: {{ section.settings.qty_btn_text }};
+    border: none;
+    padding: 3px 7px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 12px;
+  }
+  .qty-btn:hover {
+    background: {{ section.settings.qty_btn_hover }};
+    transform: translateY(-1px);
+  }
+  .qty-number {
+    font-size: 14px;
+    color: {{ section.settings.qty_text }};
+    margin: 0 6px;
+    font-weight: 600;
+  }
+  .cart-summary {
+    background: {{ section.settings.summary_bg }};
+    border: 1px solid {{ section.settings.summary_border }};
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 20px;
+    color: {{ section.settings.summary_text }};
+  }
+  .cart-summary .total {
+    font-size: 18px;
+    font-weight: 700;
+    color: {{ section.settings.summary_total }};
+    padding-top: 8px;
+    border-top: 1px solid {{ section.settings.summary_border }};
+  }
+  .cart-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .btn-panier-violet {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    background: {{ section.settings.btn_violet }};
+    color: {{ section.settings.btn_violet_text }};
+  }
+  .btn-panier-jaune {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    background: {{ section.settings.btn_jaune }};
+    color: {{ section.settings.btn_jaune_text }};
+  }
+  .btn-panier-violet:hover {
+    background: {{ section.settings.btn_violet_hover }};
+    transform: translateY(-1px);
+  }
+  .btn-panier-jaune:hover {
+    background: {{ section.settings.btn_jaune_hover }};
+    transform: translateY(-1px);
+  }
+  .cart-timer {
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: 1px;
+    color: {{ section.settings.timer_text }};
+    text-shadow: 0 0 5px {{ section.settings.timer_glow1 }}, 0 0 10px {{ section.settings.timer_glow2 }};
+    transition: color 0.3s ease;
+  }
+</style>
+
+
+<div id="cartOverlay" class="cart-overlay"></div>
+<div id="cartDrawer" class="cart-drawer-wrapper">
+  <div class="cart-drawer">
+    <div class="panier-badges">
+      <div class="panier-badge">
+        <img src="{{ section.settings.icone1 | img_url: '50x' }}" alt="Icone 1">
+        <div>{{ section.settings.text1 }}</div>
+      </div>
+      <div class="panier-badge">
+        <img src="{{ section.settings.icone2 | img_url: '50x' }}" alt="Icone 2">
+        <div>{{ section.settings.text2 }}</div>
+      </div>
+      <div class="panier-badge">
+        <img src="{{ section.settings.icone3 | img_url: '50x' }}" alt="Icone 3">
+        <div>{{ section.settings.text3 }}</div>
+      </div>
+    </div>
+    
+    <div id="cart-timer-box" style="margin: 10px auto 20px; max-width: 300px; background: {{section.settings.back-timer}}; border:1px solid #2956af; padding: 12px; border-radius: 8px;">
+      <p style="color: {{section.settings.subtitle}}; font-weight: 600; font-size: 14px; margin: 0;">⏳ Vos articles sont réservés dans votre panier pendant 10 minutes !</p>
+      <div id="cart-timer" class="cart-timer" style="font-size: 22px; font-weight: bold; margin-top: 5px; display: flex; justify-content: center;">10:00</div>
+    </div>
+
+    <div class="cart-table-header">
+      <div>Produit</div>
+      <div>Prix unitaire</div>
+      <div>Quantité</div>
+      <div>Total</div>
+    </div>
+
+    <div id="cartContent"></div>
+
+    <div class="cart-buttons">
+      <button class="btn-panier-violet" onclick="toggleCart()">⬅ CONTINUER MES ACHATS</button>
+      <button class="btn-panier-jaune" onclick="window.location.href='/checkout'">COMMANDER</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Variables globales
+let cartTimerInterval;
+
+// 🔧 Gestion du timer du panier (10 minutes)
+function startCartTimer() {
+  const now = Date.now();
+  const expiresAt = now + 10 * 60 * 1000; // 10 minutes
+  localStorage.setItem('cart_timer_expires', expiresAt);
+  console.log('Timer démarré pour 10 minutes');
+  updateCartTimer();
+}
+
+function stopCartTimer() {
+  clearInterval(cartTimerInterval);
+  localStorage.removeItem('cart_timer_expires');
+  const timerDisplay = document.getElementById('cart-timer');
+  if (timerDisplay) {
+    timerDisplay.textContent = "10:00";
+    timerDisplay.style.color = "#b80000";
+  }
+  console.log('Timer arrêté');
+}
+
+function updateCartTimer() {
+  const timerDisplay = document.getElementById('cart-timer');
+  const expiresAt = localStorage.getItem('cart_timer_expires');
+
+  if (!expiresAt || !timerDisplay) return;
+
+  function tick() {
+    const now = Date.now();
+    const timeLeft = parseInt(expiresAt) - now;
+
+    if (timeLeft <= 0) {
+      clearInterval(cartTimerInterval);
+      timerDisplay.textContent = "00:00";
+      timerDisplay.style.color = "#e74c3c"; // Rouge quand expiré
+      clearCartAutomatically();
+      return;
+    }
+
+    const minutes = Math.floor(timeLeft / 60000);
+    const seconds = Math.floor((timeLeft % 60000) / 1000);
+    
+    // Couleur selon le temps restant
+    if (timeLeft < 60000) { // Moins d'1 minute
+      timerDisplay.style.color = "#e74c3c"; // Rouge
+    } else if (timeLeft < 180000) { // Moins de 3 minutes
+      timerDisplay.style.color = "#f39c12"; // Orange
+    } else {
+      timerDisplay.style.color = "#f39c12"; // Orange au lieu du vert
+    }
+    
+    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  clearInterval(cartTimerInterval);
+  cartTimerInterval = setInterval(tick, 1000);
+  tick();
+}
+
+function clearCartAutomatically() {
+  fetch('/cart/clear.js', { method: 'POST' })
+    .then(() => {
+      console.log('Panier vidé automatiquement');
+      localStorage.removeItem('cart_timer_expires');
+      renderCart();
+      showNotification('⏰ Votre panier a expiré ! Les articles ont été supprimés.', 'error');
+    })
+    .catch(err => console.error('Erreur lors du vidage du panier:', err));
+}
+
+function checkCartAndManageTimer() {
+  fetch('/cart.js')
+    .then(response => response.json())
+    .then(cart => {
+      if (cart.items.length === 0) {
+        stopCartTimer();
+        console.log('Panier vide - Timer arrêté');
+      } else {
+        const expiresAt = localStorage.getItem('cart_timer_expires');
+        if (!expiresAt) {
+          startCartTimer();
+          console.log('Panier non vide sans timer - Timer démarré');
+        } else {
+          updateCartTimer();
+          console.log('Panier non vide avec timer - Timer continué');
+        }
+      }
+    })
+    .catch(error => {
+      console.error('Erreur lors de la vérification du panier:', error);
+    });
+}
+
+// 🔧 Fonction pour ouvrir/fermer le slide cart
+window.toggleCart = function () {
+  const drawer = document.getElementById('cartDrawer');
+  const overlay = document.getElementById('cartOverlay');
+
+  if (drawer.classList.contains('open')) {
+    drawer.classList.remove('open');
+    overlay.classList.remove('show');
+    setTimeout(() => {
+      drawer.style.display = 'none';
+      overlay.style.display = 'none';
+    }, 300);
+  } else {
+    drawer.style.display = 'block';
+    overlay.style.display = 'block';
+    setTimeout(() => {
+      drawer.classList.add('open');
+      overlay.classList.add('show');
+    }, 10);
+    renderCart();
+  }
+};
+
+// 🔧 Fonction pour rendre le contenu du panier
+function renderCart() {
+  fetch('/cart.js')
+    .then(response => response.json())
+    .then(cart => {
+      const container = document.getElementById('cartContent');
+      
+      if (!cart.items.length) {
+        container.innerHTML = '<p style="text-align:center; margin-top:40px; font-size:18px; color:white;">🛒 Votre panier est vide</p>';
+        stopCartTimer();
+        return;
+      }
+
+      // Gérer le timer selon l'état du panier
+      const expiresAt = localStorage.getItem('cart_timer_expires');
+      if (!expiresAt) {
+        startCartTimer();
+      } else {
+        updateCartTimer();
+      }
+
+      let html = '';
+      cart.items.forEach((item, index) => {
+        html += `
+          <div class="cart-item" data-line-id="${item.key}">
+            <img src="${item.image}" alt="${item.product_title}">
+            <div class="cart-item-info">
+              <div><strong>${item.product_title}</strong></div>
+              <div>${(item.final_price / 100).toFixed(2)} €</div>
+              <div>
+                <button class="qty-btn" data-action="decrease" data-line="${index}">−</button>
+                <span class="qty-number">${item.quantity}</span>
+                <button class="qty-btn" data-action="increase" data-line="${index}">+</button>
+              </div>
+              <div>${(item.line_price / 100).toFixed(2)} €</div>
+            </div>
+          </div>
+        `;
+      });
+
+      html += `
+        <div class="cart-summary">
+          <div><strong>Sous-total :</strong> ${(cart.total_price / 100).toFixed(2)} €</div>
+          <div><strong>Livraison estimée :</strong> 0,00 €</div>
+          <div class="total">Total à payer : ${(cart.total_price / 100).toFixed(2)} €</div>
+        </div>
+      `;
+
+      container.innerHTML = html;
+      updateCartCounter(cart.item_count);
+    })
+    .catch(error => {
+      console.error('Erreur lors du chargement du panier:', error);
+    });
+}
+
+// 🔧 Fonction globale pour actualiser le slide cart
+window.updateCartSlideContent = function(cart) {
+  const container = document.getElementById('cartContent');
+  if (!container) return;
+
+  if (!cart.items.length) {
+    container.innerHTML = '<p style="text-align:center; margin-top:40px; font-size:18px; color:white;">🛒 Votre panier est vide</p>';
+    stopCartTimer();
+    return;
+  }
+
+  // Gérer le timer
+  const expiresAt = localStorage.getItem('cart_timer_expires');
+  if (!expiresAt) {
+    startCartTimer();
+  } else {
+    updateCartTimer();
+  }
+
+  let html = '';
+  cart.items.forEach((item, index) => {
+    html += `
+      <div class="cart-item" data-line-id="${item.key}">
+        <img src="${item.image}" alt="${item.product_title}">
+        <div class="cart-item-info">
+          <div><strong>${item.product_title}</strong></div>
+          <div>${(item.final_price / 100).toFixed(2)} €</div>
+          <div>
+            <button class="qty-btn" data-action="decrease" data-line="${index}">−</button>
+            <span class="qty-number">${item.quantity}</span>
+            <button class="qty-btn" data-action="increase" data-line="${index}">+</button>
+          </div>
+          <div>${(item.line_price / 100).toFixed(2)} €</div>
+        </div>
+      </div>
+    `;
+  });
+
+  html += `
+    <div class="cart-summary">
+      <div><strong>Sous-total :</strong> ${(cart.total_price / 100).toFixed(2)} €</div>
+      <div><strong>Livraison estimée :</strong> 0,00 €</div>
+      <div class="total">Total à payer : ${(cart.total_price / 100).toFixed(2)} €</div>
+    </div>
+  `;
+
+  container.innerHTML = html;
+  updateCartCounter(cart.item_count);
+};
+
+// 🔧 Fonction pour mettre à jour le compteur du panier
+function updateCartCounter(itemCount) {
+  const cartCounters = document.querySelectorAll('.cart-count, .cart-counter, [data-cart-count]');
+  cartCounters.forEach(counter => {
+    counter.textContent = itemCount;
+  });
+}
+
+// 🔧 Fonctions à appeler depuis vos autres scripts
+window.onProductAddedToCart = function(cart) {
+  console.log('Produit ajouté au panier');
+  startCartTimer(); // Toujours redémarrer le timer à 10 minutes
+  
+  if (window.updateCartSlideContent) {
+    window.updateCartSlideContent(cart);
+  }
+  
+  document.dispatchEvent(new CustomEvent('cart:itemAdded', { detail: cart }));
+  showNotification('✅ Produit ajouté au panier !', 'success');
+};
+
+window.onProductRemovedFromCart = function(cart) {
+  console.log('Produit supprimé du panier');
+  
+  if (cart.items.length === 0) {
+    stopCartTimer();
+  } else {
+    startCartTimer();
+  }
+  
+  if (window.updateCartSlideContent) {
+    window.updateCartSlideContent(cart);
+  }
+  
+  document.dispatchEvent(new CustomEvent('cart:itemRemoved', { detail: cart }));
+};
+
+// 🔧 Fonction pour afficher les notifications
+function showNotification(message, type = 'success') {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.innerHTML = message;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.animation = 'fadeOut 0.3s ease-out';
+    setTimeout(() => {
+      notification.remove();
+    }, 300);
+  }, 3000);
+}
+
+// 🔧 Exemple de fonction d'ajout au panier (à adapter selon votre code)
+window.addToCart = function(productId, quantity = 1) {
+  const formData = {
+    'items': [{
+      'id': productId,
+      'quantity': quantity
+    }]
+  };
+
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData)
+  })
+  .then(response => response.json())
+  .then(cart => {
+    if (window.onProductAddedToCart) {
+      window.onProductAddedToCart(cart);
+    }
+    
+    if (window.toggleCart) {
+      window.toggleCart();
+    }
+  })
+  .catch(error => {
+    console.error('Erreur lors de l\'ajout au panier:', error);
+    showNotification('❌ Erreur lors de l\'ajout au panier', 'error');
+  });
+};
+
+// 🔧 Gestionnaire des clics sur les boutons quantité
+document.addEventListener('click', function (e) {
+  if (e.target.matches('.qty-btn')) {
+    const action = e.target.getAttribute('data-action');
+    const itemEl = e.target.closest('.cart-item');
+    const key = itemEl.getAttribute('data-line-id');
+    const qtyEl = itemEl.querySelector('.qty-number');
+    let qty = parseInt(qtyEl.innerText);
+
+    if (action === 'increase') {
+      qty++;
+    } else if (action === 'decrease' && qty > 1) {
+      qty--;
+    } else if (action === 'decrease' && qty === 1) {
+      qty = 0;
+    }
+
+    fetch('/cart/update.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ updates: { [key]: qty } })
+    })
+    .then(response => response.json())
+    .then(cart => {
+      if (qty === 0) {
+        if (window.onProductRemovedFromCart) {
+          window.onProductRemovedFromCart(cart);
+        }
+      } else {
+        if (window.onProductAddedToCart) {
+          window.onProductAddedToCart(cart);
+        }
+      }
+      
+      renderCart();
+    })
+    .catch(error => {
+      console.error('Erreur lors de la mise à jour:', error);
+      showNotification('❌ Erreur lors de la mise à jour', 'error');
+    });
+  }
+});
+
+// 🔧 Fermer le panier en cliquant sur l'overlay
+document.addEventListener('click', function(e) {
+  const drawer = document.getElementById('cartDrawer');
+  const overlay = document.getElementById('cartOverlay');
+
+  if (drawer.classList.contains('open')) {
+    const isClickInsideDrawer = drawer.querySelector('.cart-drawer').contains(e.target);
+
+    if (!isClickInsideDrawer) {
+      toggleCart();
+    }
+  }
+});
+
+// 🔧 Événements personnalisés
+document.addEventListener("cart:itemAdded", (e) => {
+  console.log('Événement cart:itemAdded déclenché');
+  startCartTimer();
+});
+
+document.addEventListener("cart:itemRemoved", (e) => {
+  console.log('Événement cart:itemRemoved déclenché');
+  checkCartAndManageTimer();
+});
+
+// 🔧 Initialisation au chargement de la page
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('DOM chargé - Vérification du panier et timer');
+  checkCartAndManageTimer();
+  renderCart();
+});
+
+// 🔧 Nettoyage quand on quitte la page
+window.addEventListener('beforeunload', () => {
+  clearInterval(cartTimerInterval);
+});
+</script>
+
+{% schema %}
+{
+  "name": "Carte Panier Slide",
+  "tag": "section",
+  "class": "cart-slide-section",
+  "settings": [
+    { "type": "image_picker", "id": "icone1", "label": "Icône Confiance 1" },
+    { "type": "text", "id": "text1", "label": "Texte Confiance 1", "default": "Paiement sécurisé" },
+    { "type": "image_picker", "id": "icone2", "label": "Icône Confiance 2" },
+    { "type": "text", "id": "text2", "label": "Texte Confiance 2", "default": "Livraison rapide" },
+    { "type": "image_picker", "id": "icone3", "label": "Icône Confiance 3" },
+    { "type": "text", "id": "text3", "label": "Texte Confiance 3", "default": "Satisfait ou remboursé" },
+
+    { "type": "color", "id": "drawer_bg", "label": "Fond du panier", "default": "#060c25" },
+    { "type": "color", "id": "drawer_text", "label": "Texte du panier", "default": "#ffffff" },
+    { "type": "color", "id": "color_border", "label": "Bordure droite", "default": "#111111" },
+
+    { "type": "color", "id": "badge_bg", "label": "Fond badges", "default": "rgba(255,255,255,0.08)" },
+    { "type": "color", "id": "badge_border", "label": "Bordure badges", "default": "#2956af" },
+    { "type": "color", "id": "badge_text", "label": "Texte badges", "default": "#ffffff" },
+
+    { "type": "color", "id": "header_bg", "label": "Fond entête", "default": "#3e78eb3d" },
+    { "type": "color", "id": "header_border", "label": "Bordure entête", "default": "#6b75b54d" },
+    { "type": "color", "id": "header_text", "label": "Texte entête", "default": "#ffffff" },
+
+    { "type": "color", "id": "item_bg", "label": "Fond produit", "default": "rgba(255,255,255,0.06)" },
+    { "type": "color", "id": "item_bg_hover", "label": "Fond produit hover", "default": "rgba(255,255,255,0.1)" },
+    { "type": "color", "id": "item_border", "label": "Bordure produit", "default": "rgba(106,53,162,0.25)" },
+    { "type": "color", "id": "item_border_hover", "label": "Bordure produit hover", "default": "rgba(106,53,162,0.4)" },
+    { "type": "color", "id": "item_text", "label": "Texte produit", "default": "#ffffff" },
+    { "type": "color", "id": "item_strong", "label": "Texte fort produit", "default": "#b8b8d6" },
+
+    { "type": "color", "id": "qty_btn_bg", "label": "Fond bouton quantité", "default": "#2956af" },
+    { "type": "color", "id": "qty_btn_hover", "label": "Fond bouton quantité hover", "default": "#7d4bc4" },
+    { "type": "color", "id": "qty_btn_text", "label": "Texte bouton quantité", "default": "#ffffff" },
+    { "type": "color", "id": "qty_text", "label": "Texte quantité", "default": "#ffffff" },
+
+    { "type": "color", "id": "summary_bg", "label": "Fond résumé", "default": "rgba(255,255,255,0.08)" },
+    { "type": "color", "id": "summary_border", "label": "Bordure résumé", "default": "rgba(106,53,162,0.3)" },
+    { "type": "color", "id": "summary_text", "label": "Texte résumé", "default": "#d1d1e0" },
+    { "type": "color", "id": "summary_total", "label": "Texte total résumé", "default": "#ffffff" },
+
+    { "type": "color", "id": "btn_violet", "label": "Fond bouton violet", "default": "#1926a7" },
+    { "type": "color", "id": "btn_violet_hover", "label": "Fond bouton violet hover", "default": "#263aff" },
+    { "type": "color", "id": "btn_violet_text", "label": "Texte bouton violet", "default": "#ffffff" },
+
+    { "type": "color", "id": "btn_jaune", "label": "Fond bouton jaune", "default": "#f39c12" },
+    { "type": "color", "id": "btn_jaune_hover", "label": "Fond bouton jaune hover", "default": "#e67e22" },
+    { "type": "color", "id": "btn_jaune_text", "label": "Texte bouton jaune", "default": "#ffffff" },
+
+    { "type": "color", "id": "timer_text", "label": "Texte timer", "default": "#f39c12" },
+    { "type": "color", "id": "timer_glow1", "label": "Glow timer 1", "default": "#f39c12" },
+    { "type": "color", "id": "timer_glow2", "label": "Glow timer 2", "default": "#e67e22" }
+  ],
+  "presets": [
+    { "name": "Carte Panier Slide Fluo", "category": "Cartes" }
+  ]
+}
+{% endschema %}
