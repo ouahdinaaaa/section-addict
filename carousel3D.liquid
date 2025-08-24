@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Carrousel Courbé 3D - Interactif</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .cwp-curved-slider {
+      width: 100%;
+      max-width: 1000px;
+      height: 500px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cwp-curved-slider canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    /* Flèches navigation */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      color: white;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      cursor: pointer;
+      z-index: 10;
+      padding: 0.5rem 1rem;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    .arrow:hover {
+      background: rgba(255,255,255,0.3);
+    }
+    .arrow.left { left: 10px; }
+    .arrow.right { right: 10px; }
+
+    /* Indicateurs (petits ronds blancs) */
+    .indicators {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .dot.active {
+      background: white;
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="cwp-curved-slider">
+    <button class="arrow left">&#10094;</button>
+    <button class="arrow right">&#10095;</button>
+    <div class="indicators"></div>
+  </div>
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.querySelector(".cwp-curved-slider");
+      const images = [
+        "https://picsum.photos/id/1015/600/400",
+        "https://picsum.photos/id/1016/600/400",
+        "https://picsum.photos/id/1018/600/400",
+        "https://picsum.photos/id/1019/600/400",
+        "https://picsum.photos/id/1020/600/400"
+      ];
+
+      // Scene + Camera
+      let scene = new THREE.Scene();
+      let camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 20);
+      camera.position.z = 2;
+
+      let renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      container.appendChild(renderer.domElement);
+
+      const geometry = new THREE.PlaneGeometry(1, 1, 20, 20);
+      const planes = [];
+
+      const curve = 12;      // courbure
+      const spacing = 1.05;  // espace réduit entre images
+      let currentIndex = 0;
+
+      // Indicateurs
+      const indicators = document.querySelector(".indicators");
+      images.forEach((_, i) => {
+        const dot = document.createElement("div");
+        dot.classList.add("dot");
+        if (i === 0) dot.classList.add("active");
+        dot.addEventListener("click", () => {
+          currentIndex = i;
+          updatePositions();
+          updateIndicators();
+          render();
+        });
+        indicators.appendChild(dot);
+      });
+      const dots = document.querySelectorAll(".dot");
+
+      function updateIndicators() {
+        dots.forEach((dot, i) => {
+          dot.classList.toggle("active", i === currentIndex);
+        });
+      }
+
+      // Chargement des textures
+      const loader = new THREE.TextureLoader();
+      images.forEach((src, i) => {
+        loader.load(src, texture => {
+          const material = new THREE.ShaderMaterial({
+            uniforms: {
+              tex: { value: texture },
+              curve: { value: curve }
+            },
+            vertexShader: `
+              uniform float curve;
+              varying vec2 vertexUV;
+              void main(){
+                vertexUV = uv;
+                vec3 newPosition = position;
+                float distanceFromCenter = abs(modelMatrix*vec4(position, 1.0)).x;
+                newPosition.y *= 1.0 + (curve/100.0)*pow(distanceFromCenter,2.0);
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+              }
+            `,
+            fragmentShader: `
+              uniform sampler2D tex;
+              varying vec2 vertexUV;
+              void main(){
+                gl_FragColor = texture2D(tex, vertexUV);
+              }
+            `
+          });
+          const plane = new THREE.Mesh(geometry, material);
+          plane.position.x = (i - Math.floor(images.length/2)) * spacing;
+          scene.add(plane);
+          planes.push(plane);
+
+          // Clic sur une image pour la centrer
+          plane.userData.index = i;
+          plane.callback = () => {
+            currentIndex = i;
+            updatePositions();
+            updateIndicators();
+            render();
+          };
+        });
+      });
+
+      // Mise à jour des positions (boucle infinie + centrage)
+      function updatePositions() {
+        planes.forEach((plane, i) => {
+          let offset = (i - currentIndex);
+          if (offset < -Math.floor(images.length/2)) offset += images.length;
+          if (offset > Math.floor(images.length/2)) offset -= images.length;
+          plane.position.x = offset * spacing;
+        });
+      }
+
+      // Flèches navigation
+      document.querySelector(".arrow.left").addEventListener("click", () => {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        updatePositions();
+        updateIndicators();
+        render();
+      });
+      document.querySelector(".arrow.right").addEventListener("click", () => {
+        currentIndex = (currentIndex + 1) % images.length;
+        updatePositions();
+        updateIndicators();
+        render();
+      });
+
+      // Détection clic sur une image
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+      container.addEventListener("click", (event) => {
+        const rect = container.getBoundingClientRect();
+        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(planes);
+        if (intersects.length > 0) {
+          const plane = intersects[0].object;
+          if (plane.callback) plane.callback();
+        }
+      });
+
+      function render() {
+        renderer.render(scene, camera);
+      }
+
+      // Resize
+      window.addEventListener("resize", () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        render();
+      });
+    });
+  </script>
+</body>
+</html>
