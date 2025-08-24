@@ -1,0 +1,341 @@
+{% comment %}
+  Section: Travel Deals Cards (fixed bg image)
+  Notes: corrige l'affichage de l'image de fond choisie via l'interface.
+  - Utilise des tests Liquid sûrs (`!= blank`).
+  - Génère une URL d'image CDN avec une largeur explicite (1600px) pour éviter les chemins `shopify://`.
+  - Évite les soucis de guillemets dans `url()` et garde un fallback sur l'image mise en avant du produit.
+{% endcomment %}
+
+<section id="travel-cards-{{ section.id }}" class="travel-cards">
+  <div class="tc-container">
+    {% for block in section.blocks %}
+      {% assign b = block.settings %}
+
+      {%- comment -%} Récupération produit & variant {%- endcomment -%}
+      {% assign prod = b.product %}
+      {% assign first_variant = null %}
+      {% if prod and prod.variants.size > 0 %}
+        {% assign first_variant = prod.variants.first %}
+      {% endif %}
+
+      <div class="tc-panel" {{ block.shopify_attributes }}>
+        <div class="tc-ring" style="
+          --tc-ring-primary: {{ section.settings.ring_primary | default: '#50c9c3' }};
+          --tc-ring-secondary: {{ section.settings.ring_secondary | default: '#ebebeb' }};
+          --tc-ring-rotate: {{ section.settings.ring_rotate | default: 50 }}deg;
+        ">
+          {%- comment -%} IMPORTANT : on fixe l'image de fond ici, avec un test != blank et une largeur explicite {%- endcomment -%}
+          <div
+            class="tc-card"
+            style="
+              --tc-bg-size: {{ b.bg_size | default: '100% 100%' }};
+              --tc-bg-size-hover: {{ b.bg_size_hover | default: '110% 110%' }};
+              --tc-bg-pos: {{ b.bg_position | default: 'center center' }};
+              {% if b.bg_image != blank %}
+                background-image: url({{ b.bg_image | image_url: width: 1600 }});
+              {% elsif prod and prod.featured_image %}
+                background-image: url({{ prod.featured_image | image_url: width: 1600 }});
+              {% endif %}
+              background-repeat: no-repeat;
+              background-size: var(--tc-bg-size);
+              background-position: var(--tc-bg-pos);
+            "
+          ></div>
+
+          <div class="tc-border">
+            {% if b.title != blank %}
+              <p class="tc-title">{{ b.title }}</p>
+            {% endif %}
+
+            <div class="tc-slide">
+              {% if b.subtitle != blank %}
+                <h6 class="tc-para">{{ b.subtitle }}</h6>
+              {% endif %}
+
+              {% if b.out_label != blank or b.out_price != blank %}
+                <div class="tc-line">
+                  <h6 class="tc-para">{{ b.out_label | default: 'OUT' }}</h6>
+                  <span class="tc-icon" aria-hidden="true">
+                    <!-- avion SVG -->
+                    <svg viewBox="0 0 24 24" width="16" height="16" role="img" aria-label="plane">
+                      <path d="M2 16l20-8-8 10-2-.5L9 22l-1-.5 1.5-4L6 16l-4-0z" fill="currentColor"></path>
+                    </svg>
+                  </span>
+                  <h6 class="tc-para">{{ b.out_price }}</h6>
+                </div>
+              {% endif %}
+
+              {% if b.rtn_label != blank or b.rtn_price != blank %}
+                <div class="tc-line">
+                  <h6 class="tc-para">{{ b.rtn_label | default: 'RTN' }}</h6>
+                  <span class="tc-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" role="img" aria-label="plane">
+                      <path d="M2 16l20-8-8 10-2-.5L9 22l-1-.5 1.5-4L6 16l-4-0z" fill="currentColor" transform="rotate(180 12 12)"></path>
+                    </svg>
+                  </span>
+                  <h6 class="tc-para">{{ b.rtn_price }}</h6>
+                </div>
+              {% endif %}
+
+              {% if prod %}
+                <div class="tc-actions">
+                  <a class="tc-btn tc-btn-link" href="{{ prod.url }}" aria-label="{{ b.title | default: prod.title }} - voir le produit">
+                    {{ b.btn_view_text | default: 'Voir le produit' }}
+                  </a>
+
+                  {% if first_variant %}
+                    <form method="post" action="/cart/add" class="tc-atc" data-type="add-to-cart-form">
+                      <input type="hidden" name="id" value="{{ first_variant.id }}">
+                      <button type="submit" class="tc-btn">
+                        {{ b.btn_add_text | default: 'Ajouter au panier' }}
+                      </button>
+                    </form>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <style>
+    /* ====== Reset local ====== */
+    #travel-cards-{{ section.id }} * { box-sizing: border-box; }
+
+    /* ====== Layout ====== */
+    #travel-cards-{{ section.id }} {
+      --tc-bg: {{ section.settings.section_bg | default: '#2e2e31' }};
+      background-color: var(--tc-bg);
+      padding: clamp(24px, 4vw, 48px) 0;
+    }
+
+    #travel-cards-{{ section.id }} .tc-container {
+      width: min(1200px, 92vw);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat( auto-fit, minmax(190px, 1fr) );
+      gap: 28px;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .tc-panel {
+      height: 270px;
+      width: 190px;
+      position: relative;
+    }
+
+    /* ====== Shared flex ====== */
+    .tc-ring, .tc-card, .tc-border, .tc-slide, .tc-line {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* ====== Ring ====== */
+    .tc-ring {
+      color: #fffbf1;
+      position: absolute;
+      inset: 50% 0 0 50%;
+      transform: translate(-50%, -50%);
+      font-size: 170px;
+    }
+    .tc-ring::before,
+    .tc-ring::after {
+      content: "";
+      padding: 0.7em 0.4em;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 115%;
+      display: block;
+      border: 5px solid var(--tc-ring-primary, #50c9c3);
+      border-radius: 50%;
+      transition: transform 1s;
+      transform: translate(-50%, -50%) rotate(var(--tc-ring-rotate, 50deg));
+    }
+    .tc-ring::before {
+      border-color: var(--tc-ring-secondary, #ebebeb) var(--tc-ring-secondary, #ebebeb) transparent transparent;
+      z-index: -1;
+    }
+    .tc-ring::after {
+      border-color: transparent transparent var(--tc-ring-secondary, #ebebeb) var(--tc-ring-secondary, #ebebeb);
+    }
+
+    /* ====== Card ====== */
+    .tc-card {
+      position: relative;
+      transition: all 1s;
+      height: 270px;
+      width: 190px;
+      border: 1px solid rgba(255, 255, 255, 1);
+      background-color: #f0ead6; /* sera recouvert par background-image si défini */
+      background-origin: border-box;
+    }
+
+    /* ====== Border & Title ====== */
+    .tc-border {
+      position: absolute;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      height: 260px;
+      width: 180px;
+      transition: border 1s;
+      overflow: hidden;
+      pointer-events: none; /* évite d'intercepter les hover sur l'image */
+    }
+    .tc-title {
+      text-align: center;
+      position: absolute;
+      font-family: {{ section.settings.title_font.family | default: 'Playfair Display' }}, serif;
+      font-size: 36px;
+      font-weight: 700;
+      transition: all 1s;
+      top: 0;
+      color: #fff;
+      width: 100%;
+      margin: 0;
+      padding-top: 6px;
+      text-shadow: 0 1px 2px rgba(0,0,0,.25);
+      pointer-events: none;
+    }
+
+    /* ====== Slide (infos) ====== */
+    .tc-slide {
+      height: 260px;
+      width: 180px;
+      position: absolute;
+      bottom: -270px;
+      background: rgba(0, 0, 0, 0.5);
+      transition: bottom 1s;
+      flex-direction: column;
+      padding-top: 40px;
+      gap: 8px;
+    }
+    .tc-para {
+      font-family: {{ section.settings.text_font.family | default: 'Raleway' }}, sans-serif;
+      padding: 10px 14px;
+      margin: 0;
+      text-align: center;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 400;
+    }
+
+    .tc-line { gap: 8px; }
+    .tc-icon { display: inline-flex; line-height: 0; color: #fff; opacity: .9; }
+
+    /* ====== Actions ====== */
+    .tc-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding-bottom: 12px;
+    }
+    .tc-btn, .tc-btn-link {
+      appearance: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      line-height: 1;
+      text-decoration: none;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+    .tc-btn {
+      background: {{ section.settings.cta_bg | default: '#50c9c3' }};
+      color: {{ section.settings.cta_text | default: '#000' }};
+      box-shadow: 0 1px 0 rgba(0,0,0,.2), inset 0 -2px 0 rgba(0,0,0,.15);
+    }
+    .tc-btn-link { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.7); }
+    .tc-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+    .tc-btn:active { transform: translateY(1px); }
+    .tc-btn:disabled, .tc-btn-link:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ====== Hover states ====== */
+    .tc-panel:hover .tc-card { filter: blur(1.5px); background-size: var(--tc-bg-size-hover); }
+    .tc-panel:hover .tc-title { color: rgba(255, 255, 255, 0.2); }
+    .tc-panel:hover .tc-border { border: 1px solid rgba(255, 255, 255, 1); }
+    .tc-panel:hover .tc-slide { bottom: 0; }
+    .tc-panel:hover .tc-ring::before, .tc-panel:hover .tc-ring::after { transform: translate(-50%, -50%) rotate(310deg); }
+
+    /* ====== Responsive ====== */
+    @media (max-width: 768px) {
+      #travel-cards-{{ section.id }} .tc-container { grid-template-columns: repeat( auto-fit, minmax(160px, 1fr) ); gap: 20px; }
+      .tc-panel { transform: scale(.9); height: 240px; width: 160px; }
+      .tc-card { height: 240px; width: 160px; }
+      .tc-border { height: 230px; width: 150px; }
+      .tc-slide { height: 230px; width: 150px; bottom: -240px; }
+      .tc-title { font-size: 28px; }
+      .tc-para { font-size: 14px; padding: 8px 10px; }
+    }
+
+    @media (max-width: 480px) {
+      .tc-panel { transform: scale(.85); }
+      #travel-cards-{{ section.id }} .tc-container { grid-template-columns: repeat( auto-fit, minmax(140px, 1fr) ); }
+    }
+
+    /* ====== Chargement fonts ====== */
+    {% if section.settings.title_font %}
+      {{ section.settings.title_font | font_face }}
+    {% endif %}
+    {% if section.settings.text_font %}
+      {{ section.settings.text_font | font_face }}
+    {% endif %}
+  </style>
+</section>
+
+{% schema %}
+{
+  "name": "Cartes offres voyages",
+  "tag": "section",
+  "class": "section-travel-deals-cards",
+  "settings": [
+    { "type": "color", "id": "section_bg", "label": "Couleur de fond de la section", "default": "#2e2e31" },
+    { "type": "color", "id": "ring_primary", "label": "Couleur principale de l'anneau", "default": "#50c9c3" },
+    { "type": "color", "id": "ring_secondary", "label": "Couleur secondaire (segments gris)", "default": "#ebebeb" },
+    { "type": "range", "id": "ring_rotate", "min": 0, "max": 360, "step": 10, "unit": "°", "label": "Rotation initiale de l'anneau", "default": 40 },
+    { "type": "font_picker", "id": "title_font", "label": "Police du titre", "default": "playfair_display_n7" },
+    { "type": "font_picker", "id": "text_font", "label": "Police du texte", "default": "raleway_n4" },
+    { "type": "color", "id": "cta_bg", "label": "Couleur bouton \"Ajouter au panier\"", "default": "#50c9c3" },
+    { "type": "color", "id": "cta_text", "label": "Texte bouton \"Ajouter au panier\"", "default": "#000000" }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Carte voyage",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titre (destination)", "default": "Brazil", "info": "Nom de la destination" },
+        { "type": "text", "id": "subtitle", "label": "Sous-titre", "default": "Latest Deals from Heathrow", "info": "Description ou détails additionnels" },
+        { "type": "text", "id": "out_label", "label": "Libellé aller", "default": "OUT" },
+        { "type": "text", "id": "out_price", "label": "Prix aller", "default": "£849" },
+        { "type": "text", "id": "rtn_label", "label": "Libellé retour", "default": "RTN" },
+        { "type": "text", "id": "rtn_price", "label": "Prix retour", "default": "£659" },
+        { "type": "product", "id": "product", "label": "Produit associé (optionnel)", "info": "Sélectionnez un produit pour activer les boutons d'achat" },
+        { "type": "text", "id": "btn_view_text", "label": "Texte bouton lien produit", "default": "Voir le produit" },
+        { "type": "text", "id": "btn_add_text", "label": "Texte bouton ajouter au panier", "default": "Ajouter au panier" },
+        { "type": "image_picker", "id": "bg_image", "label": "Image de fond de la carte", "info": "Image qui s'affichera en arrière-plan de la carte" },
+        { "type": "text", "id": "bg_size", "label": "Taille de fond (normal)", "default": "100% 100%", "info": "Ex: 200% 120% pour agrandir l'image (équivaut à background-size CSS)" },
+        { "type": "text", "id": "bg_size_hover", "label": "Taille de fond (survol)", "default": "110% 110%", "info": "Taille de l'image au survol pour créer un effet zoom" },
+        { "type": "text", "id": "bg_position", "label": "Position de fond", "default": "center center", "info": "Position de l'image : center 30%, 50% 50%, top left, etc." }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Cartes voyages – anneau animé",
+      "blocks": [
+        { "type": "card", "settings": { "title": "product 1", "subtitle": "description", "out_label": "OUT", "out_price": "£849", "rtn_label": "RTN", "rtn_price": "£659", "bg_size": "200% 120%", "bg_size_hover": "215% 135%" } },
+        { "type": "card", "settings": { "title": "product 2", "subtitle": "description", "out_label": "OUT", "out_price": "£999", "rtn_label": "RTN", "rtn_price": "£745", "bg_size": "100% 100%", "bg_size_hover": "115% 115%" } },
+        { "type": "card", "settings": { "title": "product 3", "subtitle": "description", "out_label": "OUT", "out_price": "£399", "rtn_label": "RTN", "rtn_price": "£257", "bg_size": "140% 100%", "bg_size_hover": "155% 115%" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
