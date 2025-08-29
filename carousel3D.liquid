@@ -1,227 +1,688 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Carrousel Courbé 3D - Interactif</title>
-  <style>
-    body {
-      margin: 0;
-      background: #111;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+{% schema %}
+{
+  "name": "Carrousel 3D Courbé",
+  "settings": [
+    {
+      "type": "text",
+      "id": "carousel_title",
+      "label": "Titre du carrousel",
+      "default": "Notre Collection"
+    },
+    {
+      "type": "text",
+      "id": "background_text",
+      "label": "Texte en arrière-plan",
+      "default": "MON SUPER CARROUSEL"
+    },
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Hauteur de la section (px)",
+      "min": 300,
+      "max": 800,
+      "step": 50,
+      "default": 500,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Couleur de fond",
+      "default": "#000000"
     }
-    .cwp-curved-slider {
-      width: 100%;
-      max-width: 1000px;
-      height: 500px;
-      position: relative;
-      overflow: hidden;
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Image du carrousel",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien (produit ou collection)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre sur l'image",
+          "default": "Mon Titre"
+        }
+      ]
     }
-    .cwp-curved-slider canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
+  ],
+  "presets": [
+    {
+      "name": "Carrousel 3D Courbé",
+      "category": "Slideshow"
     }
-    /* Flèches navigation */
-    .arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 2rem;
-      color: white;
-      background: rgba(0,0,0,0.5);
-      border: none;
-      cursor: pointer;
-      z-index: 10;
-      padding: 0.5rem 1rem;
-      border-radius: 50%;
-      transition: 0.3s;
-    }
-    .arrow:hover {
-      background: rgba(255,255,255,0.3);
-    }
-    .arrow.left { left: 10px; }
-    .arrow.right { right: 10px; }
+  ]
+}
+{% endschema %}
 
-    /* Indicateurs (petits ronds blancs) */
-    .indicators {
-      position: absolute;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
-      z-index: 10;
-    }
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.5);
-      cursor: pointer;
-      transition: background 0.3s, transform 0.3s;
-    }
-    .dot.active {
-      background: white;
-      transform: scale(1.2);
-    }
-  </style>
-</head>
-<body>
-  <div class="cwp-curved-slider">
-    <button class="arrow left">&#10094;</button>
-    <button class="arrow right">&#10095;</button>
-    <div class="indicators"></div>
+<div class="cwp-curved-slider-wrapper" 
+     style="background-color: {{ section.settings.background_color }}; min-height: {{ section.settings.section_height }}px;">
+
+  
+  <div class="cwp-background-text">
+    {{ section.settings.background_text }}
   </div>
 
-  <!-- Three.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const container = document.querySelector(".cwp-curved-slider");
-      const images = [
-        "https://picsum.photos/id/1015/600/400",
-        "https://picsum.photos/id/1016/600/400",
-        "https://picsum.photos/id/1018/600/400",
-        "https://picsum.photos/id/1019/600/400",
-        "https://picsum.photos/id/1020/600/400"
-      ];
+  <div class="cwp-curved-slider" 
+       id="carousel-{{ section.id }}" 
+       style="height: {{ section.settings.section_height | minus: 160 }}px;">
+    <button class="arrow left" aria-label="Image précédente">&#10094;</button>
+    <button class="arrow right" aria-label="Image suivante">&#10095;</button>
+    <div class="indicators"></div>
+    <div class="carousel-slides" style="display:none;">
+      {% for block in section.blocks %}
+        <div class="slide"
+          data-image="{{ block.settings.image | img_url: '800x' }}"
+          data-link="{{ block.settings.link }}"
+          data-title="{{ block.settings.title }}">
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 
-      // Scene + Camera
-      let scene = new THREE.Scene();
-      let camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 20);
-      camera.position.z = 2;
+<style>
+  .cwp-curved-slider-wrapper {
+    position: relative;
+    padding: 60px 0;
+    text-align: center;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .cwp-carousel-title {
+    position: relative;
+    z-index: 3;
+    margin-bottom: 30px;
+  }
+  
+  .cwp-carousel-title h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .cwp-background-text {
+    font-size: 8vw;
+    font-weight: 900;
+    text-transform: uppercase;
+    position: absolute;
+    left: 50%;
+    {% comment %} transform: translate(-50%, -50%); {% endcomment %}
+    color: rgba(255,255,255,0.05);
+    white-space: nowrap;
+    z-index: 0;
+    pointer-events: none;
+  }
+  
+  .cwp-curved-slider {
+    width: 100%;
+    max-width: 1000px;
+    position: relative;
+    margin: 0 auto;
+    z-index: 2;
+  }
+  
+  .cwp-curved-slider canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+  }
+  
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    color: white;
+    background: rgba(0,0,0,0.7);
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    padding: 0.5rem 1rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .arrow:hover { 
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-50%) scale(1.1);
+  }
+  
+  .arrow.left { left: 10px; }
+  .arrow.right { right: 10px; }
+  
+  .indicators {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+  }
+  
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+  
+  .dot.active { 
+    background: white; 
+    transform: scale(1.2);
+    border-color: rgba(255,255,255,0.8);
+  }
+  
+  .dot:hover {
+    background: rgba(255,255,255,0.8);
+    transform: scale(1.1);
+  }
 
-      let renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-      renderer.setSize(container.clientWidth, container.clientHeight);
-      container.appendChild(renderer.domElement);
+  /* Titre overlay */
+  .image-title {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    background: rgba(0,0,0,0.6);
+    padding: 10px 20px;
+    border-radius: 25px;
+    pointer-events: none;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    z-index: 5;
+  }
 
-      const geometry = new THREE.PlaneGeometry(1, 1, 20, 20);
-      const planes = [];
+  @media (max-width: 480px) {
+    .cwp-background-text {
+      font-size: 15vw;
+    }
+    
+    .cwp-carousel-title h2 {
+      font-size: 1.8rem;
+    }
+    
+    .arrow {
+      font-size: 1.2rem;
+      width: 35px;
+      height: 35px;
+    }
+    
+    .image-title {
+      font-size: 1rem;
+      padding: 6px 12px;
+    }
+  }
 
-      const curve = 12;      // courbure
-      const spacing = 1.05;  // espace réduit entre images
-      let currentIndex = 0;
+  @media (min-width: 481px) and (max-width: 768px) {
+    .cwp-background-text {
+      font-size: 12vw;
+    }
+    
+    .cwp-carousel-title h2 {
+      font-size: 2rem;
+    }
+    
+    .arrow {
+      font-size: 1.5rem;
+      width: 40px;
+      height: 40px;
+    }
+    
+    .image-title {
+      font-size: 1.1rem;
+      padding: 7px 14px;
+    }
+  }
 
-      // Indicateurs
-      const indicators = document.querySelector(".indicators");
-      images.forEach((_, i) => {
-        const dot = document.createElement("div");
-        dot.classList.add("dot");
-        if (i === 0) dot.classList.add("active");
-        dot.addEventListener("click", () => {
-          currentIndex = i;
-          updatePositions();
-          updateIndicators();
-          render();
-        });
-        indicators.appendChild(dot);
-      });
-      const dots = document.querySelectorAll(".dot");
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .cwp-background-text {
+      font-size: 10vw;
+    }
+    
+    .cwp-carousel-title h2 {
+      font-size: 2.2rem;
+    }
+    
+    .arrow {
+      font-size: 1.7rem;
+      width: 45px;
+      height: 45px;
+    }
+    
+    .image-title {
+      font-size: 1.3rem;
+      padding: 8px 16px;
+    }
+  }
 
-      function updateIndicators() {
-        dots.forEach((dot, i) => {
-          dot.classList.toggle("active", i === currentIndex);
-        });
-      }
+  @media (min-width: 1025px) and (max-width: 1440px) {
+    .cwp-background-text {
+      font-size: 8vw;
+    }
+    
+    .cwp-carousel-title h2 {
+      font-size: 2.5rem;
+    }
+    
+    .arrow {
+      font-size: 2rem;
+      width: 50px;
+      height: 50px;
+    }
+    
+    .image-title {
+      font-size: 1.5rem;
+      padding: 10px 20px;
+    }
+  }
 
-      // Chargement des textures
-      const loader = new THREE.TextureLoader();
-      images.forEach((src, i) => {
-        loader.load(src, texture => {
-          const material = new THREE.ShaderMaterial({
-            uniforms: {
-              tex: { value: texture },
-              curve: { value: curve }
-            },
-            vertexShader: `
-              uniform float curve;
-              varying vec2 vertexUV;
-              void main(){
-                vertexUV = uv;
-                vec3 newPosition = position;
-                float distanceFromCenter = abs(modelMatrix*vec4(position, 1.0)).x;
-                newPosition.y *= 1.0 + (curve/100.0)*pow(distanceFromCenter,2.0);
-                gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
-              }
-            `,
-            fragmentShader: `
-              uniform sampler2D tex;
-              varying vec2 vertexUV;
-              void main(){
-                gl_FragColor = texture2D(tex, vertexUV);
-              }
-            `
-          });
-          const plane = new THREE.Mesh(geometry, material);
-          plane.position.x = (i - Math.floor(images.length/2)) * spacing;
-          scene.add(plane);
-          planes.push(plane);
+  @media (min-width: 1441px) {
+    .cwp-background-text {
+      font-size: 6vw;
+    }
+    
+    .cwp-carousel-title h2 {
+      font-size: 3rem;
+    }
+    
+    .arrow {
+      font-size: 2.2rem;
+      width: 55px;
+      height: 55px;
+    }
+    
+    .image-title {
+      font-size: 1.7rem;
+      padding: 12px 24px;
+    }
+  }
+</style>
 
-          // Clic sur une image pour la centrer
-          plane.userData.index = i;
-          plane.callback = () => {
-            currentIndex = i;
-            updatePositions();
-            updateIndicators();
-            render();
-          };
-        });
-      });
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.querySelector("#carousel-{{ section.id }}");
+  if (!container) return;
+  
+  const slideData = [...container.querySelectorAll(".slide")].map(slide => ({
+    image: slide.dataset.image,
+    link: slide.dataset.link,
+    title: slide.dataset.title
+  }));
 
-      // Mise à jour des positions (boucle infinie + centrage)
-      function updatePositions() {
-        planes.forEach((plane, i) => {
-          let offset = (i - currentIndex);
-          if (offset < -Math.floor(images.length/2)) offset += images.length;
-          if (offset > Math.floor(images.length/2)) offset -= images.length;
-          plane.position.x = offset * spacing;
-        });
-      }
+  if (slideData.length === 0) return;
 
-      // Flèches navigation
-      document.querySelector(".arrow.left").addEventListener("click", () => {
-        currentIndex = (currentIndex - 1 + images.length) % images.length;
-        updatePositions();
-        updateIndicators();
-        render();
-      });
-      document.querySelector(".arrow.right").addEventListener("click", () => {
-        currentIndex = (currentIndex + 1) % images.length;
-        updatePositions();
-        updateIndicators();
-        render();
-      });
+  let scene = new THREE.Scene();
+  let camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 20);
+  camera.position.z = 2;
 
-      // Détection clic sur une image
-      const raycaster = new THREE.Raycaster();
-      const mouse = new THREE.Vector2();
-      container.addEventListener("click", (event) => {
-        const rect = container.getBoundingClientRect();
-        mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-        mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(planes);
-        if (intersects.length > 0) {
-          const plane = intersects[0].object;
-          if (plane.callback) plane.callback();
-        }
-      });
+  let renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  container.appendChild(renderer.domElement);
 
-      function render() {
-        renderer.render(scene, camera);
-      }
+  // Créer l'overlay pour le titre
+  const titleOverlay = document.createElement("div");
+  titleOverlay.classList.add("image-title");
+  titleOverlay.textContent = slideData[0].title;
+  container.appendChild(titleOverlay);
 
-      // Resize
-      window.addEventListener("resize", () => {
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        render();
-      });
+  // Calcul responsive des dimensions
+  function getResponsiveDimensions() {
+    const containerWidth = container.clientWidth;
+    let cardWidth, cardHeight, spacing, scale;
+    
+    if (containerWidth <= 480) {
+      // Mobile
+      cardWidth = 0.8;
+      cardHeight = 1.2;
+      spacing = 0.9;
+      scale = 0.7;
+    } else if (containerWidth <= 768) {
+      // Tablet
+      cardWidth = 1.0;
+      cardHeight = 1.4;
+      spacing = 1.1;
+      scale = 0.8;
+    } else if (containerWidth <= 1024) {
+      // Desktop small
+      cardWidth = 1.2;
+      cardHeight = 1.6;
+      spacing = 1.3;
+      scale = 0.9;
+    } else if (containerWidth <= 1440) {
+      // Desktop medium
+      cardWidth = 1.4;
+      cardHeight = 1.8;
+      spacing = 1.5;
+      scale = 1.0;
+    } else {
+      // Desktop large
+      cardWidth = 1.6;
+      cardHeight = 2.0;
+      spacing = 1.7;
+      scale = 1.1;
+    }
+    
+    return { cardWidth, cardHeight, spacing, scale };
+  }
+  
+  
+  let dimensions = getResponsiveDimensions();
+  const geometry = new THREE.PlaneGeometry(dimensions.cardWidth, dimensions.cardHeight, 20, 20);
+  const planes = [];
+  const curve = 12;
+  let currentIndex = 0;
+  let isInitialized = false;
+  let isAnimating = false; // Pour éviter les animations multiples
+
+  // Créer les indicateurs
+  const indicators = container.querySelector(".indicators");
+  slideData.forEach((_, i) => {
+    const dot = document.createElement("div");
+    dot.classList.add("dot");
+    if (i === 0) dot.classList.add("active");
+    dot.addEventListener("click", () => {
+      if (isAnimating) return; // Empêcher les clics multiples
+      currentIndex = i;
+      updatePositions(true); // Animation activée
+      updateIndicators();
+      updateTitle();
     });
-  </script>
-</body>
-</html>
+    indicators.appendChild(dot);
+  });
+  const dots = indicators.querySelectorAll(".dot");
+
+  function updateIndicators() {
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
+  }
+
+  function updateTitle() {
+    if (titleOverlay && slideData[currentIndex]) {
+      titleOverlay.textContent = slideData[currentIndex].title;
+    }
+  }
+
+  const loader = new THREE.TextureLoader();
+  let loadedTextures = 0;
+
+  slideData.forEach((slide, i) => {
+    loader.load(
+      slide.image,
+      texture => {
+        const material = new THREE.ShaderMaterial({
+          uniforms: {
+            tex: { value: texture },
+            curve: { value: curve }
+          },
+          vertexShader: `
+            uniform float curve;
+            varying vec2 vertexUV;
+            void main(){
+              vertexUV = uv;
+              vec3 newPosition = position;
+              float distanceFromCenter = abs(modelMatrix*vec4(position, 1.0)).x;
+              newPosition.y *= 1.0 + (curve/100.0)*pow(distanceFromCenter,2.0);
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+            }
+          `,
+          fragmentShader: `
+            uniform sampler2D tex;
+            varying vec2 vertexUV;
+            void main(){
+              gl_FragColor = texture2D(tex, vertexUV);
+            }
+          `
+        });
+        
+        const plane = new THREE.Mesh(geometry, material);
+        plane.position.x = (i - Math.floor(slideData.length/2)) * dimensions.spacing;
+        plane.scale.set(dimensions.scale, dimensions.scale, dimensions.scale);
+        scene.add(plane);
+        planes.push({ mesh: plane, index: i });
+
+        plane.userData = { index: i, link: slide.link, title: slide.title };
+
+        loadedTextures++;
+        
+        // Initialiser le rendu quand toutes les textures sont chargées
+        if (loadedTextures === slideData.length && !isInitialized) {
+          isInitialized = true;
+          updatePositions();
+          render();
+          
+          // Animation d'entrée
+          planes.forEach((planeObj, index) => {
+            planeObj.mesh.scale.set(0, 0, 0);
+            setTimeout(() => {
+              animateScale(planeObj.mesh, { x: 1, y: 1, z: 1 }, 500 + index * 100);
+            }, index * 50);
+          });
+        }
+      },
+      undefined,
+      error => {
+        console.error('Erreur lors du chargement de la texture:', error);
+      }
+    );
+  });
+
+  function animateScale(mesh, targetScale, duration) {
+    const startScale = { x: mesh.scale.x, y: mesh.scale.y, z: mesh.scale.z };
+    const startTime = Date.now();
+    
+    function animate() {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      
+      mesh.scale.x = startScale.x + (targetScale.x - startScale.x) * easeProgress;
+      mesh.scale.y = startScale.y + (targetScale.y - startScale.y) * easeProgress;
+      mesh.scale.z = startScale.z + (targetScale.z - startScale.z) * easeProgress;
+      
+      render();
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    }
+    
+    animate();
+  }
+
+  function updatePositions(animate = false) {
+    const currentDimensions = getResponsiveDimensions();
+    
+    if (animate && !isAnimating) {
+      isAnimating = true;
+      
+      // Animation fluide avec easing
+      const duration = 600;
+      const startTime = Date.now();
+      const startPositions = planes.map(planeObj => ({
+        x: planeObj.mesh.position.x,
+        scaleX: planeObj.mesh.scale.x,
+        scaleY: planeObj.mesh.scale.y,
+        index: planeObj.index
+      }));
+      
+      function animateStep() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Fonction d'easing cubic-bezier pour une animation naturelle
+        const easeProgress = progress < 0.5 
+          ? 4 * progress * progress * progress 
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+        
+        planes.forEach((planeObj, idx) => {
+          const i = planeObj.index;
+          let targetOffset = (i - currentIndex);
+          if (targetOffset < -Math.floor(slideData.length/2)) targetOffset += slideData.length;
+          if (targetOffset > Math.floor(slideData.length/2)) targetOffset -= slideData.length;
+          
+          const targetX = targetOffset * currentDimensions.spacing;
+          const startX = startPositions[idx].x;
+          const targetScale = currentDimensions.scale;
+          const startScaleX = startPositions[idx].scaleX;
+          const startScaleY = startPositions[idx].scaleY;
+          
+          planeObj.mesh.position.x = startX + (targetX - startX) * easeProgress;
+          planeObj.mesh.scale.x = startScaleX + (targetScale - startScaleX) * easeProgress;
+          planeObj.mesh.scale.y = startScaleY + (targetScale - startScaleY) * easeProgress;
+        });
+        
+        render();
+        
+        if (progress < 1) {
+          requestAnimationFrame(animateStep);
+        } else {
+          isAnimating = false;
+        }
+      }
+      
+      animateStep();
+    } else if (!animate) {
+      planes.forEach((planeObj) => {
+        const i = planeObj.index;
+        let offset = (i - currentIndex);
+        if (offset < -Math.floor(slideData.length/2)) offset += slideData.length;
+        if (offset > Math.floor(slideData.length/2)) offset -= slideData.length;
+        planeObj.mesh.position.x = offset * currentDimensions.spacing;
+        planeObj.mesh.scale.set(currentDimensions.scale, currentDimensions.scale, currentDimensions.scale);
+      });
+    }
+  }
+
+  // Navigation par flèches
+  container.querySelector(".arrow.left").addEventListener("click", (e) => {
+    e.preventDefault();
+    if (isAnimating) return; // Empêcher les clics multiples pendant l'animation
+    
+    currentIndex = (currentIndex - 1 + slideData.length) % slideData.length;
+    updatePositions(true); // Animation activée
+    updateIndicators();
+    updateTitle();
+  });
+  
+  container.querySelector(".arrow.right").addEventListener("click", (e) => {
+    e.preventDefault();
+    if (isAnimating) return; // Empêcher les clics multiples pendant l'animation
+    
+    currentIndex = (currentIndex + 1) % slideData.length;
+    updatePositions(true); // Animation activée
+    updateIndicators();
+    updateTitle();
+  });
+
+  // Clic sur les images pour redirection
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  
+  container.addEventListener("click", (event) => {
+    // Éviter la propagation si on clique sur les flèches ou indicateurs
+    if (event.target.classList.contains('arrow') || 
+        event.target.classList.contains('dot')) {
+      return;
+    }
+    
+    const rect = container.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    
+    raycaster.setFromCamera(mouse, camera);
+    const meshes = planes.map(p => p.mesh);
+    const intersects = raycaster.intersectObjects(meshes);
+    
+    if (intersects.length > 0) {
+      const plane = intersects[0].object;
+      const link = plane.userData.link;
+      if (link) {
+        window.open(link, '_blank');
+      }
+    }
+  });
+
+  function render() {
+    if (renderer && scene && camera) {
+      renderer.render(scene, camera);
+    }
+  }
+
+  // Gestion du redimensionnement
+  function handleResize() {
+    if (!container || !camera || !renderer) return;
+    
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    
+    // Mise à jour des dimensions responsive
+    dimensions = getResponsiveDimensions();
+    
+    // Mise à jour de la caméra et du renderer
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+    
+    // Recréation de la géométrie avec les nouvelles dimensions
+    const newGeometry = new THREE.PlaneGeometry(dimensions.cardWidth, dimensions.cardHeight, 20, 20);
+    
+    // Mise à jour de tous les plans
+    planes.forEach((planeObj) => {
+      planeObj.mesh.geometry.dispose();
+      planeObj.mesh.geometry = newGeometry;
+      planeObj.mesh.scale.set(dimensions.scale, dimensions.scale, dimensions.scale);
+    });
+    
+    // Mise à jour des positions sans animation
+    updatePositions(false);
+    render();
+  }
+
+  window.addEventListener("resize", handleResize);
+  
+  // Navigation au clavier
+  document.addEventListener("keydown", (e) => {
+    if (isAnimating) return; // Empêcher la navigation pendant l'animation
+    
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      container.querySelector(".arrow.left").click();
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      container.querySelector(".arrow.right").click();
+    }
+  });
+});
+</script>

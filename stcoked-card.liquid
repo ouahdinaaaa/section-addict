@@ -1,0 +1,659 @@
+{% comment %}
+  Section: Stacked Cards
+  Auteur: Section personnalisable pour Shopify
+{% endcomment %}
+
+{{ 'stacked-cards.css' | asset_url | stylesheet_tag }}
+
+{%- assign section_id = 'stacked-cards-' | append: section.id -%}
+
+<section id="{{ section_id }}" class="stacked-cards-section">
+  <main class="stacked-cards-main">
+    <div class="stacked-cards-content" style="text-align: {{ section.settings.text_alignment }};">
+      {% if section.settings.title != blank %}
+        <h1 class="stacked-cards-title">{{ section.settings.title }}</h1>
+      {% endif %}
+      
+      {% if section.settings.description != blank %}
+        <p class="stacked-cards-description">{{ section.settings.description }}</p>
+      {% endif %}
+      
+      {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+        <a href="{{ section.settings.button_link }}" class="stacked-cards-btn">
+          {{ section.settings.button_label }}
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="stacked-cards-stack" data-autoplay="{{ section.settings.enable_autoplay }}">
+      {% for block in section.blocks %}
+        {% case block.type %}
+          {% when 'card' %}
+            <div class="stacked-card" {{ block.shopify_attributes }}>
+              {% if block.settings.image != blank %}
+                <img
+                  src="{{ block.settings.image | img_url: '500x750' }}"
+                  alt="{{ block.settings.image.alt | default: block.settings.title }}"
+                  loading="lazy"
+                  width="350"
+                  height="500">
+              {% else %}
+                <div class="stacked-card-placeholder">
+                  <svg width="100" height="100" viewBox="0 0 100 100" fill="none">
+                    <rect width="100" height="100" fill="#f0f0f0"/>
+                    <path d="M20 20h60v60H20z" fill="#ddd"/>
+                    <circle cx="35" cy="35" r="5" fill="#bbb"/>
+                    <path d="M20 60l15-15 10 10 15-15 20 20v10H20z" fill="#bbb"/>
+                  </svg>
+                </div>
+              {% endif %}
+            </div>
+        {% endcase %}
+      {% endfor %}
+    </div>
+  </main>
+</section>
+
+<style>
+  :root {
+    --stacked-cards-bg: {{ section.settings.background_color }};
+    --stacked-cards-text: {{ section.settings.text_color }};
+    --stacked-cards-title: {{ section.settings.title_color }};
+    --stacked-cards-button-bg: {{ section.settings.button_background }};
+    --stacked-cards-button-text: {{ section.settings.button_text_color }};
+    
+    /* Desktop font sizes */
+    --title-size-desktop: {{ section.settings.title_size_desktop }}px;
+    --text-size-desktop: {{ section.settings.text_size_desktop }}px;
+    --button-size-desktop: {{ section.settings.button_size_desktop }}px;
+    
+    /* Tablet font sizes */
+    --title-size-tablet: {{ section.settings.title_size_tablet }}px;
+    --text-size-tablet: {{ section.settings.text_size_tablet }}px;
+    --button-size-tablet: {{ section.settings.button_size_tablet }}px;
+    
+    /* Mobile font sizes */
+    --title-size-mobile: {{ section.settings.title_size_mobile }}px;
+    --text-size-mobile: {{ section.settings.text_size_mobile }}px;
+    --button-size-mobile: {{ section.settings.button_size_mobile }}px;
+  }
+
+  .stacked-cards-section {
+    background: var(--stacked-cards-bg);
+    background: linear-gradient(145deg, color-mix(in srgb, var(--stacked-cards-bg) 70%, white 30%) 0%, color-mix(in srgb, var(--stacked-cards-bg) 95%, black 5%) 76%);
+    padding: 60px 0;
+  }
+
+  .stacked-cards-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    place-items: center;
+    min-height: 70vh;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .stacked-cards-content {
+    padding-left: 120px;
+    color: var(--stacked-cards-text);
+    user-select: none;
+  }
+
+  .stacked-cards-title {
+    font-family: "Dancing Script", cursive;
+    font-size: var(--title-size-desktop);
+    font-weight: 700;
+    color: var(--stacked-cards-title);
+    background: linear-gradient(45deg, var(--stacked-cards-title), color-mix(in srgb, var(--stacked-cards-title) 80%, orange 20%));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+    margin-bottom: 36px;
+    padding-left: 10px;
+  }
+
+  .stacked-cards-description {
+    font-size: var(--text-size-desktop);
+    line-height: 1.6;
+    padding-right: 100px;
+    margin-bottom: 20px;
+  }
+
+  .stacked-cards-btn {
+    background: var(--stacked-cards-button-bg);
+    background: linear-gradient(-180deg, color-mix(in srgb, var(--stacked-cards-button-bg) 90%, yellow 10%), var(--stacked-cards-button-bg));
+    font-size: var(--button-size-desktop);
+    font-weight: 600;
+    color: var(--stacked-cards-button-text);
+    display: inline-block;
+    text-decoration: none;
+    outline: 0;
+    border: 0;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 12px 24px;
+    margin-top: 26px;
+    text-align: center;
+    transform: scale(1);
+    transition: all 0.2s ease-in;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .stacked-cards-btn:hover {
+    box-shadow: 0 4px 10px color-mix(in srgb, var(--stacked-cards-button-bg) 50%, transparent 50%);
+    transform: scale(0.98);
+    text-decoration: none;
+    color: var(--stacked-cards-button-text);
+  }
+
+  .stacked-cards-stack {
+    position: relative;
+  }
+
+  .stacked-card {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    width: 350px;
+    height: 500px;
+    border-radius: 2rem;
+    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.25), 0 15px 20px 0 rgba(0, 0, 0, 0.125);
+    transition: transform 0.6s;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  .stacked-card img,
+  .stacked-card-placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  .stacked-card-placeholder {
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stacked-card:nth-last-child(n + 5) {
+    --x: calc(-50% + 90px);
+    transform: translate(var(--x), -50%) scale(0.85);
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.01);
+  }
+
+  .stacked-card:nth-last-child(4) {
+    --x: calc(-50% + 60px);
+    transform: translate(var(--x), -50%) scale(0.9);
+  }
+
+  .stacked-card:nth-last-child(3) {
+    --x: calc(-50% + 30px);
+    transform: translate(var(--x), -50%) scale(0.95);
+  }
+
+  .stacked-card:nth-last-child(2) {
+    --x: calc(-50%);
+    transform: translate(var(--x), -50%) scale(1);
+  }
+
+  .stacked-card:nth-last-child(1) {
+    --x: calc(-50% - 30px);
+    transform: translate(var(--x), -50%) scale(1.05);
+  }
+
+  .stacked-card:nth-last-child(1) img {
+    box-shadow: 0 1px 5px 5px color-mix(in srgb, var(--stacked-cards-button-bg) 50%, transparent 50%);
+  }
+
+  .stacked-card.swap {
+    animation: swap 1.3s ease-out forwards;
+  }
+
+  @keyframes swap {
+    30% {
+      transform: translate(calc(var(--x) - 250px), -50%) scale(0.85) rotate(-5deg) rotateY(65deg);
+    }
+    100% {
+      transform: translate(calc(var(--x) - 30px), -50%) scale(0.5);
+      z-index: -1;
+    }
+  }
+
+  /* Tablet styles */
+  @media (max-width: 1200px) {
+    .stacked-cards-title {
+      font-size: var(--title-size-tablet);
+    }
+    
+    .stacked-cards-description {
+      font-size: var(--text-size-tablet);
+    }
+    
+    .stacked-cards-btn {
+      font-size: var(--button-size-tablet);
+    }
+
+    .stacked-cards-content {
+      padding-left: 80px;
+    }
+
+    .stacked-cards-description {
+      padding-right: 40px;
+    }
+
+    .stacked-card {
+      width: 250px;
+      height: 380px;
+    }
+
+    @keyframes swap {
+      30% {
+        transform: translate(calc(var(--x) - 200px), -50%) scale(0.85) rotate(-5deg) rotateY(65deg);
+      }
+      100% {
+        transform: translate(calc(var(--x) - 30px), -50%) scale(0.5);
+        z-index: -1;
+      }
+    }
+  }
+
+  @media (max-width: 1050px) {
+    .stacked-cards-content {
+      padding-left: 60px;
+    }
+
+    .stacked-cards-description {
+      line-height: 1.5;
+    }
+
+    .stacked-card {
+      width: 220px;
+      height: 350px;
+    }
+
+    @keyframes swap {
+      30% {
+        transform: translate(calc(var(--x) - 150px), -50%) scale(0.85) rotate(-5deg) rotateY(65deg);
+      }
+      100% {
+        transform: translate(calc(var(--x) - 30px), -50%) scale(0.5);
+        z-index: -1;
+      }
+    }
+  }
+
+  @media (max-width: 990px) {
+    .stacked-cards-description {
+      padding-right: 0;
+    }
+
+    .stacked-card {
+      width: 200px;
+      height: 300px;
+    }
+  }
+
+  /* Mobile styles */
+  @media (max-width: 950px) {
+    .stacked-cards-title {
+      font-size: var(--title-size-mobile);
+    }
+    
+    .stacked-cards-description {
+      font-size: var(--text-size-mobile);
+    }
+    
+    .stacked-cards-btn {
+      font-size: var(--button-size-mobile);
+    }
+
+    .stacked-cards-main {
+      grid-template-columns: 1fr;
+      grid-template-rows: 4fr 3fr;
+      grid-template-areas: "stacked" "content";
+    }
+
+    .stacked-cards-content {
+      grid-area: content;
+      padding: 0 90px;
+    }
+
+    .stacked-cards-btn {
+      margin-bottom: 30px;
+    }
+
+    .stacked-cards-stack {
+      grid-area: stacked;
+    }
+  }
+
+  @media (max-width: 650px) {
+    .stacked-cards-main {
+      grid-template-rows: 1fr 1fr;
+    }
+
+    .stacked-cards-content {
+      padding: 0 50px;
+    }
+
+    .stacked-cards-title {
+      padding-left: 0;
+    }
+
+    .stacked-cards-btn {
+      padding: 8px 16px;
+    }
+
+    .stacked-card {
+      width: 180px;
+      height: 260px;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const stacks = document.querySelectorAll('.stacked-cards-stack');
+    
+    stacks.forEach(function(stack) {
+      const cards = Array.from(stack.children)
+        .reverse()
+        .filter((child) => child.classList.contains('stacked-card'));
+
+      cards.forEach((card) => stack.appendChild(card));
+
+      function moveCard() {
+        const lastCard = stack.lastElementChild;
+        if (lastCard && lastCard.classList.contains('stacked-card')) {
+          lastCard.classList.add('swap');
+
+          setTimeout(() => {
+            lastCard.classList.remove('swap');
+            stack.insertBefore(lastCard, stack.firstElementChild);
+          }, 1200);
+        }
+      }
+
+      let autoplayInterval;
+      const enableAutoplay = stack.getAttribute('data-autoplay') === 'true';
+
+      if (enableAutoplay) {
+        autoplayInterval = setInterval(moveCard, 4000);
+      }
+
+      stack.addEventListener('click', function(e) {
+        const card = e.target.closest('.stacked-card');
+        if (card && card === stack.lastElementChild) {
+          card.classList.add('swap');
+
+          setTimeout(() => {
+            card.classList.remove('swap');
+            stack.insertBefore(card, stack.firstElementChild);
+          }, 1200);
+
+          // Reset autoplay timer if enabled
+          if (enableAutoplay) {
+            clearInterval(autoplayInterval);
+            autoplayInterval = setInterval(moveCard, 4000);
+          }
+        }
+      });
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Stacked Cards",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Contenu"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "La Pâtisserie Belle"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Welcome to La Pâtisserie Belle, where every bite is a journey into the exquisite world of finely crafted pastries."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Texte du bouton",
+      "default": "Explore More"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Lien du bouton"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Alignement du texte",
+      "options": [
+        {
+          "value": "left",
+          "label": "Gauche"
+        },
+        {
+          "value": "center",
+          "label": "Centre"
+        },
+        {
+          "value": "right",
+          "label": "Droite"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Activer le défilement automatique",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Couleurs"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Couleur de fond",
+      "default": "#0d0a0b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur du texte",
+      "default": "#c7c7c7"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Couleur du titre",
+      "default": "#f76591"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Couleur de fond du bouton",
+      "default": "#f76591"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Couleur du texte du bouton",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Tailles de police - Desktop"
+    },
+    {
+      "type": "range",
+      "id": "title_size_desktop",
+      "label": "Taille du titre (Desktop)",
+      "min": 24,
+      "max": 96,
+      "step": 2,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_size_desktop",
+      "label": "Taille du texte (Desktop)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_size_desktop",
+      "label": "Taille du bouton (Desktop)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Tailles de police - Tablette"
+    },
+    {
+      "type": "range",
+      "id": "title_size_tablet",
+      "label": "Taille du titre (Tablette)",
+      "min": 20,
+      "max": 72,
+      "step": 2,
+      "default": 48,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_size_tablet",
+      "label": "Taille du texte (Tablette)",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_size_tablet",
+      "label": "Taille du bouton (Tablette)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Tailles de police - Mobile"
+    },
+    {
+      "type": "range",
+      "id": "title_size_mobile",
+      "label": "Taille du titre (Mobile)",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "default": 32,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "text_size_mobile",
+      "label": "Taille du texte (Mobile)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 14,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "button_size_mobile",
+      "label": "Taille du bouton (Mobile)",
+      "min": 10,
+      "max": 16,
+      "step": 1,
+      "default": 12,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Carte",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titre de l'image (pour l'accessibilité)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stacked Cards",
+      "blocks": [
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        },
+        {
+          "type": "card"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
