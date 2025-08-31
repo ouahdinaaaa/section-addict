@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carousel Vidéos Amélioré</title>
+  <style>
+    /* Reset et base styles */
+    .carousel-root,
+    .carousel-root * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      overflow: hidden;
+    }
+    
+    .carousel-root {
+      position: relative;
+      display: none;
+    }
+    
+    .carousel-root .viewport {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Video carousel améliré */
+    .video-carousel-root,
+    .video-carousel-root * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+    }
+
+    .video-carousel-root {
+      width: 100%;
+      height: 100vh;
+      margin: 0;
+      position: relative;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      overflow: hidden;
+    }
+
+    .video-carousel-viewport {
+      width: 100%;
+      height: 100vh;
+      margin: 0 auto;
+      padding: 20px 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .video-carousel-container {
+      position: relative;
+      width: 100%;
+      height: calc(100vh - 40px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .video-carousel-slider {
+      display: flex;
+      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      height: 100%;
+      gap: 20px;
+    }
+
+    .video-slide {
+      flex-shrink: 0;
+      position: relative;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .video-slide:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .video-slide .video-wrapper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+    }
+
+    .video-slide iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 15px;
+    }
+
+    /* Overlay gradient pour l'effet esthétique */
+    .video-slide::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+      pointer-events: none;
+      z-index: 1;
+      border-radius: 15px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-slide:hover::before {
+      opacity: 1;
+    }
+
+    /* Boutons de navigation améliorés */
+    .video-carousel-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #333;
+      transition: all 0.3s ease;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .video-carousel-button:hover {
+      background: rgba(255, 255, 255, 1);
+      transform: translateY(-50%) scale(1.1);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .video-carousel-button-left {
+      left: 30px;
+    }
+
+    .video-carousel-button-right {
+      right: 30px;
+    }
+
+    /* Indicateurs de pagination */
+    .video-carousel-dots {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: white;
+      transform: scale(1.2);
+    }
+
+    /* Responsive Design */
+    
+    /* Desktop - 7 vidéos */
+    @media (min-width: 1200px) {
+      .video-slide {
+        width: calc((100vw - 200px) / 7 - 20px);
+        height: calc(100vh - 120px);
+      }
+    }
+
+    /* Tablette - 5 vidéos */
+    @media (min-width: 768px) and (max-width: 1199px) {
+      .video-slide {
+        width: calc((100vw - 160px) / 5 - 20px);
+        height: calc(100vh - 120px);
+      }
+      
+      .video-carousel-button-left {
+        left: 20px;
+      }
+      
+      .video-carousel-button-right {
+        right: 20px;
+      }
+    }
+
+    /* Mobile - 3 vidéos */
+    @media (max-width: 767px) {
+      .video-slide {
+        width: calc((100vw - 120px) / 3 - 15px);
+        height: calc(100vh - 100px);
+      }
+      
+      .video-carousel-slider {
+        gap: 15px;
+      }
+      
+      .video-carousel-button {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+      
+      .video-carousel-button-left {
+        left: 10px;
+      }
+      
+      .video-carousel-button-right {
+        right: 10px;
+      }
+      
+      .video-carousel-viewport {
+        padding: 10px 0;
+      }
+    }
+
+    /* Animations d'entrée */
+    @keyframes slideInFromBottom {
+      0% {
+        transform: translateY(100px);
+        opacity: 0;
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .video-slide {
+      animation: slideInFromBottom 0.8s ease-out;
+    }
+
+    .video-slide:nth-child(1) { animation-delay: 0.1s; }
+    .video-slide:nth-child(2) { animation-delay: 0.2s; }
+    .video-slide:nth-child(3) { animation-delay: 0.3s; }
+    .video-slide:nth-child(4) { animation-delay: 0.4s; }
+    .video-slide:nth-child(5) { animation-delay: 0.5s; }
+    .video-slide:nth-child(6) { animation-delay: 0.6s; }
+    .video-slide:nth-child(7) { animation-delay: 0.7s; }
+
+    /* Loading state */
+    .video-slide.loading {
+      background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+      background-size: 400% 400%;
+      animation: gradient 1.5s ease infinite;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Titre du carousel */
+    .carousel-title {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-family: 'Arial', sans-serif;
+      font-size: 2em;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+    }
+
+    @media (max-width: 767px) {
+      .carousel-title {
+        font-size: 1.5em;
+        top: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="video-carousel-root">
+    <h2 class="carousel-title">Galerie Vidéos</h2>
+    
+    <div class="video-carousel-viewport">
+      <div class="video-carousel-container">
+        <div class="video-carousel-slider" id="videoSlider">
+          <!-- Vidéos YouTube avec différentes vidéos pour plus de variété -->
+          <div class="video-slide">
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/DE1UbbikE5A?rel=0&mute=1&autoplay=0&loop=1&playlist=DE1UbbikE5A" 
+                allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+            </div>
+          </div>
+
+          <div class="video-slide">
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0&mute=1&autoplay=0&loop=1&playlist=dQw4w9WgXcQ" 
+                allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+            </div>
+          </div>
+
+          <div class="video-slide">
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/9bZkp7q19f0?rel=0&mute=1&autoplay=0&loop=1&playlist=9bZkp7q19f0" 
+                allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+            </div>
+          </div>
+
+          <div class="video-slide">
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/kJQP7kiw5Fk?rel=0&mute=1&autoplay=0&loop=1&playlist=kJQP7kiw5Fk" 
+                allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+            </div>
+          </div>
+
+          <div class="video-slide">
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/YQHsXMglC9A?rel=0&mute=1&autoplay=0&loop=1&playlist=YQHsXMglC9A" 
+                allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+            </div>
+          </div>
+
+          <div class="video-slide">
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/L_jWHffIx5E?rel=0&mute=1&autoplay=0&loop=1&playlist=L_jWHffIx5E" 
+                allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+            </div>
+          </div>
+
+          <div class="video-slide">
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/fJ9rUzIMcZQ?rel=0&mute=1&autoplay=0&loop=1&playlist=fJ9rUzIMcZQ" 
+                allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+            </div>
+          </div>
+
+          <div class="video-slide">
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/ZZ5LpwO-An4?rel=0&mute=1&autoplay=0&loop=1&playlist=ZZ5LpwO-An4" 
+                allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+            </div>
+          </div>
+
+          <div class="video-slide">
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/hFZFjoX2cGg?rel=0&mute=1&autoplay=0&loop=1&playlist=hFZFjoX2cGg" 
+                allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+            </div>
+          </div>
+
+          <div class="video-slide">
+            <div class="video-wrapper">
+              <iframe src="https://www.youtube.com/embed/2vjPBrBU-TM?rel=0&mute=1&autoplay=0&loop=1&playlist=2vjPBrBU-TM" 
+                allow="autoplay; encrypted-media" allowfullscreen loading="lazy"></iframe>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boutons de navigation -->
+        <button class="video-carousel-button video-carousel-button-left" id="prevBtn">
+          &#8249;
+        </button>
+        <button class="video-carousel-button video-carousel-button-right" id="nextBtn">
+          &#8250;
+        </button>
+      </div>
+
+      <!-- Indicateurs de pagination -->
+      <div class="video-carousel-dots" id="dotsContainer"></div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const slider = document.getElementById("videoSlider");
+      const slides = Array.from(slider.children);
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const dotsContainer = document.getElementById("dotsContainer");
+
+      let currentIndex = 0;
+      let visibleSlides = getVisibleSlides();
+      let isAnimating = false;
+
+      function getVisibleSlides() {
+        if (window.innerWidth >= 1200) return 7; // Desktop
+        if (window.innerWidth >= 768) return 5;  // Tablette
+        return 3; // Mobile
+      }
+
+      function createDots() {
+        dotsContainer.innerHTML = '';
+        const totalPages = Math.ceil(slides.length / visibleSlides);
+        
+        for (let i = 0; i < totalPages; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'dot';
+          if (i === 0) dot.classList.add('active');
+          dot.addEventListener('click', () => goToPage(i));
+          dotsContainer.appendChild(dot);
+        }
+      }
+
+      function updateDots() {
+        const dots = dotsContainer.querySelectorAll('.dot');
+        const currentPage = Math.floor(currentIndex / visibleSlides);
+        
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentPage);
+        });
+      }
+
+      function updateCarousel() {
+        if (isAnimating) return;
+        
+        const slideWidth = slides[0].getBoundingClientRect().width;
+        const gap = 20;
+        const offset = currentIndex * (slideWidth + gap);
+        
+        slider.style.transform = `translateX(-${offset}px)`;
+        updateDots();
+      }
+
+      function moveNext() {
+        if (isAnimating) return;
+        
+        isAnimating = true;
+        const maxIndex = slides.length - visibleSlides;
+        
+        if (currentIndex >= maxIndex) {
+          currentIndex = 0; // Retour au début pour l'effet infini
+        } else {
+          currentIndex++;
+        }
+        
+        updateCarousel();
+        
+        setTimeout(() => {
+          isAnimating = false;
+        }, 800);
+      }
+
+      function movePrev() {
+        if (isAnimating) return;
+        
+        isAnimating = true;
+        const maxIndex = slides.length - visibleSlides;
+        
+        if (currentIndex <= 0) {
+          currentIndex = maxIndex; // Aller à la fin pour l'effet infini
+        } else {
+          currentIndex--;
+        }
+        
+        updateCarousel();
+        
+        setTimeout(() => {
+          isAnimating = false;
+        }, 800);
+      }
+
+      function goToPage(pageIndex) {
+        if (isAnimating) return;
+        
+        isAnimating = true;
+        currentIndex = pageIndex * visibleSlides;
+        const maxIndex = slides.length - visibleSlides;
+        
+        if (currentIndex > maxIndex) {
+          currentIndex = maxIndex;
+        }
+        
+        updateCarousel();
+        
+        setTimeout(() => {
+          isAnimating = false;
+        }, 800);
+      }
+
+      function handleResize() {
+        const newVisibleSlides = getVisibleSlides();
+        if (newVisibleSlides !== visibleSlides) {
+          visibleSlides = newVisibleSlides;
+          currentIndex = Math.min(currentIndex, slides.length - visibleSlides);
+          createDots();
+          updateCarousel();
+        }
+      }
+
+      // Auto-play functionality
+      let autoPlayInterval;
+      
+      function startAutoPlay() {
+        autoPlayInterval = setInterval(moveNext, 5000);
+      }
+
+      function stopAutoPlay() {
+        clearInterval(autoPlayInterval);
+      }
+
+      // Event listeners
+      nextBtn.addEventListener("click", () => {
+        stopAutoPlay();
+        moveNext();
+        startAutoPlay();
+      });
+      
+      prevBtn.addEventListener("click", () => {
+        stopAutoPlay();
+        movePrev();
+        startAutoPlay();
+      });
+
+      // Pause autoplay on hover
+      slider.addEventListener("mouseenter", stopAutoPlay);
+      slider.addEventListener("mouseleave", startAutoPlay);
+
+      // Touch support pour mobile
+      let startX = 0;
+      let currentX = 0;
+      let isDragging = false;
+
+      slider.addEventListener("touchstart", (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        stopAutoPlay();
+      });
+
+      slider.addEventListener("touchmove", (e) => {
+        if (!isDragging) return;
+        currentX = e.touches[0].clientX;
+      });
+
+      slider.addEventListener("touchend", () => {
+        if (!isDragging) return;
+        isDragging = false;
+        
+        const diff = startX - currentX;
+        
+        if (Math.abs(diff) > 50) {
+          if (diff > 0) {
+            moveNext();
+          } else {
+            movePrev();
+          }
+        }
+        
+        startAutoPlay();
+      });
+
+      // Keyboard navigation
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") {
+          stopAutoPlay();
+          movePrev();
+          startAutoPlay();
+        } else if (e.key === "ArrowRight") {
+          stopAutoPlay();
+          moveNext();
+          startAutoPlay();
+        }
+      });
+
+      window.addEventListener("resize", handleResize);
+
+      // Initialize
+      createDots();
+      updateCarousel();
+      startAutoPlay();
+
+      // Performance: Lazy load videos
+      const observerOptions = {
+        root: null,
+        rootMargin: '50px',
+        threshold: 0.1
+      };
+
+      const videoObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const iframe = entry.target.querySelector('iframe');
+            if (iframe && !iframe.src.includes('autoplay=1')) {
+              // On peut activer l'autoplay quand la vidéo devient visible
+              iframe.src = iframe.src.replace('autoplay=0', 'autoplay=1');
+            }
+          }
+        });
+      }, observerOptions);
+
+      slides.forEach(slide => {
+        videoObserver.observe(slide);
+      });
+    });
+  </script>
+</body>
+</html>
