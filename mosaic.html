@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galerie Mosaïque Style Magazine</title>
+    <style>
+        :root {
+            --section-bg: #ffffff;
+            --text-bg: #f8f8f8;
+            --text-color: #000000;
+            --accent-color: #cccccc;
+            --title-weight: 700;
+            --text-weight: 400;
+            --spacing: 10px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        .mosaic-gallery {
+            background-color: var(--section-bg);
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .mosaic-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-auto-rows: minmax(200px, auto);
+            gap: var(--spacing);
+        }
+        
+        .mosaic-item {
+            position: relative;
+            overflow: hidden;
+            background-color: var(--accent-color);
+        }
+        
+        .mosaic-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .text-block {
+            padding: 30px;
+            background-color: var(--text-bg);
+            color: var(--text-color);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .text-block h2 {
+            font-size: 24px;
+            font-weight: var(--title-weight);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+        
+        .text-block p {
+            font-size: 16px;
+            font-weight: var(--text-weight);
+            line-height: 1.6;
+        }
+        
+        /* Placement spécifique des éléments selon l'image */
+        .mosaic-large-image {
+            grid-column: 1 / 2;
+            grid-row: 1 / 3;
+        }
+        
+        .mosaic-text-block-1 {
+            grid-column: 2 / 3;
+            grid-row: 1 / 2;
+        }
+        
+        .mosaic-text-block-2 {
+            grid-column: 1 / 2;
+            grid-row: 3 / 4;
+        }
+        
+        .mosaic-square-image {
+            grid-column: 2 / 3;
+            grid-row: 2 / 3;
+        }
+        
+        .mosaic-small-image-1 {
+            grid-column: 2 / 3;
+            grid-row: 3 / 4;
+        }
+        
+        .mosaic-small-image-2 {
+            grid-column: 1 / 2;
+            grid-row: 4 / 5;
+        }
+        
+        .mosaic-text-block-3 {
+            grid-column: 2 / 3;
+            grid-row: 4 / 5;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mosaic-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mosaic-large-image,
+            .mosaic-text-block-1,
+            .mosaic-text-block-2,
+            .mosaic-square-image,
+            .mosaic-small-image-1,
+            .mosaic-small-image-2,
+            .mosaic-text-block-3 {
+                grid-column: 1 / 2;
+            }
+            
+            .mosaic-large-image { grid-row: 1 / 2; }
+            .mosaic-text-block-1 { grid-row: 2 / 3; }
+            .mosaic-square-image { grid-row: 3 / 4; }
+            .mosaic-text-block-2 { grid-row: 4 / 5; }
+            .mosaic-small-image-1 { grid-row: 5 / 6; }
+            .mosaic-small-image-2 { grid-row: 6 / 7; }
+            .mosaic-text-block-3 { grid-row: 7 / 8; }
+            
+            .text-block {
+                padding: 20px;
+            }
+        }
+        
+        .control-panel {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .control-group input, .control-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .color-selector {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .color-selector input {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="mosaic-gallery">
+        <div class="mosaic-grid">
+            <div class="mosaic-item mosaic-large-image">
+                <img src="https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Large image">
+            </div>
+            
+            <div class="mosaic-item mosaic-text-block-1 text-block">
+                <h2>ADITION REIMAGIN</h2>
+                <p>I was commissioned by LA Galaxy during the release of their Retrograde Kit as part the adidas x MLS Archive Collection.</p>
+            </div>
+            
+            <div class="mosaic-item mosaic-text-block-2 text-block">
+                <h2>LA GALAXY & THEFOOTBALLGAL</h2>
+                <p>The I/I piece was auctioned off on their channels, with proceeds benefiting The LA Galaxy Foundation.</p>
+            </div>
+            
+            <div class="mosaic-item mosaic-square-image">
+                <img src="https://images.unsplash.com/photo-1529900748604-07564a03e7a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Square image">
+            </div>
+            
+            <div class="mosaic-item mosaic-small-image-1">
+                <img src="https://images.unsplash.com/photo-1519457431-44ccd64a579b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Small image 1">
+            </div>
+            
+            <div class="mosaic-item mosaic-small-image-2">
+                <img src="https://images.unsplash.com/photo-1552664199-fd31f7431a55?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Small image 2">
+            </div>
+            
+            <div class="mosaic-item mosaic-text-block-3 text-block">
+                <p>JULY 2024</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <h2>Personnalisation de la section</h2>
+        
+        <div class="control-group">
+            <label for="section-bg">Couleur de fond de la section</label>
+            <div class="color-selector">
+                <input type="color" id="section-bg" value="#ffffff">
+                <input type="text" id="section-bg-text" value="#ffffff">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label for="text-bg">Couleur de fond des blocs de texte</label>
+            <div class="color-selector">
+                <input type="color" id="text-bg" value="#f8f8f8">
+                <input type="text" id="text-bg-text" value="#f8f8f8">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label for="text-color">Couleur du texte</label>
+            <div class="color-selector">
+                <input type="color" id="text-color" value="#000000">
+                <input type="text" id="text-color-text" value="#000000">
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label for="title-weight">Épaisseur du texte des titres</label>
+            <select id="title-weight">
+                <option value="400">Normal</option>
+                <option value="500">Medium</option>
+                <option value="600" selected>Semi-Gras</option>
+                <option value="700">Gras</option>
+                <option value="800">Extra-Gras</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label for="text-weight">Épaisseur du texte standard</label>
+            <select id="text-weight">
+                <option value="300">Léger</option>
+                <option value="400" selected>Normal</option>
+                <option value="500">Medium</option>
+                <option value="600">Semi-Gras</option>
+            </select>
+        </div>
+        
+        <div class="control-group">
+            <label for="spacing">Espacement entre les éléments (px)</label>
+            <input type="range" id="spacing" min="5" max="30" value="10">
+            <span id="spacing-value">10 px</span>
+        </div>
+    </div>
+
+    <script>
+        // Fonctions pour mettre à jour les couleurs
+        function updateColor(inputId, cssVar) {
+            const colorInput = document.getElementById(inputId);
+            const colorTextInput = document.getElementById(inputId + '-text');
+            
+            function updateColorValue(value) {
+                document.documentElement.style.setProperty(cssVar, value);
+                colorInput.value = value;
+                colorTextInput.value = value;
+            }
+            
+            colorInput.addEventListener('input', () => updateColorValue(colorInput.value));
+            colorTextInput.addEventListener('input', () => updateColorValue(colorTextInput.value));
+        }
+        
+        // Initialisation des sélecteurs de couleur
+        updateColor('section-bg', '--section-bg');
+        updateColor('text-bg', '--text-bg');
+        updateColor('text-color', '--text-color');
+        
+        // Gestion de l'épaisseur du texte
+        document.getElementById('title-weight').addEventListener('change', function() {
+            document.documentElement.style.setProperty('--title-weight', this.value);
+        });
+        
+        document.getElementById('text-weight').addEventListener('change', function() {
+            document.documentElement.style.setProperty('--text-weight', this.value);
+        });
+        
+        // Gestion de l'espacement
+        const spacingSlider = document.getElementById('spacing');
+        const spacingValue = document.getElementById('spacing-value');
+        
+        spacingSlider.addEventListener('input', function() {
+            const value = this.value + 'px';
+            document.documentElement.style.setProperty('--spacing', value);
+            spacingValue.textContent = value;
+        });
+    </script>
+</body>
+</html>

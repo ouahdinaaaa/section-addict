@@ -1,0 +1,195 @@
+{% schema %}
+{
+  "name": "🔔 Barre Timer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "announcement_text",
+      "label": "Texte de l’annonce",
+      "default": "🏷️ BLACK FRIDAY PRE-SALE"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Couleur de fond",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur du texte",
+      "default": "#ffffff"
+    },
+    {
+      "type": "number",
+      "id": "bar_height",
+      "label": "Hauteur de la barre (px)",
+      "default": 50
+    },
+    {
+      "type": "number",
+      "id": "bar_width",
+      "label": "Largeur de la barre (%)",
+      "default": 100
+    },
+    {
+      "type": "number",
+      "id": "font_size_desktop",
+      "label": "Taille du texte (Desktop px)",
+      "default": 18
+    },
+    {
+      "type": "number",
+      "id": "font_size_tablet",
+      "label": "Taille du texte (Tablette px)",
+      "default": 16
+    },
+    {
+      "type": "number",
+      "id": "font_size_mobile",
+      "label": "Taille du texte (Mobile px)",
+      "default": 14
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "Date de fin du compte à rebours (YYYY-MM-DD HH:MM:SS)",
+      "default": "2025-11-30 23:59:59"
+    }
+  ],
+  "presets": [
+    {
+      "name": "🔔 Barre Timer"
+    }
+  ]
+}
+{% endschema %}
+
+<section 
+  id="announcement-bar"
+  style="
+    background-color: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    width: {{ section.settings.bar_width }}%;
+    height: {{ section.settings.bar_height }}px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+  "
+>
+  <div class="announcement-inner">
+    <span id="announcement-text">{{ section.settings.announcement_text }}</span>
+
+    <div id="countdown" class="countdown-wrapper">
+      <div class="box-2">
+        <div id="days" class="clock-number-2">00</div>
+        <div class="clock-label-2">Jours</div>
+      </div>
+      <div class="box-2">
+        <div id="hours" class="clock-number-2">00</div>
+        <div class="clock-label-2">Hrs</div>
+      </div>
+      <div class="box-2">
+        <div id="minutes" class="clock-number-2">00</div>
+        <div class="clock-label-2">Min</div>
+      </div>
+      <div class="box-2">
+        <div id="seconds" class="clock-number-2">00</div>
+        <div class="clock-label-2">Sec</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #announcement-bar {
+    font-size: {{ section.settings.font_size_desktop }}px;
+  }
+
+  .countdown-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 12px;
+    gap: 6px;
+  }
+
+  .box-2 {
+    width: 1.75rem;
+    height: 1.75rem;
+    background-color: #fff;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3px;
+  }
+
+  .clock-number-2 {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: black;
+    line-height: 1;
+  }
+
+  .clock-label-2 {
+    font-size: 0.5rem;
+    color: black;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  @media (max-width: 991px) {
+    #announcement-bar {
+      font-size: {{ section.settings.font_size_tablet }}px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    #announcement-bar {
+      font-size: {{ section.settings.font_size_mobile }}px;
+    }
+    .countdown-wrapper {
+      flex-wrap: wrap;
+    }
+  }
+</style>
+
+<script>
+  function startCountdown() {
+    const endDate = new Date("{{ section.settings.end_date | escape }}").getTime();
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const timeLeft = endDate - now;
+
+      if (timeLeft > 0) {
+        const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+        document.getElementById("days").innerText = formatTime(days);
+        document.getElementById("hours").innerText = formatTime(hours);
+        document.getElementById("minutes").innerText = formatTime(minutes);
+        document.getElementById("seconds").innerText = formatTime(seconds);
+      } else {
+        ["days", "hours", "minutes", "seconds"].forEach(id => {
+          document.getElementById(id).innerText = "00";
+        });
+        clearInterval(interval);
+      }
+    }, 1000);
+  }
+
+  function formatTime(num) {
+    return num < 10 ? "0" + num : num;
+  }
+
+  document.addEventListener("DOMContentLoaded", startCountdown);
+</script>

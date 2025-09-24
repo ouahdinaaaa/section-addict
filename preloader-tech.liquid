@@ -1,0 +1,522 @@
+<div id="preloader-tech" class="preloader-tech" style="display: none;">
+  <div class="device">
+    <div class="device__a">
+      <div class="device__a-1"></div>
+      <div class="device__a-2"></div>
+    </div>
+    <div class="device__b"></div>
+    <div class="device__c"></div>
+    <div class="device__d"></div>
+    <div class="device__e"></div>
+    <div class="device__f"></div>
+    <div class="device__g"></div>
+  </div>
+  <div class="preloader-tech__text">
+    <p class="preloader-tech__msg">{{ section.settings.message_default }}</p>
+    <p class="preloader-tech__msg preloader-tech__msg--last">{{ section.settings.message_last }}</p>
+  </div>
+</div>
+
+<style>
+  :root {
+    --preloader-tech-bg: {{ section.settings.background_color }};
+    --preloader-tech-fg: {{ section.settings.text_color }};
+    --preloader-tech-device: {{ section.settings.device_color }};
+    --preloader-tech-accent: {{ section.settings.accent_color }};
+    --preloader-tech-hue: {{ section.settings.hue }};
+  }
+
+  #preloader-tech {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: var(--preloader-tech-bg) !important;
+    color: var(--preloader-tech-fg) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 9999 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.3s ease, visibility 0.3s ease !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: sans-serif !important;
+  }
+
+  #preloader-tech.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  #preloader-tech .preloader-tech__text {
+    position: relative;
+    margin-top: 2rem;
+    text-align: center;
+    width: 100%;
+    min-height: 2em;
+  }
+
+  #preloader-tech .preloader-tech__msg {
+    animation: preloader-tech-msg 0.3s 13.7s linear forwards;
+    position: absolute;
+    width: 100%;
+    margin: 0;
+    font-size: {{ section.settings.text_size }}px;
+    text-align: center;
+    white-space: nowrap;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  #preloader-tech .preloader-tech__msg--last {
+    animation-direction: reverse;
+    animation-delay: 14s;
+    visibility: hidden;
+  }
+
+  /* DEVICE ANIMATION */
+  #preloader-tech .device {
+    position: relative;
+    width: {{ section.settings.device_size }}px;
+    height: {{ section.settings.device_size }}px;
+  }
+
+  #preloader-tech .device__a,
+  #preloader-tech .device__a-1,
+  #preloader-tech .device__a-2,
+  #preloader-tech .device__b,
+  #preloader-tech .device__c,
+  #preloader-tech .device__d,
+  #preloader-tech .device__e,
+  #preloader-tech .device__f,
+  #preloader-tech .device__g {
+    animation-duration: {{ section.settings.animation_speed }}s;
+    animation-timing-function: cubic-bezier(0.65,0,0.35,1);
+    animation-iteration-count: infinite;
+    position: absolute;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+
+  #preloader-tech .device__a,
+  #preloader-tech .device__d,
+  #preloader-tech .device__e {
+    background-color: var(--preloader-tech-device);
+    box-shadow: 0 0 0 0.25em var(--preloader-tech-accent) inset;
+  }
+
+  #preloader-tech .device__a {
+    animation-name: preloader-device-a;
+    border-radius: 0.375em;
+    top: 0;
+    width: 4em;
+    height: 2.5em;
+    z-index: 1;
+  }
+
+  #preloader-tech .device__a-1,
+  #preloader-tech .device__a-2 {
+    visibility: hidden;
+  }
+
+  #preloader-tech .device__a-1 {
+    animation-name: preloader-device-a-1;
+    top: 2.25em;
+    left: 1.5em;
+    width: 1em;
+    height: 0.25em;
+  }
+
+  #preloader-tech .device__a-2 {
+    animation-name: preloader-device-a-2;
+    top: 0.625em;
+    right: 0;
+    width: 0.25em;
+    height: 0.75em;
+  }
+
+  #preloader-tech .device__a-1,
+  #preloader-tech .device__a-2,
+  #preloader-tech .device__b,
+  #preloader-tech .device__c,
+  #preloader-tech .device__f,
+  #preloader-tech .device__g {
+    background-color: var(--preloader-tech-accent);
+    border-radius: 0.125em;
+  }
+
+  #preloader-tech .device__b {
+    animation-name: preloader-device-b;
+    top: 2.25em;
+    left: 1.875em;
+    width: 0.25em;
+    height: 1em;
+  }
+
+  #preloader-tech .device__c {
+    animation-name: preloader-device-c;
+    top: 3em;
+    left: 1em;
+    width: 2em;
+    height: 0.25em;
+  }
+
+  #preloader-tech .device__d,
+  #preloader-tech .device__e {
+    left: 1.25em;
+    width: 1.5em;
+    height: 0.875em;
+    visibility: hidden;
+  }
+
+  #preloader-tech .device__d {
+    animation-name: preloader-device-d;
+    border-radius: 0.375em 0.375em 0 0;
+    top: 0.75em;
+  }
+
+  #preloader-tech .device__e {
+    animation-name: preloader-device-e;
+    border-radius: 0 0 0.375em 0.375em;
+    top: 1.625em;
+  }
+
+  #preloader-tech .device__f,
+  #preloader-tech .device__g {
+    filter: blur(0.375em);
+    bottom: 0;
+    height: 0.25em;
+  }
+
+  #preloader-tech .device__f {
+    animation-name: preloader-device-f;
+    opacity: 0.5;
+    left: 1em;
+    width: 2em;
+  }
+
+  #preloader-tech .device__g {
+    animation-name: preloader-device-g;
+    opacity: 0;
+    left: 0;
+    width: 4em;
+  }
+
+  /* KEYFRAMES */
+  @keyframes preloader-tech-msg {
+    from { opacity: 1; visibility: visible; }
+    99.9% { opacity: 0; visibility: visible; }
+    to { opacity: 0; visibility: hidden; }
+  }
+
+  @keyframes preloader-device-a {
+    from, to {
+      animation-timing-function: cubic-bezier(0.33,0,0.67,0);
+      left: 0; width: 4em; height: 2.5em; transform: translateY(0);
+    }
+    12.5% {
+      animation-timing-function: cubic-bezier(0.33,1,0.67,1);
+      left: 0; width: 4em; height: 2.5em; transform: translateY(1.5em);
+    }
+    25% {
+      animation-timing-function: cubic-bezier(0.33,0,0.67,0);
+      left: 0; width: 4em; height: 2.5em; transform: translateY(0.375em);
+    }
+    37.5% {
+      animation-timing-function: cubic-bezier(0.33,1,0.67,1);
+      left: 0; width: 4em; height: 2.5em; transform: translateY(1.5em);
+    }
+    50% {
+      animation-timing-function: cubic-bezier(0.33,0,0.67,0);
+      left: 1em; width: 2em; height: 3em; transform: translateY(0.125em);
+    }
+    62.5% {
+      animation-timing-function: cubic-bezier(0.33,1,0.67,1);
+      left: 1em; width: 2em; height: 3em; transform: translateY(1em);
+    }
+    75% {
+      animation-timing-function: cubic-bezier(0.33,0,0.67,0);
+      left: 1em; width: 2em; height: 2em; transform: translateY(0.625em);
+    }
+    87.5% {
+      animation-timing-function: cubic-bezier(0.33,1,0.67,1);
+      left: 1em; width: 2em; height: 2em; transform: translateY(1.375em);
+    }
+  }
+
+  @keyframes preloader-device-a-1 {
+    from {
+      left: 1.5em; width: 1em; transform: translateY(0); visibility: hidden;
+    }
+    12.5% {
+      left: 1.5em; width: 1em; transform: translateY(0); visibility: visible;
+    }
+    25%, 37.5% {
+      left: 1.5em; width: 1em; transform: translateY(-0.5em); visibility: visible;
+    }
+    50%, 62.5% {
+      left: 0.875em; width: 0.25em; transform: translateY(0); visibility: visible;
+    }
+    75%, to {
+      left: 0.875em; width: 0.25em; transform: translateY(-0.5em); visibility: hidden;
+    }
+  }
+
+  @keyframes preloader-device-a-2 {
+    from { transform: translate(0,0.375em); visibility: hidden; }
+    62.5% { transform: translate(0,0.375em); visibility: visible; }
+    75%, 87.5% { transform: translate(0.375em,0); visibility: visible; }
+    to { transform: translate(0,0.25em); visibility: visible; }
+  }
+
+  @keyframes preloader-device-b {
+    from, to { transform: translateY(0); visibility: visible; }
+    10%, 12.5% { transform: translateY(0.75em); visibility: visible; }
+    25% { transform: translateY(0.75em); visibility: hidden; }
+    87.5% { transform: translateY(0.75em); visibility: hidden; }
+  }
+
+  @keyframes preloader-device-c {
+    from, to { transform: translateY(0); visibility: visible; width: 2em; }
+    10%, 12.5% { transform: translateY(0.75em); visibility: visible; width: 2em; }
+    25% { transform: translateY(0.75em); visibility: hidden; width: 2em; }
+    87.5% { transform: translateY(0.75em); visibility: hidden; width: 1em; }
+  }
+
+  @keyframes preloader-device-d {
+    from { transform: translateY(0.25em); visibility: hidden; }
+    62.5% { transform: translateY(0.25em); visibility: visible; }
+    75% { transform: translateY(-0.75em); }
+    87.5% { transform: translateY(0); }
+    to { transform: translateY(-0.75em); }
+  }
+
+  @keyframes preloader-device-e {
+    from { transform: translateY(1.5em); visibility: hidden; }
+    62.5% { transform: translateY(1.5em); visibility: visible; }
+    75% { transform: translateY(0.75em); }
+    87.5% { transform: translateY(1.5em); }
+    to { transform: translateY(0); }
+  }
+
+  @keyframes preloader-device-f {
+    from { filter: blur(0.375em); }
+    12.5% { filter: blur(0.1875em); opacity: 0.5; }
+    25%, to { filter: blur(0.375em); opacity: 0; }
+  }
+
+  @keyframes preloader-device-g {
+    from, 12.5% { filter: blur(0.1875em); opacity: 0; }
+    25% { filter: blur(0.375em); opacity: 0.5; }
+    37.5% { filter: blur(0.1875em); opacity: 0.5; left: 0; width: 4em; }
+    50%, 75%, to { filter: blur(0.375em); opacity: 0.5; left: 1em; width: 2em; }
+    62.5%, 87.5% { filter: blur(0.1875em); opacity: 0.5; left: 1em; width: 2em; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    #preloader-tech .device {
+      width: {{ section.settings.device_size | divided_by: 1.3 }}px;
+      height: {{ section.settings.device_size | divided_by: 1.3 }}px;
+    }
+    #preloader-tech .preloader-tech__msg {
+      font-size: {{ section.settings.text_size | minus: 2 }}px;
+    }
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const preloader = document.getElementById('preloader-tech');
+  const duration = {{ section.settings.display_duration | times: 1000 }};
+  
+  function showTechPreloader() {
+    if (preloader) {
+      preloader.style.display = 'flex';
+      setTimeout(() => preloader.classList.add('show'), 10);
+    }
+  }
+  
+  function hideTechPreloader() {
+    if (preloader) {
+      preloader.classList.remove('show');
+      setTimeout(() => preloader.style.display = 'none', 300);
+    }
+  }
+  
+  window.showTechPreloader = function() {
+    showTechPreloader();
+    setTimeout(hideTechPreloader, duration);
+  };
+  
+  // Détection des clics sur boutons panier
+  document.addEventListener('click', function(e) {
+    const cartButtons = [
+      '[name="add"]', '.btn-cart', '.add-to-cart', '.product-form__cart-submit',
+      '[data-add-to-cart]', '.js-ajax-submit', 'button[type="submit"]'
+    ];
+    
+    const isCartButton = cartButtons.some(selector => 
+      e.target.matches(selector) || e.target.closest(selector)
+    );
+    
+    const isInProductForm = e.target.closest('form') && 
+      (e.target.closest('form').querySelector('[name="add"]') || 
+       e.target.closest('form').classList.contains('product-form'));
+    
+    if (isCartButton || isInProductForm) {
+      showTechPreloader();
+      setTimeout(hideTechPreloader, duration);
+    }
+  });
+  
+  // Détection clics icône panier
+  document.addEventListener('click', function(e) {
+    const cartIconSelectors = [
+      '.cart-link', '.header__icon--cart', '[data-cart-drawer]',
+      '.js-drawer-open-cart', '.cart-icon', 'a[href*="cart"]'
+    ];
+    
+    const isCartIcon = cartIconSelectors.some(selector => 
+      e.target.matches(selector) || e.target.closest(selector)
+    );
+    
+    if (isCartIcon) {
+      showTechPreloader();
+      setTimeout(hideTechPreloader, duration);
+    }
+  });
+  
+  // AJAX Cart API
+  if (typeof fetch !== 'undefined') {
+    const originalFetch = window.fetch;
+    window.fetch = function(...args) {
+      const url = args[0];
+      if (typeof url === 'string' && url.includes('/cart/add')) {
+        showTechPreloader();
+        setTimeout(hideTechPreloader, duration);
+      }
+      return originalFetch.apply(this, args);
+    };
+  }
+});
+</script>
+
+{% schema %}
+{
+  "name": "Preloader Tech",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
+      "type": "text",
+      "id": "message_default",
+      "label": "Message principal",
+      "default": "Chargement en cours..."
+    },
+    {
+      "type": "text",
+      "id": "message_last",
+      "label": "Message alternatif",
+      "default": "Veuillez patienter..."
+    },
+    {
+      "type": "header",
+      "content": "Couleurs"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Couleur de fond",
+      "default": "#e8eaf0"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Couleur du texte",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "device_color",
+      "label": "Couleur du device (gris)",
+      "default": "#b3b3b3"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Couleur d'accent (noir)",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "header",
+      "content": "Tailles"
+    },
+    {
+      "type": "range",
+      "id": "device_size",
+      "min": 60,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Taille du device",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "text_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Taille du texte",
+      "default": 18
+    },
+    {
+      "type": "header",
+      "content": "Animation"
+    },
+    {
+      "type": "range",
+      "id": "hue",
+      "min": 0,
+      "max": 360,
+      "step": 10,
+      "unit": "°",
+      "label": "Teinte couleur (HSL)",
+      "default": 220
+    },
+    {
+      "type": "range",
+      "id": "animation_speed",
+      "min": 1,
+      "max": 5,
+      "step": 0.5,
+      "unit": "s",
+      "label": "Vitesse d'animation",
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "display_duration",
+      "min": 1,
+      "max": 5,
+      "step": 0.5,
+      "unit": "s",
+      "label": "Durée d'affichage",
+      "default": 2
+    }
+  ],
+  "presets": [
+    {
+      "name": "Preloader Tech"
+    }
+  ]
+}
+{% endschema %}

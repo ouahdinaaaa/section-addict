@@ -1,0 +1,595 @@
+<style>
+
+    
+@mixin book {
+    font-family: "Gotham SSm 4r", sans-serif;
+}
+
+@mixin medium {
+    font-family: "Gotham SSm 5r", sans-serif;
+}
+
+$thin-column: 235px;
+$color-gold: #deb359;
+
+#imvu {
+    position: relative;
+    min-height: 100%;
+    background: #f2f2f2;
+}
+
+.global-nav {
+    position: sticky;
+    top: 0;
+    background: #404040;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    z-index: 2;
+    @include medium;
+}
+
+.mode-nav {
+    position: sticky;
+    top: 50px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #404040;
+    letter-spacing: 1px;
+    z-index: 2;
+    
+    .active {
+        position: relative;
+        color: inherit;
+        @include medium;
+        border-bottom: solid 2px #404040;
+    }
+}
+
+// layout
+// -------------------------------------------------
+
+.column-container {
+    position: relative;
+    display: grid;
+    grid-template-columns:
+        minmax($thin-column, 1fr)
+        470px
+        minmax($thin-column, 1fr);
+    grid-gap: 20px;
+    padding: 0 20px;
+}
+
+.main-column {
+    padding: 20px 0;
+
+    .search-widget {
+        z-index: 2;
+        margin: 0 0 20px;
+        position: sticky;
+        top: 100px;
+    }
+}
+
+.left-column {
+    margin-left: auto;
+}
+
+.sidebar {
+    top: 100px;
+    width: $thin-column;
+    padding: 20px 0;
+    overflow: hidden;
+    overflow-y: auto;
+
+    &.sticky {
+        position: sticky;
+        top: 100px;
+        
+        // important for sticky to work
+        height: calc(100vh - 100px);
+    }
+}
+
+.left-sidebar {
+    justify-self: right;
+}
+
+// products
+// -------------------------------------------------
+
+.shop-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 150px);
+    grid-gap: 10px;
+}
+
+.product-tile {
+    display: grid;
+    grid-template: 150px 60px / 150px;
+    overflow: hidden;
+    
+    .tile-body {
+        display: grid;
+        grid: "x";
+        background: #d4d4d4;
+        overflow: hidden;
+        transition: background-color 0.3s ease;
+        
+        .cover-image,
+        .badge-list {
+            grid-area: x;
+        }
+        
+        .badge-list {
+            display: grid;
+            grid-auto-rows: min-content;
+            grid-gap: 5px;
+            justify-self: end;
+            padding: 5px;
+            z-index: 1;
+        }
+        
+        .cover-image {
+            transform: scale(1) translateZ(0);
+            transition: transform 0.3s 0.45s ease;
+        }
+        
+        &:hover {
+            background-color: #b4b4b4;
+            .cover-image {
+                transform: scale(1.1) translateZ(0);
+            }
+        }
+    }
+    
+    .product-info {
+        display: grid;
+        grid:
+            /* row map & heights */
+            "name name" 16px
+            "text cart" 1fr /
+            /* column widths */
+            1fr   20px;
+        background: #fff;
+        padding: 8px 10px 5px;
+    }
+    
+    .product-name {
+        grid-area: name;
+        @include medium;
+    }
+    
+    .price-info {
+        display: grid;
+        grid-area: text;
+        align-self: center;
+
+        .price-credits {
+            display: grid;
+            grid: 1fr / 15px 1fr;
+            grid-gap: 4px;
+            color: $color-gold;
+            @include medium;
+        }
+        
+        .displayonly-label {
+            justify-self: start;
+        }
+    }
+    
+    .cart-button {
+        grid-area: cart;
+        justify-self: end;
+        color: #a8a8a8;
+        
+        svg {
+            width: 24px;
+            height: 100%;
+            transform: translate(4px, 0);
+        }
+    }
+}
+
+.badge {
+    color: #fff;
+    width: 25px;
+    height: 25px;
+    display: grid;
+    place-content: center;
+    @include medium;
+}
+
+.ap-badge {
+    background: rgba(235, 0, 109, 0.9);
+}
+
+.vip-badge {
+    background: rgba($color-gold, 0.9);
+    font-size: 90%;
+}
+
+.credits-widget {
+    display: grid;
+    grid:
+        "avail   avail"
+        "credits promo" / auto 1fr;
+    grid-gap: 5px 10px;
+    background: #fff;
+    height: 60px;
+    padding: 10px;
+    
+    &__title {
+        grid-area: avail;
+    }
+    
+    .available-credits {
+        display: grid;
+        grid: 1fr / 15px 1fr;
+        grid-gap: 4px;
+        color: $color-gold;
+        @include medium;
+    }
+    
+    .promo-credits {
+        grid-area: promo;
+        font-size: 10px;
+        align-self: center;
+    }
+}
+
+// general classes
+
+.system-info-header {
+    width: 100%;
+    line-height: 16px;
+    @include medium;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #a8a8a8;
+    border-bottom: solid 1px #d4d4d4;
+    margin: 0 0 5px;
+    
+    &.no-divider {
+        border-bottom: none;
+    }
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.trunc {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.icon {
+    width: 15px;
+    height: 15px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.dimmed {
+    color: #a8a8a8;
+    @include medium;
+}
+
+// general tags
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    @include book;
+    font-size: 12px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100%;
+    user-select: none;
+}
+
+nav {
+    display: grid;
+    grid-auto-columns: min-content;
+    grid-auto-flow: column;
+    justify-content: center;
+    grid-gap: 20px;
+    text-align: center;
+    height: 50px;
+    
+    a {
+        display: grid;
+        place-content: center;
+        padding: 0 10px;
+        white-space: nowrap;
+    }
+
+    .active {
+        color: $color-gold;
+    }
+}
+
+form {
+    display: grid;
+    grid-gap: 20px;
+}
+
+fieldset {
+    display: grid;
+
+    label {
+        line-height: 24px;
+    }
+}
+
+legend {
+    display: block;
+}
+
+label {
+    cursor: pointer;
+}
+
+select {
+    width: 100%;
+}
+
+input[type="text"] {
+    width: 100%;
+    line-height: 40px;
+    padding: 0 10px;
+    margin: 0;
+    font-size: 13px;
+    border: solid 1px #d4d4d4;
+}
+
+
+</style>
+
+<div id="imvu">
+    <nav class="global-nav">
+        <a>Home</a>
+        <a>Inventory</a>
+        <a class="active">Shop</a>
+        <a>Chat</a>
+    </nav>
+    <div class="mode-container">
+        <div class="mode shop-mode">
+            <nav class="mode-nav">
+                <a>Featured</a>
+                <a>All</a>
+                <a>Looks</a>
+                <a class="active">Tops</a>
+                <a>Bottoms</a>
+                <a>Shoes</a>
+                <a>Accessories</a>
+                <a>Hairstyles</a>
+            </nav>
+            <div class="submodes">
+                <div class="submode shop-submode">
+                    <div class="column-container">
+                        <div class="column left-column"></div>
+                        <div class="column main-column"></div>
+                        <div class="column right-column"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<template id="product-tile-template">
+    <article class="tile product-tile shopping-tile">
+        <div class="tile-body">
+            <img class="cover-image">
+            <div class="badge-list">
+                <div class="badge ap-badge hidden">AP</div>
+                <div class="badge vip-badge hidden">VIP</div>
+            </div>
+        </div>
+        <div class="product-info">
+            <div class="product-name trunc"></div>
+            <div class="price-info nowrap">
+                <div class="price-credits">
+                    <svg class="icon icon-credits price-credits__icon" fill="currentcolor" viewBox="0 0 1024 1024">
+                        <path d="M512 981a469 469 0 1 1 0-938 469 469 0 0 1 0 938zm0-140c207 0 375-158 375-352S719 137 512 137 137 294 137 489s168 352 375 352zM369 657c-43-42-68-101-68-167v-1c0-130 99-237 238-237 86 0 139 29 182 76l-79 85c-29-30-58-50-104-50-64 0-110 57-110 124v2c0 69 45 125 115 125 44 0 73-19 105-48l75 76a228 228 0 0 1-177 83H301l68-68z"/>
+                    </svg>
+                    <div class="price-credits__text"></div>
+                </div>
+                <div class="owned-label hidden">IN INVENTORY</div>
+                <div class="displayonly-label hidden">DISPLAY ONLY</div>
+            </div>
+            <div class="cart-button add-to-cart-btn">
+                <svg class="icon icon-add-to-cart" viewBox="0 0 25 25" fill="currentcolor">
+                    <path d="M8.073 18.814a1.493 1.493 0 1 1-1.221 2.724 1.493 1.493 0 0 1 1.221-2.724zm8.158-.13a1.493 1.493 0 1 1 0 2.985 1.493 1.493 0 0 1 0-2.985zM19.254 5.25a.746.746 0 0 1 .626.85l-1.049 6.942a2.095 2.095 0 0 1-2.08 1.76H6.582a.008.008 0 0 0-.007.01l.302 1.477c0 .003.004.006.007.006h10.43c.434 0 .781.37.743.813-.034.392-.389.68-.782.68h-11a.754.754 0 0 1-.739-.604L2.8 3.79a.008.008 0 0 0-.006-.006L.622 3.3c-.384-.085-.668-.443-.616-.833a.746.746 0 0 1 .902-.632l2.687.597c.287.064.51.29.569.58l2.103 10.292c0 .003.004.006.007.006h10.477c.303 0 .558-.21.606-.5l1.047-6.934a.746.746 0 0 1 .85-.626zm-6.96 3.107l2.557-2.576a.881.881 0 0 1 1.253 0 .898.898 0 0 1 0 1.263l-4.696 4.731-4.785-4.82a.898.898 0 0 1 0-1.263.881.881 0 0 1 1.253 0l2.646 2.665V.893A.89.89 0 0 1 11.408 0c.49 0 .886.4.886.893v7.465z"></path>
+                </svg>                
+            </div>
+        </div>
+    </article>
+</template>
+
+<template id="left-sidebar-template">
+    <div class="sidebar left-sidebar sticky">
+        <div class="shop-filter-widget">
+            <form>
+                <fieldset>
+                    <legend class="system-info-header w100">Gender</legend>
+                    <label>
+                        <input type="checkbox">
+                        <span>Female</span>
+                    </label>
+                    <label>
+                        <input type="checkbox">
+                        <span>Male</span>
+                    </label>
+                </fieldset>
+                <fieldset>
+                    <legend class="system-info-header w100">Rating</legend>
+                        <label class="db w100">
+                            <input type="checkbox">
+                            <span>Access Pass</span>
+                        </label>
+                        <label class="db w100">
+                            <input type="checkbox">
+                            <span>General Access</span>
+                        </label>
+                    </legend>
+                </fieldset>
+                <fieldset>
+                    <legend class="system-info-header no-divider">Pricing</legend>
+                    <select class="w100">
+                        <option>Any Price</option>
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <legend class="system-info-header no-divider">Creator</legend>
+                    <input type="text" placeholder="Search Creators" class="w100">
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</template>
+
+<template id="main-column-template">
+    <div class="search-widget">
+        <form class="search">
+            <input type="text" placeholder="Search Shop" class="w100">
+        </form>
+    </div>
+    <section class="is-list shop-list"></section>
+</template>
+
+<template id="right-sidebar-template">
+    <div class="sidebar right-sidebar sticky">
+        <div class="credits-widget">
+            <div class="credits-widget__title dimmed">Available Credits</div>
+            <span class="available-credits">
+                <svg class="icon icon-credits" fill="currentcolor" viewBox="0 0 1024 1024">
+                    <path d="M512 981a469 469 0 1 1 0-938 469 469 0 0 1 0 938zm0-140c207 0 375-158 375-352S719 137 512 137 137 294 137 489s168 352 375 352zM369 657c-43-42-68-101-68-167v-1c0-130 99-237 238-237 86 0 139 29 182 76l-79 85c-29-30-58-50-104-50-64 0-110 57-110 124v2c0 69 45 125 115 125 44 0 73-19 105-48l75 76a228 228 0 0 1-177 83H301l68-68z"/>
+                </svg>
+                <span class="available-credits__number">1,998,080</span>
+            </span>
+            <span class="promo-credits has-promo-credits dimmed">7,405 Promo</span>
+        </div>
+    </div>
+</template>
+
+<script>
+
+const $ = (selector, el = document) => el.querySelector(selector);
+
+const leftColumn = $('.left-column');
+const mainColumn = $('.main-column');
+const rightColumn = $('.right-column');
+
+const leftSidebarTemplate = $('#left-sidebar-template');
+const mainColumnTemplate = $('#main-column-template');
+const rightSidebarTemplate = $('#right-sidebar-template');
+
+const productTileTemplate = $('#product-tile-template');
+const newProductTile = data => {
+    const el = document.importNode(productTileTemplate.content, true);
+    $('.cover-image', el).setAttribute('src', data.imageUrl);
+    $('.product-name', el).textContent = data.productName;
+    $('.price-credits__text', el).textContent = data.price;
+    if (data.isInInventory) {
+        $('.price-credits', el).classList.add('hidden');
+        $('.owned-label', el).classList.remove('hidden');
+    } else if (data.isDisplayOnly) {
+        $('.price-credits', el).classList.add('hidden');
+        $('.displayonly-label', el).classList.remove('hidden');
+    }
+    if (data.isInInventory || data.isDisplayOnly) {
+        $('.cart-button', el).classList.add('hidden');
+    }
+    if (data.isAP) {
+        $('.ap-badge', el).classList.remove('hidden');
+    }
+    if (data.isVIP) {
+        $('.vip-badge', el).classList.remove('hidden');
+    }
+    return el;
+}
+
+const productDataList = [
+    {
+        imageUrl: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/207435/top-00.png',
+        productName: 'G- XXXTENTACION (F)',
+        price: 523,
+    },
+    {
+        imageUrl: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/207435/top-01.png',
+        productName: `!! Tattoo's RLL V2`,
+        price: 663,
+        isAP: true,
+        isVIP: true,
+    },
+    {
+        imageUrl: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/207435/top-02.png',
+        productName: 'A. Tentacion R. Hoodie!',
+        price: 631,
+        isDisplayOnly: true,
+        isVIP: true,
+    },
+    {
+        imageUrl: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/207435/top-03.png',
+        productName: '¿ Nike Fit RLL',
+        price: 529,
+        isInInventory: true,
+    },
+    {
+        imageUrl: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/207435/top-04.png',
+        productName: 'J l Raquel TXL',
+        price: 474,
+    },
+    {
+        imageUrl: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/207435/top-05.png',
+        productName: 'K|KL*HotSummerDress',
+        price: 631,
+    },
+    {
+        imageUrl: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/207435/top-06.png',
+        productName: 'Wrapped Lemon RLL',
+        price: 579,
+    },
+    {
+        imageUrl: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/207435/top-07.png',
+        productName: 'Oversized Crewneck',
+        price: 474,
+        isAP: true,
+    },
+    {
+        imageUrl: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/207435/top-08.png',
+        productName: '~nau~ Vivian perfect',
+        price: 568,
+    },
+    {
+        imageUrl: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/207435/top-09.png',
+        productName: 'L! Oh b!tch,  please :)',
+        price: 579,
+        isVIP: true,
+    },
+];
+
+leftColumn.appendChild(leftSidebarTemplate.content);
+rightColumn.appendChild(rightSidebarTemplate.content);
+mainColumn.appendChild(mainColumnTemplate.content);
+
+// not available until main column is rendered
+const shopList = $('.shop-list');
+
+for (let productData of [...productDataList, ...productDataList]) {
+    shopList.appendChild(newProductTile(productData));
+}
+
+
+
+</script>
